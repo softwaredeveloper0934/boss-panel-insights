@@ -38,6 +38,7 @@ export type InfluencerDetailDrawerProps = {
 
 const TABS = [
   "Overview",
+  "Activity",
   "Performance",
   "Analytics",
   "Social Accounts",
@@ -45,6 +46,7 @@ const TABS = [
   "Commissions",
   "Wallet",
   "Documents",
+  "Notes",
   "Audit",
 ] as const;
 type Tab = (typeof TABS)[number];
@@ -63,6 +65,7 @@ export function InfluencerDetailDrawer({
           className="fixed inset-y-0 right-0 z-50 h-full w-full max-w-[640px] border-l border-border bg-surface shadow-xl transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right data-[state=closed]:duration-200 data-[state=open]:duration-300 flex flex-col"
         >
           <Header onClose={() => onOpenChange(false)} />
+          <VerificationChipsRow />
           <ScoreStrip />
           <TabBar tab={tab} onChange={setTab} />
           <div className="flex-1 overflow-y-auto bg-background">
@@ -254,6 +257,8 @@ function TabContent({ tab }: { tab: Tab }) {
   switch (tab) {
     case "Overview":
       return <Overview />;
+    case "Activity":
+      return <ActivityTab />;
     case "Performance":
       return <SimpleEmpty title="Performance" message="Followers growth, engagement, reach and ROI will appear here." />;
     case "Analytics":
@@ -267,10 +272,150 @@ function TabContent({ tab }: { tab: Tab }) {
     case "Wallet":
       return <SimpleEmpty title="Wallet" message="Balance, transactions and reconciliation per currency." />;
     case "Documents":
-      return <SimpleEmpty title="Documents" message="Agreements, NDAs, KYC, invoices and tax documents." />;
+      return <DocumentsTab />;
+    case "Notes":
+      return <NotesTab />;
     case "Audit":
       return <SimpleEmpty title="Audit log" message="Every change, action and approval is recorded here." />;
   }
+}
+
+/* ---------- Verification chips row ---------- */
+
+function VerificationChipsRow() {
+  const chips: { label: string; tone: "good" | "warn" | "bad" | "neutral" }[] = [
+    { label: "Identity", tone: "warn" },
+    { label: "Email", tone: "warn" },
+    { label: "Phone", tone: "warn" },
+    { label: "Social", tone: "warn" },
+    { label: "Bank", tone: "neutral" },
+    { label: "Tax", tone: "neutral" },
+    { label: "Sanctions", tone: "neutral" },
+    { label: "Agreement", tone: "neutral" },
+  ];
+  return (
+    <div className="px-5 py-2.5 border-b border-border bg-surface-muted/40 flex items-center gap-2 overflow-x-auto no-scrollbar">
+      <span className="text-[10.5px] uppercase tracking-wide font-medium text-muted-foreground shrink-0">Verification</span>
+      {chips.map((c) => (
+        <StatusPill key={c.label} tone={c.tone}>{c.label} · {c.tone === "good" ? "Verified" : c.tone === "warn" ? "Pending" : "Not checked"}</StatusPill>
+      ))}
+    </div>
+  );
+}
+
+/* ---------- Activity feed ---------- */
+
+const ACTIVITY_TEMPLATE = [
+  { icon: <Sparkles className="h-3.5 w-3.5" />, kind: "system", title: "Profile created", body: "A record is created when this creator is onboarded from the Boss Panel." },
+  { icon: <ShieldCheck className="h-3.5 w-3.5" />, kind: "verification", title: "Verification submitted", body: "Identity, social, bank and tax steps enter the review queue." },
+  { icon: <BadgeCheck className="h-3.5 w-3.5" />, kind: "approval", title: "Verified by reviewer", body: "All KYC checks pass and the profile is marked verified." },
+  { icon: <MessageSquare className="h-3.5 w-3.5" />, kind: "message", title: "Message sent", body: "Outbound communications from Boss Panel are logged here." },
+  { icon: <Calendar className="h-3.5 w-3.5" />, kind: "campaign", title: "Assigned to campaign", body: "Campaign assignments, deliverables and approvals stream in real time." },
+];
+
+function ActivityTab() {
+  return (
+    <div className="p-5">
+      <Card title="Activity feed">
+        <ol className="relative border-l border-border ml-2 space-y-3">
+          {ACTIVITY_TEMPLATE.map((a) => (
+            <li key={a.title} className="pl-4 relative">
+              <span className="absolute -left-[7px] top-1 h-3 w-3 rounded-full border border-border bg-surface grid place-items-center text-muted-foreground" />
+              <div className="rounded-md border border-border bg-surface-muted/30 p-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">{a.icon}</span>
+                  <div className="text-[12.5px] font-medium text-foreground">{a.title}</div>
+                  <span className="ml-auto text-[10.5px] uppercase tracking-wide text-muted-foreground">{a.kind}</span>
+                </div>
+                <div className="mt-0.5 text-[11.5px] text-muted-foreground">{a.body}</div>
+                <div className="mt-1 text-[10.5px] text-muted-foreground">Timestamp —</div>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <div className="mt-3 text-[11.5px] text-muted-foreground">
+          The feed streams verification events, campaign changes, messages, approvals and admin actions.
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+/* ---------- Documents tab ---------- */
+
+const DOC_CATEGORIES = [
+  { label: "Identity (KYC)", hint: "Government ID, address proof, liveness" },
+  { label: "Company", hint: "Certificate of incorporation, GST/VAT" },
+  { label: "Bank & payout", hint: "Void cheque, bank letter, UPI proof" },
+  { label: "Tax", hint: "W-9 / W-8BEN, tax residency certificate" },
+  { label: "Agreements", hint: "Master agreement, NDAs, addendums" },
+  { label: "Campaign contracts", hint: "Statements of work and briefs" },
+];
+
+function DocumentsTab() {
+  return (
+    <div className="p-5 space-y-4">
+      <Card title="Documents library">
+        <ul className="divide-y divide-border -mx-3">
+          {DOC_CATEGORIES.map((d) => (
+            <li key={d.label} className="px-3 py-2.5 flex items-center gap-3">
+              <span className="h-8 w-8 rounded-md bg-muted border border-border grid place-items-center text-muted-foreground">
+                <FileSpreadsheet className="h-3.5 w-3.5" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="text-[12.5px] font-medium text-foreground truncate">{d.label}</div>
+                <div className="text-[11px] text-muted-foreground truncate">{d.hint}</div>
+              </div>
+              <StatusPill tone="neutral">0 files</StatusPill>
+              <button type="button" className="h-7 px-2 rounded-md border border-border bg-surface hover:bg-muted text-[11.5px] font-medium">
+                Upload
+              </button>
+            </li>
+          ))}
+        </ul>
+      </Card>
+      <Card title="Retention & compliance">
+        <div className="text-[12px] text-muted-foreground">
+          Documents are stored with per-category retention rules, versioning and a full download audit trail.
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+/* ---------- Notes tab ---------- */
+
+function NotesTab() {
+  const [note, setNote] = useState("");
+  return (
+    <div className="p-5 space-y-4">
+      <Card title="Add a note">
+        <textarea
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          rows={3}
+          placeholder="Write an internal note visible to admins and account managers…"
+          className="w-full px-2.5 py-2 rounded-md border border-border bg-background text-[13px] outline-none focus:border-ring focus:ring-1 focus:ring-ring/30"
+        />
+        <div className="mt-2 flex items-center justify-between">
+          <div className="text-[11px] text-muted-foreground">Notes are private, timestamped and attributed to the author.</div>
+          <button
+            type="button"
+            disabled={!note.trim()}
+            onClick={() => { setNote(""); toast.success("Note drafted"); }}
+            className="h-8 px-3 rounded-md bg-primary hover:bg-primary/90 text-primary-foreground text-[12.5px] font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Save note
+          </button>
+        </div>
+      </Card>
+      <Card title="Notes history">
+        <div className="py-8 text-center text-[12.5px] text-muted-foreground">
+          Saved notes list here in reverse chronological order with author and pin controls.
+        </div>
+      </Card>
+    </div>
+  );
 }
 
 /* ---------- Analytics tab: ROI + Risk trends ---------- */

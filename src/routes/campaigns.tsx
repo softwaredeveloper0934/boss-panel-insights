@@ -31,6 +31,7 @@ import {
 import { CreateCampaignDialog } from "@/components/influencer/create-campaign-dialog";
 import { AssignCreatorsDialog } from "@/components/influencer/assign-creators-dialog";
 import { CampaignKanban } from "@/components/influencer/campaign-kanban";
+import { CampaignDetailDrawer } from "@/components/influencer/campaign-detail-drawer";
 
 export const Route = createFileRoute("/campaigns")({
   head: () => ({
@@ -73,6 +74,7 @@ function CampaignsPage() {
   const [tab, setTab] = useState(0);
   const [createOpen, setCreateOpen] = useState(false);
   const [assignOpen, setAssignOpen] = useState(false);
+  const [detailOpen, setDetailOpen] = useState(false);
   const [query, setQuery] = useState("");
 
   return (
@@ -111,6 +113,7 @@ function CampaignsPage() {
 
       <CreateCampaignDialog open={createOpen} onOpenChange={setCreateOpen} />
       <AssignCreatorsDialog open={assignOpen} onOpenChange={setAssignOpen} />
+      <CampaignDetailDrawer open={detailOpen} onOpenChange={setDetailOpen} />
     </div>
   );
 }
