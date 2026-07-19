@@ -9,8 +9,158 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WalletRouteImport } from './routes/wallet'
+import { Route as SupportRouteImport } from './routes/support'
+import { Route as SocialAccountsRouteImport } from './routes/social-accounts'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ReviewsRouteImport } from './routes/reviews'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as ReferralLinksRouteImport } from './routes/referral-links'
+import { Route as PerformanceRouteImport } from './routes/performance'
+import { Route as PayoutsRouteImport } from './routes/payouts'
+import { Route as MediaAssetsRouteImport } from './routes/media-assets'
+import { Route as MarketplacePromotionsRouteImport } from './routes/marketplace-promotions'
+import { Route as LeadsRouteImport } from './routes/leads'
+import { Route as InfluencersRouteImport } from './routes/influencers'
+import { Route as DocumentsRouteImport } from './routes/documents'
+import { Route as CustomersRouteImport } from './routes/customers'
+import { Route as CreatorProfilesRouteImport } from './routes/creator-profiles'
+import { Route as CouponsRouteImport } from './routes/coupons'
+import { Route as ContentLibraryRouteImport } from './routes/content-library'
+import { Route as ComplianceRouteImport } from './routes/compliance'
+import { Route as CommunicationRouteImport } from './routes/communication'
+import { Route as CommissionsRouteImport } from './routes/commissions'
+import { Route as CampaignsRouteImport } from './routes/campaigns'
+import { Route as ApplicationsRouteImport } from './routes/applications'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as AffiliateLinksRouteImport } from './routes/affiliate-links'
 import { Route as IndexRouteImport } from './routes/index'
 
+const WalletRoute = WalletRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SocialAccountsRoute = SocialAccountsRouteImport.update({
+  id: '/social-accounts',
+  path: '/social-accounts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReviewsRoute = ReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReferralLinksRoute = ReferralLinksRouteImport.update({
+  id: '/referral-links',
+  path: '/referral-links',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerformanceRoute = PerformanceRouteImport.update({
+  id: '/performance',
+  path: '/performance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PayoutsRoute = PayoutsRouteImport.update({
+  id: '/payouts',
+  path: '/payouts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MediaAssetsRoute = MediaAssetsRouteImport.update({
+  id: '/media-assets',
+  path: '/media-assets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketplacePromotionsRoute = MarketplacePromotionsRouteImport.update({
+  id: '/marketplace-promotions',
+  path: '/marketplace-promotions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeadsRoute = LeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InfluencersRoute = InfluencersRouteImport.update({
+  id: '/influencers',
+  path: '/influencers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocumentsRoute = DocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CustomersRoute = CustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorProfilesRoute = CreatorProfilesRouteImport.update({
+  id: '/creator-profiles',
+  path: '/creator-profiles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CouponsRoute = CouponsRouteImport.update({
+  id: '/coupons',
+  path: '/coupons',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContentLibraryRoute = ContentLibraryRouteImport.update({
+  id: '/content-library',
+  path: '/content-library',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComplianceRoute = ComplianceRouteImport.update({
+  id: '/compliance',
+  path: '/compliance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunicationRoute = CommunicationRouteImport.update({
+  id: '/communication',
+  path: '/communication',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommissionsRoute = CommissionsRouteImport.update({
+  id: '/commissions',
+  path: '/commissions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CampaignsRoute = CampaignsRouteImport.update({
+  id: '/campaigns',
+  path: '/campaigns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApplicationsRoute = ApplicationsRouteImport.update({
+  id: '/applications',
+  path: '/applications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AffiliateLinksRoute = AffiliateLinksRouteImport.update({
+  id: '/affiliate-links',
+  path: '/affiliate-links',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +169,382 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/affiliate-links': typeof AffiliateLinksRoute
+  '/analytics': typeof AnalyticsRoute
+  '/applications': typeof ApplicationsRoute
+  '/campaigns': typeof CampaignsRoute
+  '/commissions': typeof CommissionsRoute
+  '/communication': typeof CommunicationRoute
+  '/compliance': typeof ComplianceRoute
+  '/content-library': typeof ContentLibraryRoute
+  '/coupons': typeof CouponsRoute
+  '/creator-profiles': typeof CreatorProfilesRoute
+  '/customers': typeof CustomersRoute
+  '/documents': typeof DocumentsRoute
+  '/influencers': typeof InfluencersRoute
+  '/leads': typeof LeadsRoute
+  '/marketplace-promotions': typeof MarketplacePromotionsRoute
+  '/media-assets': typeof MediaAssetsRoute
+  '/payouts': typeof PayoutsRoute
+  '/performance': typeof PerformanceRoute
+  '/referral-links': typeof ReferralLinksRoute
+  '/reports': typeof ReportsRoute
+  '/reviews': typeof ReviewsRoute
+  '/settings': typeof SettingsRoute
+  '/social-accounts': typeof SocialAccountsRoute
+  '/support': typeof SupportRoute
+  '/wallet': typeof WalletRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/affiliate-links': typeof AffiliateLinksRoute
+  '/analytics': typeof AnalyticsRoute
+  '/applications': typeof ApplicationsRoute
+  '/campaigns': typeof CampaignsRoute
+  '/commissions': typeof CommissionsRoute
+  '/communication': typeof CommunicationRoute
+  '/compliance': typeof ComplianceRoute
+  '/content-library': typeof ContentLibraryRoute
+  '/coupons': typeof CouponsRoute
+  '/creator-profiles': typeof CreatorProfilesRoute
+  '/customers': typeof CustomersRoute
+  '/documents': typeof DocumentsRoute
+  '/influencers': typeof InfluencersRoute
+  '/leads': typeof LeadsRoute
+  '/marketplace-promotions': typeof MarketplacePromotionsRoute
+  '/media-assets': typeof MediaAssetsRoute
+  '/payouts': typeof PayoutsRoute
+  '/performance': typeof PerformanceRoute
+  '/referral-links': typeof ReferralLinksRoute
+  '/reports': typeof ReportsRoute
+  '/reviews': typeof ReviewsRoute
+  '/settings': typeof SettingsRoute
+  '/social-accounts': typeof SocialAccountsRoute
+  '/support': typeof SupportRoute
+  '/wallet': typeof WalletRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/affiliate-links': typeof AffiliateLinksRoute
+  '/analytics': typeof AnalyticsRoute
+  '/applications': typeof ApplicationsRoute
+  '/campaigns': typeof CampaignsRoute
+  '/commissions': typeof CommissionsRoute
+  '/communication': typeof CommunicationRoute
+  '/compliance': typeof ComplianceRoute
+  '/content-library': typeof ContentLibraryRoute
+  '/coupons': typeof CouponsRoute
+  '/creator-profiles': typeof CreatorProfilesRoute
+  '/customers': typeof CustomersRoute
+  '/documents': typeof DocumentsRoute
+  '/influencers': typeof InfluencersRoute
+  '/leads': typeof LeadsRoute
+  '/marketplace-promotions': typeof MarketplacePromotionsRoute
+  '/media-assets': typeof MediaAssetsRoute
+  '/payouts': typeof PayoutsRoute
+  '/performance': typeof PerformanceRoute
+  '/referral-links': typeof ReferralLinksRoute
+  '/reports': typeof ReportsRoute
+  '/reviews': typeof ReviewsRoute
+  '/settings': typeof SettingsRoute
+  '/social-accounts': typeof SocialAccountsRoute
+  '/support': typeof SupportRoute
+  '/wallet': typeof WalletRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/affiliate-links'
+    | '/analytics'
+    | '/applications'
+    | '/campaigns'
+    | '/commissions'
+    | '/communication'
+    | '/compliance'
+    | '/content-library'
+    | '/coupons'
+    | '/creator-profiles'
+    | '/customers'
+    | '/documents'
+    | '/influencers'
+    | '/leads'
+    | '/marketplace-promotions'
+    | '/media-assets'
+    | '/payouts'
+    | '/performance'
+    | '/referral-links'
+    | '/reports'
+    | '/reviews'
+    | '/settings'
+    | '/social-accounts'
+    | '/support'
+    | '/wallet'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/affiliate-links'
+    | '/analytics'
+    | '/applications'
+    | '/campaigns'
+    | '/commissions'
+    | '/communication'
+    | '/compliance'
+    | '/content-library'
+    | '/coupons'
+    | '/creator-profiles'
+    | '/customers'
+    | '/documents'
+    | '/influencers'
+    | '/leads'
+    | '/marketplace-promotions'
+    | '/media-assets'
+    | '/payouts'
+    | '/performance'
+    | '/referral-links'
+    | '/reports'
+    | '/reviews'
+    | '/settings'
+    | '/social-accounts'
+    | '/support'
+    | '/wallet'
+  id:
+    | '__root__'
+    | '/'
+    | '/affiliate-links'
+    | '/analytics'
+    | '/applications'
+    | '/campaigns'
+    | '/commissions'
+    | '/communication'
+    | '/compliance'
+    | '/content-library'
+    | '/coupons'
+    | '/creator-profiles'
+    | '/customers'
+    | '/documents'
+    | '/influencers'
+    | '/leads'
+    | '/marketplace-promotions'
+    | '/media-assets'
+    | '/payouts'
+    | '/performance'
+    | '/referral-links'
+    | '/reports'
+    | '/reviews'
+    | '/settings'
+    | '/social-accounts'
+    | '/support'
+    | '/wallet'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AffiliateLinksRoute: typeof AffiliateLinksRoute
+  AnalyticsRoute: typeof AnalyticsRoute
+  ApplicationsRoute: typeof ApplicationsRoute
+  CampaignsRoute: typeof CampaignsRoute
+  CommissionsRoute: typeof CommissionsRoute
+  CommunicationRoute: typeof CommunicationRoute
+  ComplianceRoute: typeof ComplianceRoute
+  ContentLibraryRoute: typeof ContentLibraryRoute
+  CouponsRoute: typeof CouponsRoute
+  CreatorProfilesRoute: typeof CreatorProfilesRoute
+  CustomersRoute: typeof CustomersRoute
+  DocumentsRoute: typeof DocumentsRoute
+  InfluencersRoute: typeof InfluencersRoute
+  LeadsRoute: typeof LeadsRoute
+  MarketplacePromotionsRoute: typeof MarketplacePromotionsRoute
+  MediaAssetsRoute: typeof MediaAssetsRoute
+  PayoutsRoute: typeof PayoutsRoute
+  PerformanceRoute: typeof PerformanceRoute
+  ReferralLinksRoute: typeof ReferralLinksRoute
+  ReportsRoute: typeof ReportsRoute
+  ReviewsRoute: typeof ReviewsRoute
+  SettingsRoute: typeof SettingsRoute
+  SocialAccountsRoute: typeof SocialAccountsRoute
+  SupportRoute: typeof SupportRoute
+  WalletRoute: typeof WalletRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wallet': {
+      id: '/wallet'
+      path: '/wallet'
+      fullPath: '/wallet'
+      preLoaderRoute: typeof WalletRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/social-accounts': {
+      id: '/social-accounts'
+      path: '/social-accounts'
+      fullPath: '/social-accounts'
+      preLoaderRoute: typeof SocialAccountsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reviews': {
+      id: '/reviews'
+      path: '/reviews'
+      fullPath: '/reviews'
+      preLoaderRoute: typeof ReviewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/referral-links': {
+      id: '/referral-links'
+      path: '/referral-links'
+      fullPath: '/referral-links'
+      preLoaderRoute: typeof ReferralLinksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/performance': {
+      id: '/performance'
+      path: '/performance'
+      fullPath: '/performance'
+      preLoaderRoute: typeof PerformanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payouts': {
+      id: '/payouts'
+      path: '/payouts'
+      fullPath: '/payouts'
+      preLoaderRoute: typeof PayoutsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/media-assets': {
+      id: '/media-assets'
+      path: '/media-assets'
+      fullPath: '/media-assets'
+      preLoaderRoute: typeof MediaAssetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketplace-promotions': {
+      id: '/marketplace-promotions'
+      path: '/marketplace-promotions'
+      fullPath: '/marketplace-promotions'
+      preLoaderRoute: typeof MarketplacePromotionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leads': {
+      id: '/leads'
+      path: '/leads'
+      fullPath: '/leads'
+      preLoaderRoute: typeof LeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/influencers': {
+      id: '/influencers'
+      path: '/influencers'
+      fullPath: '/influencers'
+      preLoaderRoute: typeof InfluencersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/documents': {
+      id: '/documents'
+      path: '/documents'
+      fullPath: '/documents'
+      preLoaderRoute: typeof DocumentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/customers': {
+      id: '/customers'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof CustomersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-profiles': {
+      id: '/creator-profiles'
+      path: '/creator-profiles'
+      fullPath: '/creator-profiles'
+      preLoaderRoute: typeof CreatorProfilesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/coupons': {
+      id: '/coupons'
+      path: '/coupons'
+      fullPath: '/coupons'
+      preLoaderRoute: typeof CouponsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/content-library': {
+      id: '/content-library'
+      path: '/content-library'
+      fullPath: '/content-library'
+      preLoaderRoute: typeof ContentLibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compliance': {
+      id: '/compliance'
+      path: '/compliance'
+      fullPath: '/compliance'
+      preLoaderRoute: typeof ComplianceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/communication': {
+      id: '/communication'
+      path: '/communication'
+      fullPath: '/communication'
+      preLoaderRoute: typeof CommunicationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/commissions': {
+      id: '/commissions'
+      path: '/commissions'
+      fullPath: '/commissions'
+      preLoaderRoute: typeof CommissionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/campaigns': {
+      id: '/campaigns'
+      path: '/campaigns'
+      fullPath: '/campaigns'
+      preLoaderRoute: typeof CampaignsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/applications': {
+      id: '/applications'
+      path: '/applications'
+      fullPath: '/applications'
+      preLoaderRoute: typeof ApplicationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/affiliate-links': {
+      id: '/affiliate-links'
+      path: '/affiliate-links'
+      fullPath: '/affiliate-links'
+      preLoaderRoute: typeof AffiliateLinksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +557,32 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AffiliateLinksRoute: AffiliateLinksRoute,
+  AnalyticsRoute: AnalyticsRoute,
+  ApplicationsRoute: ApplicationsRoute,
+  CampaignsRoute: CampaignsRoute,
+  CommissionsRoute: CommissionsRoute,
+  CommunicationRoute: CommunicationRoute,
+  ComplianceRoute: ComplianceRoute,
+  ContentLibraryRoute: ContentLibraryRoute,
+  CouponsRoute: CouponsRoute,
+  CreatorProfilesRoute: CreatorProfilesRoute,
+  CustomersRoute: CustomersRoute,
+  DocumentsRoute: DocumentsRoute,
+  InfluencersRoute: InfluencersRoute,
+  LeadsRoute: LeadsRoute,
+  MarketplacePromotionsRoute: MarketplacePromotionsRoute,
+  MediaAssetsRoute: MediaAssetsRoute,
+  PayoutsRoute: PayoutsRoute,
+  PerformanceRoute: PerformanceRoute,
+  ReferralLinksRoute: ReferralLinksRoute,
+  ReportsRoute: ReportsRoute,
+  ReviewsRoute: ReviewsRoute,
+  SettingsRoute: SettingsRoute,
+  SocialAccountsRoute: SocialAccountsRoute,
+  SupportRoute: SupportRoute,
+  WalletRoute: WalletRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
