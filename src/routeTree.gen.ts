@@ -10,14 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WalletRouteImport } from './routes/wallet'
+import { Route as VerificationRouteImport } from './routes/verification'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as SocialAccountsRouteImport } from './routes/social-accounts'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as RewardsRouteImport } from './routes/rewards'
 import { Route as ReviewsRouteImport } from './routes/reviews'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as ReferralLinksRouteImport } from './routes/referral-links'
 import { Route as PerformanceRouteImport } from './routes/performance'
 import { Route as PayoutsRouteImport } from './routes/payouts'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MediaAssetsRouteImport } from './routes/media-assets'
 import { Route as MarketplacePromotionsRouteImport } from './routes/marketplace-promotions'
 import { Route as LeadsRouteImport } from './routes/leads'
@@ -30,15 +33,23 @@ import { Route as ContentLibraryRouteImport } from './routes/content-library'
 import { Route as ComplianceRouteImport } from './routes/compliance'
 import { Route as CommunicationRouteImport } from './routes/communication'
 import { Route as CommissionsRouteImport } from './routes/commissions'
+import { Route as CollaborationsRouteImport } from './routes/collaborations'
 import { Route as CampaignsRouteImport } from './routes/campaigns'
+import { Route as BrandsRouteImport } from './routes/brands'
 import { Route as ApplicationsRouteImport } from './routes/applications'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AffiliateLinksRouteImport } from './routes/affiliate-links'
+import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as IndexRouteImport } from './routes/index'
 
 const WalletRoute = WalletRouteImport.update({
   id: '/wallet',
   path: '/wallet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerificationRoute = VerificationRouteImport.update({
+  id: '/verification',
+  path: '/verification',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SupportRoute = SupportRouteImport.update({
@@ -54,6 +65,11 @@ const SocialAccountsRoute = SocialAccountsRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RewardsRoute = RewardsRouteImport.update({
+  id: '/rewards',
+  path: '/rewards',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReviewsRoute = ReviewsRouteImport.update({
@@ -79,6 +95,11 @@ const PerformanceRoute = PerformanceRouteImport.update({
 const PayoutsRoute = PayoutsRouteImport.update({
   id: '/payouts',
   path: '/payouts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MediaAssetsRoute = MediaAssetsRouteImport.update({
@@ -141,9 +162,19 @@ const CommissionsRoute = CommissionsRouteImport.update({
   path: '/commissions',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CollaborationsRoute = CollaborationsRouteImport.update({
+  id: '/collaborations',
+  path: '/collaborations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CampaignsRoute = CampaignsRouteImport.update({
   id: '/campaigns',
   path: '/campaigns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandsRoute = BrandsRouteImport.update({
+  id: '/brands',
+  path: '/brands',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApplicationsRoute = ApplicationsRouteImport.update({
@@ -161,6 +192,11 @@ const AffiliateLinksRoute = AffiliateLinksRouteImport.update({
   path: '/affiliate-links',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AchievementsRoute = AchievementsRouteImport.update({
+  id: '/achievements',
+  path: '/achievements',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -169,10 +205,13 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/achievements': typeof AchievementsRoute
   '/affiliate-links': typeof AffiliateLinksRoute
   '/analytics': typeof AnalyticsRoute
   '/applications': typeof ApplicationsRoute
+  '/brands': typeof BrandsRoute
   '/campaigns': typeof CampaignsRoute
+  '/collaborations': typeof CollaborationsRoute
   '/commissions': typeof CommissionsRoute
   '/communication': typeof CommunicationRoute
   '/compliance': typeof ComplianceRoute
@@ -185,22 +224,28 @@ export interface FileRoutesByFullPath {
   '/leads': typeof LeadsRoute
   '/marketplace-promotions': typeof MarketplacePromotionsRoute
   '/media-assets': typeof MediaAssetsRoute
+  '/notifications': typeof NotificationsRoute
   '/payouts': typeof PayoutsRoute
   '/performance': typeof PerformanceRoute
   '/referral-links': typeof ReferralLinksRoute
   '/reports': typeof ReportsRoute
   '/reviews': typeof ReviewsRoute
+  '/rewards': typeof RewardsRoute
   '/settings': typeof SettingsRoute
   '/social-accounts': typeof SocialAccountsRoute
   '/support': typeof SupportRoute
+  '/verification': typeof VerificationRoute
   '/wallet': typeof WalletRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/achievements': typeof AchievementsRoute
   '/affiliate-links': typeof AffiliateLinksRoute
   '/analytics': typeof AnalyticsRoute
   '/applications': typeof ApplicationsRoute
+  '/brands': typeof BrandsRoute
   '/campaigns': typeof CampaignsRoute
+  '/collaborations': typeof CollaborationsRoute
   '/commissions': typeof CommissionsRoute
   '/communication': typeof CommunicationRoute
   '/compliance': typeof ComplianceRoute
@@ -213,23 +258,29 @@ export interface FileRoutesByTo {
   '/leads': typeof LeadsRoute
   '/marketplace-promotions': typeof MarketplacePromotionsRoute
   '/media-assets': typeof MediaAssetsRoute
+  '/notifications': typeof NotificationsRoute
   '/payouts': typeof PayoutsRoute
   '/performance': typeof PerformanceRoute
   '/referral-links': typeof ReferralLinksRoute
   '/reports': typeof ReportsRoute
   '/reviews': typeof ReviewsRoute
+  '/rewards': typeof RewardsRoute
   '/settings': typeof SettingsRoute
   '/social-accounts': typeof SocialAccountsRoute
   '/support': typeof SupportRoute
+  '/verification': typeof VerificationRoute
   '/wallet': typeof WalletRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/achievements': typeof AchievementsRoute
   '/affiliate-links': typeof AffiliateLinksRoute
   '/analytics': typeof AnalyticsRoute
   '/applications': typeof ApplicationsRoute
+  '/brands': typeof BrandsRoute
   '/campaigns': typeof CampaignsRoute
+  '/collaborations': typeof CollaborationsRoute
   '/commissions': typeof CommissionsRoute
   '/communication': typeof CommunicationRoute
   '/compliance': typeof ComplianceRoute
@@ -242,24 +293,30 @@ export interface FileRoutesById {
   '/leads': typeof LeadsRoute
   '/marketplace-promotions': typeof MarketplacePromotionsRoute
   '/media-assets': typeof MediaAssetsRoute
+  '/notifications': typeof NotificationsRoute
   '/payouts': typeof PayoutsRoute
   '/performance': typeof PerformanceRoute
   '/referral-links': typeof ReferralLinksRoute
   '/reports': typeof ReportsRoute
   '/reviews': typeof ReviewsRoute
+  '/rewards': typeof RewardsRoute
   '/settings': typeof SettingsRoute
   '/social-accounts': typeof SocialAccountsRoute
   '/support': typeof SupportRoute
+  '/verification': typeof VerificationRoute
   '/wallet': typeof WalletRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/achievements'
     | '/affiliate-links'
     | '/analytics'
     | '/applications'
+    | '/brands'
     | '/campaigns'
+    | '/collaborations'
     | '/commissions'
     | '/communication'
     | '/compliance'
@@ -272,22 +329,28 @@ export interface FileRouteTypes {
     | '/leads'
     | '/marketplace-promotions'
     | '/media-assets'
+    | '/notifications'
     | '/payouts'
     | '/performance'
     | '/referral-links'
     | '/reports'
     | '/reviews'
+    | '/rewards'
     | '/settings'
     | '/social-accounts'
     | '/support'
+    | '/verification'
     | '/wallet'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/achievements'
     | '/affiliate-links'
     | '/analytics'
     | '/applications'
+    | '/brands'
     | '/campaigns'
+    | '/collaborations'
     | '/commissions'
     | '/communication'
     | '/compliance'
@@ -300,22 +363,28 @@ export interface FileRouteTypes {
     | '/leads'
     | '/marketplace-promotions'
     | '/media-assets'
+    | '/notifications'
     | '/payouts'
     | '/performance'
     | '/referral-links'
     | '/reports'
     | '/reviews'
+    | '/rewards'
     | '/settings'
     | '/social-accounts'
     | '/support'
+    | '/verification'
     | '/wallet'
   id:
     | '__root__'
     | '/'
+    | '/achievements'
     | '/affiliate-links'
     | '/analytics'
     | '/applications'
+    | '/brands'
     | '/campaigns'
+    | '/collaborations'
     | '/commissions'
     | '/communication'
     | '/compliance'
@@ -328,23 +397,29 @@ export interface FileRouteTypes {
     | '/leads'
     | '/marketplace-promotions'
     | '/media-assets'
+    | '/notifications'
     | '/payouts'
     | '/performance'
     | '/referral-links'
     | '/reports'
     | '/reviews'
+    | '/rewards'
     | '/settings'
     | '/social-accounts'
     | '/support'
+    | '/verification'
     | '/wallet'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AchievementsRoute: typeof AchievementsRoute
   AffiliateLinksRoute: typeof AffiliateLinksRoute
   AnalyticsRoute: typeof AnalyticsRoute
   ApplicationsRoute: typeof ApplicationsRoute
+  BrandsRoute: typeof BrandsRoute
   CampaignsRoute: typeof CampaignsRoute
+  CollaborationsRoute: typeof CollaborationsRoute
   CommissionsRoute: typeof CommissionsRoute
   CommunicationRoute: typeof CommunicationRoute
   ComplianceRoute: typeof ComplianceRoute
@@ -357,14 +432,17 @@ export interface RootRouteChildren {
   LeadsRoute: typeof LeadsRoute
   MarketplacePromotionsRoute: typeof MarketplacePromotionsRoute
   MediaAssetsRoute: typeof MediaAssetsRoute
+  NotificationsRoute: typeof NotificationsRoute
   PayoutsRoute: typeof PayoutsRoute
   PerformanceRoute: typeof PerformanceRoute
   ReferralLinksRoute: typeof ReferralLinksRoute
   ReportsRoute: typeof ReportsRoute
   ReviewsRoute: typeof ReviewsRoute
+  RewardsRoute: typeof RewardsRoute
   SettingsRoute: typeof SettingsRoute
   SocialAccountsRoute: typeof SocialAccountsRoute
   SupportRoute: typeof SupportRoute
+  VerificationRoute: typeof VerificationRoute
   WalletRoute: typeof WalletRoute
 }
 
@@ -375,6 +453,13 @@ declare module '@tanstack/react-router' {
       path: '/wallet'
       fullPath: '/wallet'
       preLoaderRoute: typeof WalletRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verification': {
+      id: '/verification'
+      path: '/verification'
+      fullPath: '/verification'
+      preLoaderRoute: typeof VerificationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/support': {
@@ -396,6 +481,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rewards': {
+      id: '/rewards'
+      path: '/rewards'
+      fullPath: '/rewards'
+      preLoaderRoute: typeof RewardsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reviews': {
@@ -431,6 +523,13 @@ declare module '@tanstack/react-router' {
       path: '/payouts'
       fullPath: '/payouts'
       preLoaderRoute: typeof PayoutsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/media-assets': {
@@ -517,11 +616,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommissionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/collaborations': {
+      id: '/collaborations'
+      path: '/collaborations'
+      fullPath: '/collaborations'
+      preLoaderRoute: typeof CollaborationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/campaigns': {
       id: '/campaigns'
       path: '/campaigns'
       fullPath: '/campaigns'
       preLoaderRoute: typeof CampaignsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brands': {
+      id: '/brands'
+      path: '/brands'
+      fullPath: '/brands'
+      preLoaderRoute: typeof BrandsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/applications': {
@@ -545,6 +658,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AffiliateLinksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/achievements': {
+      id: '/achievements'
+      path: '/achievements'
+      fullPath: '/achievements'
+      preLoaderRoute: typeof AchievementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -557,10 +677,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AchievementsRoute: AchievementsRoute,
   AffiliateLinksRoute: AffiliateLinksRoute,
   AnalyticsRoute: AnalyticsRoute,
   ApplicationsRoute: ApplicationsRoute,
+  BrandsRoute: BrandsRoute,
   CampaignsRoute: CampaignsRoute,
+  CollaborationsRoute: CollaborationsRoute,
   CommissionsRoute: CommissionsRoute,
   CommunicationRoute: CommunicationRoute,
   ComplianceRoute: ComplianceRoute,
@@ -573,14 +696,17 @@ const rootRouteChildren: RootRouteChildren = {
   LeadsRoute: LeadsRoute,
   MarketplacePromotionsRoute: MarketplacePromotionsRoute,
   MediaAssetsRoute: MediaAssetsRoute,
+  NotificationsRoute: NotificationsRoute,
   PayoutsRoute: PayoutsRoute,
   PerformanceRoute: PerformanceRoute,
   ReferralLinksRoute: ReferralLinksRoute,
   ReportsRoute: ReportsRoute,
   ReviewsRoute: ReviewsRoute,
+  RewardsRoute: RewardsRoute,
   SettingsRoute: SettingsRoute,
   SocialAccountsRoute: SocialAccountsRoute,
   SupportRoute: SupportRoute,
+  VerificationRoute: VerificationRoute,
   WalletRoute: WalletRoute,
 }
 export const routeTree = rootRouteImport
