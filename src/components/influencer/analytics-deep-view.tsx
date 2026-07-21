@@ -265,8 +265,8 @@ function ReachPanel() {
         <StatCard label="Profile visits" />
       </div>
       <div className="grid gap-3 lg:grid-cols-2">
-        <ChartCard title="Reach over time" icon={<LineChartIcon className="h-3.5 w-3.5" />} />
-        <ChartCard title="Reach by platform" icon={<BarChart3 className="h-3.5 w-3.5" />} />
+        <ChartCard scope="reach" title="Reach over time" icon={<LineChartIcon className="h-3.5 w-3.5" />} />
+        <ChartCard scope="reach" title="Reach by platform" icon={<BarChart3 className="h-3.5 w-3.5" />} />
       </div>
     </div>
   );
