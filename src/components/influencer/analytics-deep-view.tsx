@@ -4,16 +4,29 @@ import {
   BarChart3,
   Download,
   Eye,
+  FileSpreadsheet,
+  FileText,
   Filter,
   Globe2,
   Heart,
+  Image as ImageIcon,
   LineChart as LineChartIcon,
+  Maximize2,
   Monitor,
   PieChart as PieIcon,
   Smartphone,
   Tablet,
   Users,
+  X,
 } from "lucide-react";
+import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogOverlay,
+  DialogPortal,
+} from "@/components/ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { EmptySurface } from "@/components/influencer/wall-page";
 
 const TABS = [
