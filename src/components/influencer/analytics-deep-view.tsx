@@ -282,8 +282,8 @@ function EngagementPanel() {
         <StatCard label="Shares & saves" />
       </div>
       <div className="grid gap-3 lg:grid-cols-2">
-        <ChartCard title="Engagement rate trend" icon={<Activity className="h-3.5 w-3.5" />} />
-        <ChartCard title="Top performing posts" icon={<BarChart3 className="h-3.5 w-3.5" />} />
+        <ChartCard scope="engagement" title="Engagement rate trend" icon={<Activity className="h-3.5 w-3.5" />} />
+        <ChartCard scope="engagement" title="Top performing posts" icon={<BarChart3 className="h-3.5 w-3.5" />} />
       </div>
     </div>
   );
@@ -299,8 +299,8 @@ function AudiencePanel() {
         <StatCard label="Female / Male / Other" />
       </div>
       <div className="grid gap-3 lg:grid-cols-2">
-        <ChartCard title="Age distribution" icon={<BarChart3 className="h-3.5 w-3.5" />} />
-        <ChartCard title="Gender split" icon={<PieIcon className="h-3.5 w-3.5" />} />
+        <ChartCard scope="audience" title="Age distribution" icon={<BarChart3 className="h-3.5 w-3.5" />} />
+        <ChartCard scope="audience" title="Gender split" icon={<PieIcon className="h-3.5 w-3.5" />} />
       </div>
     </div>
   );
@@ -315,7 +315,7 @@ function DevicePanel() {
   return (
     <div className="space-y-3">
       <div className="grid gap-3 lg:grid-cols-2">
-        <ChartCard title="Sessions by device" icon={<PieIcon className="h-3.5 w-3.5" />} />
+        <ChartCard scope="device" title="Sessions by device" icon={<PieIcon className="h-3.5 w-3.5" />} />
         <div className="rounded-md border border-border bg-surface overflow-hidden">
           <div className="h-10 px-3 border-b border-border bg-surface-muted flex items-center text-[12.5px] font-semibold">Device breakdown</div>
           <ul className="divide-y divide-border">
@@ -339,7 +339,7 @@ function DevicePanel() {
 function CountryPanel() {
   return (
     <div className="space-y-3">
-      <ChartCard title="Reach heatmap" icon={<Globe2 className="h-3.5 w-3.5" />} height={280} />
+      <ChartCard scope="country" title="Reach heatmap" icon={<Globe2 className="h-3.5 w-3.5" />} height={280} />
       <div className="rounded-md border border-border bg-surface overflow-hidden">
         <div className="h-10 px-3 border-b border-border bg-surface-muted flex items-center text-[12.5px] font-semibold">Top countries</div>
         <EmptySurface
