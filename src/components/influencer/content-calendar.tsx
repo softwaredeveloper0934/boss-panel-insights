@@ -197,7 +197,7 @@ function WeekGrid({ cursor }: { cursor: Date }) {
     return `${laneKey}::${d.toISOString().slice(0, 10)}`;
   }
 
-  function evaluateConflict(nextLane: Lane, d: Date): string | null {
+  function evaluateConflict(nextLane: Lane, d: Date, fromLane?: Lane): string | null {
     const cellDate = new Date(d);
     cellDate.setHours(0, 0, 0, 0);
     if (nextLane === "scheduled" && cellDate < today) {
@@ -206,7 +206,7 @@ function WeekGrid({ cursor }: { cursor: Date }) {
     if (nextLane === "published" && cellDate > today) {
       return "Cannot mark as published on a future date.";
     }
-    if (nextLane === "draft" && dragging?.fromLane === "published") {
+    if (nextLane === "draft" && fromLane === "published") {
       return "Published items cannot be reverted to draft.";
     }
     return null;
