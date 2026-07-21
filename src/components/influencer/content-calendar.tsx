@@ -188,7 +188,6 @@ function WeekGrid({ cursor }: { cursor: Date }) {
   const days = useWeekDays(cursor);
   const [dragOverKey, setDragOverKey] = useState<string | null>(null);
   const [conflict, setConflict] = useState<{ key: string; message: string } | null>(null);
-  const [dragging, setDragging] = useState<DragPayload | null>(null);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
