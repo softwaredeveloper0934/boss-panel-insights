@@ -300,7 +300,7 @@ function WeekGrid({ cursor }: { cursor: Date }) {
           })}
         </div>
       ))}
-
+    </div>
   );
 }
 
