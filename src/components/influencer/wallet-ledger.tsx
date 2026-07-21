@@ -1,25 +1,39 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
+  AlertTriangle,
   ArrowDownToLine,
   ArrowUpRight,
   Banknote,
   Building2,
   Check,
+  CircleDot,
   CreditCard,
   Download,
   Filter,
   Landmark,
+  Loader2,
   MoreHorizontal,
   Plus,
   Search,
+  ShieldCheck,
   Smartphone,
   Star,
   Trash2,
   Wallet as WalletIcon,
   X,
+  XCircle,
 } from "lucide-react";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogOverlay, DialogPortal } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { EmptySurface } from "@/components/influencer/wall-page";
 
@@ -224,64 +238,438 @@ function TransactionDetailDrawer({ open, onClose }: { open: boolean; onClose: ()
 
 /* -------------------------- Payout methods -------------------------- */
 
+type MethodKey = "bank" | "upi" | "paypal" | "wise" | "payoneer" | "card";
+type MethodStatus = "not_configured" | "pending" | "verified" | "failed";
+
+type MethodTemplate = {
+  key: MethodKey;
+  label: string;
+  hint: string;
+  icon: React.ReactNode;
+  requirements: string[];
+};
+
+const METHOD_TEMPLATES: MethodTemplate[] = [
+  {
+    key: "bank",
+    label: "Bank account",
+    hint: "Wire / ACH / SEPA / NEFT",
+    icon: <Landmark className="h-4 w-4" />,
+    requirements: [
+      "Account holder name matches KYC",
+      "Bank account or IBAN number",
+      "Routing / IFSC / SWIFT code",
+      "Proof of account (voided cheque or statement)",
+      "Micro-deposit verification confirmed",
+    ],
+  },
+  {
+    key: "upi",
+    label: "UPI",
+    hint: "India — VPA linked payouts",
+    icon: <Smartphone className="h-4 w-4" />,
+    requirements: [
+      "Verified VPA handle (name@bank)",
+      "PAN linked to VPA",
+      "One-time ₹1 name-match verification",
+    ],
+  },
+  {
+    key: "paypal",
+    label: "PayPal",
+    hint: "Global email-based transfer",
+    icon: <Building2 className="h-4 w-4" />,
+    requirements: [
+      "Verified PayPal email",
+      "Business or Premier account type",
+      "Currency preference set",
+    ],
+  },
+  {
+    key: "wise",
+    label: "Wise",
+    hint: "Multi-currency borderless",
+    icon: <ArrowUpRight className="h-4 w-4" />,
+    requirements: [
+      "Wise account ID",
+      "Recipient currency & country",
+      "Wise identity verified",
+    ],
+  },
+  {
+    key: "payoneer",
+    label: "Payoneer",
+    hint: "Marketplace-friendly",
+    icon: <Banknote className="h-4 w-4" />,
+    requirements: [
+      "Payoneer customer ID",
+      "Approved receiving account",
+      "Tax form (W-8/W-9) submitted",
+    ],
+  },
+  {
+    key: "card",
+    label: "Card / debit rail",
+    hint: "Instant push where supported",
+    icon: <CreditCard className="h-4 w-4" />,
+    requirements: [
+      "Debit card number & expiry",
+      "Cardholder name matches KYC",
+      "Issuer supports push-to-card",
+    ],
+  },
+];
+
+function StatusChip({ status }: { status: MethodStatus }) {
+  if (status === "verified") {
+    return (
+      <span className="h-5 px-1.5 inline-flex items-center gap-1 rounded text-[10.5px] font-medium border bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400">
+        <ShieldCheck className="h-3 w-3" /> Verified
+      </span>
+    );
+  }
+  if (status === "pending") {
+    return (
+      <span className="h-5 px-1.5 inline-flex items-center gap-1 rounded text-[10.5px] font-medium border bg-amber-500/10 text-amber-600 border-amber-500/20 dark:text-amber-400">
+        <Loader2 className="h-3 w-3 animate-spin" /> Pending verification
+      </span>
+    );
+  }
+  if (status === "failed") {
+    return (
+      <span className="h-5 px-1.5 inline-flex items-center gap-1 rounded text-[10.5px] font-medium border bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400">
+        <XCircle className="h-3 w-3" /> Verification failed
+      </span>
+    );
+  }
+  return (
+    <span className="h-5 px-1.5 inline-flex items-center gap-1 rounded text-[10.5px] font-medium bg-muted text-muted-foreground border border-border">
+      <CircleDot className="h-3 w-3" /> Not configured
+    </span>
+  );
+}
+
 function MethodsPanel() {
-  const templates = [
-    { icon: <Landmark className="h-4 w-4" />, label: "Bank account", hint: "Wire / ACH / SEPA / NEFT" },
-    { icon: <Smartphone className="h-4 w-4" />, label: "UPI", hint: "India — VPA linked payouts" },
-    { icon: <Building2 className="h-4 w-4" />, label: "PayPal", hint: "Global email-based transfer" },
-    { icon: <ArrowUpRight className="h-4 w-4" />, label: "Wise", hint: "Multi-currency borderless" },
-    { icon: <Banknote className="h-4 w-4" />, label: "Payoneer", hint: "Marketplace-friendly" },
-    { icon: <CreditCard className="h-4 w-4" />, label: "Card / debit rail", hint: "Instant push where supported" },
-  ];
+  const [statuses, setStatuses] = useState<Record<MethodKey, MethodStatus>>(() =>
+    METHOD_TEMPLATES.reduce((acc, t) => ({ ...acc, [t.key]: "not_configured" as MethodStatus }), {} as Record<MethodKey, MethodStatus>),
+  );
+  const [primary, setPrimary] = useState<MethodKey | null>(null);
+  const [verifyFor, setVerifyFor] = useState<MethodTemplate | null>(null);
+  const [confirmPrimary, setConfirmPrimary] = useState<MethodTemplate | null>(null);
+
+  const verifiedCount = useMemo(
+    () => Object.values(statuses).filter((s) => s === "verified").length,
+    [statuses],
+  );
+
   return (
     <div className="space-y-4">
-      <div className="rounded-md border border-border bg-surface p-4 flex items-center justify-between">
+      <div className="rounded-md border border-border bg-surface p-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <div className="text-[13px] font-semibold">Payout methods</div>
           <p className="text-[12px] text-muted-foreground mt-0.5 max-w-2xl">
-            Add and verify the destinations that receive settled commission. Primary method is used for automatic payouts.
+            Add and verify the destinations that receive settled commission. The primary method is used for automatic payouts.
           </p>
+          <div className="mt-1.5 text-[11.5px] text-muted-foreground">
+            {verifiedCount} verified · {primary ? `Primary: ${METHOD_TEMPLATES.find((t) => t.key === primary)?.label}` : "No primary set"}
+          </div>
         </div>
-        <button onClick={() => toast.message("Add payout method")} className="h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12.5px] inline-flex items-center gap-1.5">
+        <button
+          onClick={() => toast.message("Add payout method")}
+          className="h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12.5px] inline-flex items-center gap-1.5"
+        >
           <Plus className="h-3.5 w-3.5" /> Add method
         </button>
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {templates.map((t) => (
-          <article key={t.label} className="rounded-md border border-border bg-surface p-3">
-            <header className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-md bg-muted grid place-items-center">{t.icon}</div>
-                <div>
-                  <div className="text-[12.5px] font-semibold">{t.label}</div>
-                  <div className="text-[11px] text-muted-foreground">{t.hint}</div>
+        {METHOD_TEMPLATES.map((t) => {
+          const status = statuses[t.key];
+          const isPrimary = primary === t.key;
+          const canBePrimary = status === "verified";
+          return (
+            <article key={t.key} className="rounded-md border border-border bg-surface p-3">
+              <header className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="h-8 w-8 rounded-md bg-muted grid place-items-center">{t.icon}</div>
+                  <div>
+                    <div className="text-[12.5px] font-semibold flex items-center gap-1.5">
+                      {t.label}
+                      {isPrimary ? (
+                        <span className="h-4 px-1 inline-flex items-center gap-0.5 rounded text-[10px] font-medium bg-primary/10 text-primary border border-primary/20">
+                          <Star className="h-2.5 w-2.5 fill-current" /> Primary
+                        </span>
+                      ) : null}
+                    </div>
+                    <div className="text-[11px] text-muted-foreground">{t.hint}</div>
+                  </div>
                 </div>
+                <button className="h-7 w-7 grid place-items-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted">
+                  <MoreHorizontal className="h-3.5 w-3.5" />
+                </button>
+              </header>
+              <div className="mt-3 flex items-center gap-1.5">
+                <StatusChip status={status} />
               </div>
-              <button className="h-7 w-7 grid place-items-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted">
-                <MoreHorizontal className="h-3.5 w-3.5" />
-              </button>
-            </header>
-            <div className="mt-3 flex items-center gap-1.5">
-              <span className="h-5 px-1.5 inline-flex items-center rounded text-[10.5px] font-medium bg-muted text-muted-foreground border border-border">
-                Not configured
-              </span>
-            </div>
-            <footer className="mt-3 flex items-center justify-between text-[11.5px]">
-              <button className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
-                <Star className="h-3 w-3" /> Set primary
-              </button>
-              <button onClick={() => toast.message("Connect " + t.label)} className="text-primary hover:underline inline-flex items-center gap-1">
-                <Check className="h-3 w-3" /> Connect
-              </button>
-            </footer>
-          </article>
-        ))}
+              <footer className="mt-3 flex items-center justify-between text-[11.5px]">
+                <button
+                  disabled={!canBePrimary || isPrimary}
+                  onClick={() => setConfirmPrimary(t)}
+                  className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <Star className="h-3 w-3" /> {isPrimary ? "Primary" : "Set primary"}
+                </button>
+                <button
+                  onClick={() => setVerifyFor(t)}
+                  className="text-primary hover:underline inline-flex items-center gap-1"
+                >
+                  {status === "verified" ? (
+                    <>
+                      <ShieldCheck className="h-3 w-3" /> Review
+                    </>
+                  ) : status === "failed" ? (
+                    <>
+                      <AlertTriangle className="h-3 w-3" /> Retry
+                    </>
+                  ) : status === "pending" ? (
+                    <>
+                      <Loader2 className="h-3 w-3" /> Continue
+                    </>
+                  ) : (
+                    <>
+                      <Check className="h-3 w-3" /> Connect & verify
+                    </>
+                  )}
+                </button>
+              </footer>
+            </article>
+          );
+        })}
       </div>
 
       <div className="rounded-md border border-dashed border-border bg-surface-muted/40 p-4 text-[12px] text-muted-foreground flex items-center gap-2">
         <Trash2 className="h-3.5 w-3.5" /> Removing a primary method requires a replacement to be set first.
       </div>
+
+      <VerificationDrawer
+        method={verifyFor}
+        status={verifyFor ? statuses[verifyFor.key] : "not_configured"}
+        onClose={() => setVerifyFor(null)}
+        onSubmit={(next) => {
+          if (!verifyFor) return;
+          setStatuses((s) => ({ ...s, [verifyFor.key]: next }));
+          toast.success(
+            next === "verified"
+              ? `${verifyFor.label} verified`
+              : next === "pending"
+                ? `${verifyFor.label} submitted for verification`
+                : `${verifyFor.label} verification failed`,
+          );
+          setVerifyFor(null);
+        }}
+      />
+
+      <PrimaryConfirmDialog
+        method={confirmPrimary}
+        currentPrimaryLabel={primary ? METHOD_TEMPLATES.find((t) => t.key === primary)?.label ?? null : null}
+        onCancel={() => setConfirmPrimary(null)}
+        onConfirm={() => {
+          if (!confirmPrimary) return;
+          setPrimary(confirmPrimary.key);
+          toast.success(`${confirmPrimary.label} is now the primary payout method`);
+          setConfirmPrimary(null);
+        }}
+      />
     </div>
+  );
+}
+
+/* ------------------------- Verification drawer ------------------------- */
+
+function VerificationDrawer({
+  method,
+  status,
+  onClose,
+  onSubmit,
+}: {
+  method: MethodTemplate | null;
+  status: MethodStatus;
+  onClose: () => void;
+  onSubmit: (next: MethodStatus) => void;
+}) {
+  const open = !!method;
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
+
+  const allChecked = method ? method.requirements.every((r) => checked[r]) : false;
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => (!o ? onClose() : null)}>
+      <DialogPortal>
+        <DialogOverlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" />
+        <DialogPrimitive.Content className="fixed inset-y-0 right-0 z-50 w-full max-w-[520px] bg-background border-l border-border shadow-2xl flex flex-col outline-none">
+          <DialogContent asChild>
+            <div className="flex flex-col h-full">
+              <div className="h-14 border-b border-border bg-surface flex items-center px-4 gap-3">
+                <div className="h-8 w-8 rounded-md bg-muted grid place-items-center">
+                  {method?.icon ?? <ShieldCheck className="h-4 w-4" />}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[13px] font-semibold truncate">
+                    Verify {method?.label ?? "payout method"}
+                  </div>
+                  <div className="text-[11.5px] text-muted-foreground">{method?.hint}</div>
+                </div>
+                <StatusChip status={status} />
+                <button onClick={onClose} className="h-8 w-8 grid place-items-center rounded-md hover:bg-muted">
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div className="rounded-md border border-border bg-surface p-4">
+                  <div className="text-[12.5px] font-semibold">Required fields checklist</div>
+                  <p className="text-[11.5px] text-muted-foreground mt-0.5">
+                    Complete every requirement before submitting for verification. Missing items block payout eligibility.
+                  </p>
+                  <ul className="mt-3 space-y-1.5">
+                    {method?.requirements.map((r) => {
+                      const done = !!checked[r];
+                      return (
+                        <li key={r}>
+                          <label className="flex items-start gap-2 text-[12.5px] cursor-pointer select-none">
+                            <button
+                              type="button"
+                              onClick={() => setChecked((c) => ({ ...c, [r]: !c[r] }))}
+                              className={[
+                                "mt-0.5 h-4 w-4 rounded border grid place-items-center shrink-0",
+                                done
+                                  ? "bg-primary border-primary text-primary-foreground"
+                                  : "bg-background border-border",
+                              ].join(" ")}
+                              aria-pressed={done}
+                              aria-label={r}
+                            >
+                              {done ? <Check className="h-3 w-3" /> : null}
+                            </button>
+                            <span className={done ? "" : "text-muted-foreground"}>{r}</span>
+                          </label>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+
+                <div className="rounded-md border border-border bg-surface p-4">
+                  <div className="text-[12.5px] font-semibold mb-2">Verification steps</div>
+                  <ol className="relative pl-4 space-y-2 text-[12px]">
+                    <span className="absolute left-1.5 top-1 bottom-1 w-px bg-border" />
+                    {["Submit details", "Automated compliance checks", "Micro-deposit / OTP match", "Manual review (if flagged)", "Enabled for payouts"].map((s) => (
+                      <li key={s} className="relative">
+                        <span className="absolute -left-[13px] top-1 h-2 w-2 rounded-full bg-muted-foreground/40" />
+                        <div>{s}</div>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                <div className="rounded-md border border-dashed border-border bg-surface-muted/40 p-3 text-[11.5px] text-muted-foreground flex items-start gap-2">
+                  <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+                  Verification typically completes within 1–2 business days. You'll be notified once the method is enabled for payouts.
+                </div>
+              </div>
+
+              <div className="border-t border-border bg-surface p-3 flex items-center justify-between gap-2">
+                <button
+                  onClick={() => onSubmit("failed")}
+                  className="h-8 px-3 rounded-md border border-border bg-surface hover:bg-muted text-[12.5px] text-muted-foreground"
+                >
+                  Simulate failure
+                </button>
+                <div className="flex items-center gap-2">
+                  <button onClick={onClose} className="h-8 px-3 rounded-md border border-border bg-surface hover:bg-muted text-[12.5px]">
+                    Close
+                  </button>
+                  <button
+                    disabled={!allChecked}
+                    onClick={() => onSubmit("verified")}
+                    className="h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12.5px] inline-flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    <ShieldCheck className="h-3.5 w-3.5" /> Submit for verification
+                  </button>
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+        </DialogPrimitive.Content>
+      </DialogPortal>
+    </Dialog>
+  );
+}
+
+/* ------------------------ Primary confirm modal ------------------------ */
+
+function PrimaryConfirmDialog({
+  method,
+  currentPrimaryLabel,
+  onCancel,
+  onConfirm,
+}: {
+  method: MethodTemplate | null;
+  currentPrimaryLabel: string | null;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  const open = !!method;
+  return (
+    <Dialog open={open} onOpenChange={(o) => (!o ? onCancel() : null)}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-[15px]">
+            <Star className="h-4 w-4 fill-current text-primary" />
+            Set as primary payout method?
+          </DialogTitle>
+          <DialogDescription className="text-[12.5px]">
+            All future automatic payouts will be sent to <strong className="text-foreground">{method?.label}</strong>.
+            {currentPrimaryLabel ? (
+              <>
+                {" "}This replaces the current primary method (<strong className="text-foreground">{currentPrimaryLabel}</strong>).
+              </>
+            ) : null}
+          </DialogDescription>
+        </DialogHeader>
+
+        <ul className="rounded-md border border-border bg-surface divide-y divide-border text-[12.5px]">
+          <li className="flex items-center justify-between px-3 py-2">
+            <span className="text-muted-foreground">Method</span>
+            <span className="font-medium">{method?.label}</span>
+          </li>
+          <li className="flex items-center justify-between px-3 py-2">
+            <span className="text-muted-foreground">Status</span>
+            <StatusChip status="verified" />
+          </li>
+          <li className="flex items-center justify-between px-3 py-2">
+            <span className="text-muted-foreground">Effective</span>
+            <span className="font-medium">Immediately</span>
+          </li>
+        </ul>
+
+        <div className="rounded-md border border-dashed border-border bg-surface-muted/40 p-3 text-[11.5px] text-muted-foreground flex items-start gap-2">
+          <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+          Any pending payout requests already in flight will continue to their originally selected destination.
+        </div>
+
+        <DialogFooter>
+          <button onClick={onCancel} className="h-8 px-3 rounded-md border border-border bg-surface hover:bg-muted text-[12.5px]">
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12.5px] inline-flex items-center gap-1.5"
+          >
+            <Star className="h-3.5 w-3.5 fill-current" /> Confirm primary
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

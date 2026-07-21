@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
 import {
+  AlertTriangle,
   CalendarDays,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Clock,
   Filter,
+  GripVertical,
   MoreHorizontal,
   Plus,
   Search,
@@ -174,10 +176,56 @@ function MonthGrid({ cursor }: { cursor: Date }) {
 
 /* ------------------------------ Week ------------------------------ */
 
+type DragPayload = {
+  id: string;
+  title: string;
+  fromLane: Lane;
+  fromISO: string;
+  scheduledAt?: string;
+};
+
 function WeekGrid({ cursor }: { cursor: Date }) {
   const days = useWeekDays(cursor);
+  const [dragOverKey, setDragOverKey] = useState<string | null>(null);
+  const [conflict, setConflict] = useState<{ key: string; message: string } | null>(null);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  function cellKey(laneKey: Lane, d: Date) {
+    return `${laneKey}::${d.toISOString().slice(0, 10)}`;
+  }
+
+  function evaluateConflict(nextLane: Lane, d: Date, fromLane?: Lane): string | null {
+    const cellDate = new Date(d);
+    cellDate.setHours(0, 0, 0, 0);
+    if (nextLane === "scheduled" && cellDate < today) {
+      return "Cannot schedule in the past. Pick today or a future date.";
+    }
+    if (nextLane === "published" && cellDate > today) {
+      return "Cannot mark as published on a future date.";
+    }
+    if (nextLane === "draft" && fromLane === "published") {
+      return "Published items cannot be reverted to draft.";
+    }
+    return null;
+  }
+
   return (
     <div className="rounded-md border border-border bg-surface overflow-hidden">
+      <div className="flex items-center justify-between gap-2 px-3 h-9 border-b border-border bg-surface-muted/60 text-[11.5px]">
+        <div className="flex items-center gap-1.5 text-muted-foreground">
+          <GripVertical className="h-3.5 w-3.5" />
+          Drag items between cells to reschedule or transition between swimlanes.
+        </div>
+        {conflict ? (
+          <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400 font-medium">
+            <AlertTriangle className="h-3.5 w-3.5" />
+            {conflict.message}
+          </div>
+        ) : null}
+      </div>
+
       <div className="grid grid-cols-[120px_repeat(7,_minmax(0,_1fr))] border-b border-border bg-surface-muted text-[11.5px]">
         <div className="px-2 py-2 border-r border-border font-semibold uppercase tracking-wide text-muted-foreground">Swimlane</div>
         {days.map((d) => (
@@ -194,15 +242,62 @@ function WeekGrid({ cursor }: { cursor: Date }) {
               {lane.label}
             </span>
           </div>
-          {days.map((d) => (
-            <button
-              key={d.toISOString()}
-              onClick={() => toast.message(`New ${lane.label} on ${d.toDateString()}`)}
-              className="min-h-[96px] border-r border-border last:border-r-0 p-2 text-left hover:bg-muted/40 flex items-center justify-center text-[11px] text-muted-foreground"
-            >
-              <Plus className="h-3 w-3 mr-1" /> add
-            </button>
-          ))}
+          {days.map((d) => {
+            const key = cellKey(lane.key, d);
+            const isOver = dragOverKey === key;
+            const hasConflict = conflict?.key === key;
+            return (
+              <div
+                key={d.toISOString()}
+                onDragOver={(e) => {
+                  if (!e.dataTransfer.types.includes("application/json")) return;
+                  e.preventDefault();
+                  e.dataTransfer.dropEffect = "move";
+                  setDragOverKey(key);
+                  const msg = evaluateConflict(lane.key, d);
+                  setConflict(msg ? { key, message: msg } : null);
+                }}
+                onDragLeave={() => {
+                  if (dragOverKey === key) setDragOverKey(null);
+                  if (conflict?.key === key) setConflict(null);
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const raw = e.dataTransfer.getData("application/json");
+                  setDragOverKey(null);
+                  if (!raw) return;
+                  const payload = JSON.parse(raw) as DragPayload;
+                  const msg = evaluateConflict(lane.key, d, payload.fromLane);
+                  if (msg) {
+                    toast.error(msg);
+                    setConflict(null);
+                    return;
+                  }
+                  const dateLabel = d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+                  const transitioned = payload.fromLane !== lane.key;
+                  toast.success(
+                    transitioned
+                      ? `Moved "${payload.title}" → ${lane.label} · ${dateLabel}`
+                      : `Rescheduled "${payload.title}" to ${dateLabel}`,
+                  );
+                  setConflict(null);
+                }}
+                className={[
+                  "min-h-[96px] border-r border-border last:border-r-0 p-2 flex items-center justify-center text-[11px] text-muted-foreground transition-colors",
+                  isOver && !hasConflict ? "bg-primary/10 outline outline-2 outline-primary/40 -outline-offset-2" : "",
+                  isOver && hasConflict ? "bg-red-500/10 outline outline-2 outline-red-500/40 -outline-offset-2" : "",
+                ].join(" ")}
+              >
+                <button
+                  type="button"
+                  onClick={() => toast.message(`New ${lane.label} on ${d.toDateString()}`)}
+                  className="w-full h-full rounded hover:bg-muted/40 flex items-center justify-center"
+                >
+                  <Plus className="h-3 w-3 mr-1" /> add
+                </button>
+              </div>
+            );
+          })}
         </div>
       ))}
     </div>
@@ -211,20 +306,34 @@ function WeekGrid({ cursor }: { cursor: Date }) {
 
 /* --------------------------- Item transitions ---------------------------
    Rendered inline inside a cell when an item exists; kept here as a
-   reusable component for when data connects. */
+   reusable component for when data connects. Drag payload uses the shape
+   consumed by WeekGrid's drop handlers. */
 
 export function ContentItemChip({
+  id,
   title,
   status,
+  isoDate,
   onTransition,
 }: {
+  id: string;
   title: string;
   status: Lane;
+  isoDate: string;
   onTransition: (next: Lane) => void;
 }) {
   const lane = LANES.find((l) => l.key === status)!;
   return (
-    <div className={["group rounded border px-1.5 py-1 text-[11px] flex items-center gap-1.5", lane.tone].join(" ")}>
+    <div
+      draggable
+      onDragStart={(e) => {
+        const payload: DragPayload = { id, title, fromLane: status, fromISO: isoDate };
+        e.dataTransfer.setData("application/json", JSON.stringify(payload));
+        e.dataTransfer.effectAllowed = "move";
+      }}
+      className={["group rounded border px-1.5 py-1 text-[11px] flex items-center gap-1.5 cursor-grab active:cursor-grabbing", lane.tone].join(" ")}
+    >
+      <GripVertical className="h-3 w-3 shrink-0 opacity-60" />
       <Sparkles className="h-3 w-3 shrink-0" />
       <span className="truncate flex-1">{title}</span>
       <div className="hidden group-hover:flex items-center gap-0.5">
