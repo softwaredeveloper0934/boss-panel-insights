@@ -250,7 +250,7 @@ function WeekGrid({ cursor }: { cursor: Date }) {
               <div
                 key={d.toISOString()}
                 onDragOver={(e) => {
-                  if (!dragging) return;
+                  if (!e.dataTransfer.types.includes("application/json")) return;
                   e.preventDefault();
                   e.dataTransfer.dropEffect = "move";
                   setDragOverKey(key);
@@ -267,11 +267,10 @@ function WeekGrid({ cursor }: { cursor: Date }) {
                   setDragOverKey(null);
                   if (!raw) return;
                   const payload = JSON.parse(raw) as DragPayload;
-                  const msg = evaluateConflict(lane.key, d);
+                  const msg = evaluateConflict(lane.key, d, payload.fromLane);
                   if (msg) {
                     toast.error(msg);
                     setConflict(null);
-                    setDragging(null);
                     return;
                   }
                   const dateLabel = d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
@@ -282,7 +281,6 @@ function WeekGrid({ cursor }: { cursor: Date }) {
                       : `Rescheduled "${payload.title}" to ${dateLabel}`,
                   );
                   setConflict(null);
-                  setDragging(null);
                 }}
                 className={[
                   "min-h-[96px] border-r border-border last:border-r-0 p-2 flex items-center justify-center text-[11px] text-muted-foreground transition-colors",
@@ -303,10 +301,6 @@ function WeekGrid({ cursor }: { cursor: Date }) {
         </div>
       ))}
 
-      {/* Consumer-facing DnD hooks exposed via context would go here.
-          The reusable ContentItemChip below reads/writes the same payload shape. */}
-      <div className="hidden" data-dnd-active={dragging ? "1" : "0"} onDragEnd={() => setDragging(null)} />
-    </div>
   );
 }
 
