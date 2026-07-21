@@ -118,21 +118,118 @@ function ChartCard({
   title,
   icon,
   height = 200,
+  scope,
 }: {
   title: string;
   icon: React.ReactNode;
   height?: number;
+  scope: Tab;
 }) {
+  const [open, setOpen] = useState(false);
   return (
-    <div className="rounded-md border border-border bg-surface overflow-hidden">
-      <div className="h-10 px-3 border-b border-border bg-surface-muted flex items-center gap-2 text-[12.5px] font-semibold">
-        {icon}
-        {title}
+    <>
+      <div className="rounded-md border border-border bg-surface overflow-hidden">
+        <div className="h-10 px-3 border-b border-border bg-surface-muted flex items-center gap-2 text-[12.5px] font-semibold">
+          {icon}
+          <span className="flex-1">{title}</span>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="h-6 px-1.5 inline-flex items-center gap-1 rounded text-[11px] text-muted-foreground hover:text-foreground hover:bg-muted"
+            title="Open drill-down"
+          >
+            <Maximize2 className="h-3 w-3" />
+            Drill down
+          </button>
+        </div>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="block w-full text-left p-3"
+        >
+          <MiniChart height={height} />
+        </button>
       </div>
-      <div className="p-3">
-        <MiniChart height={height} />
-      </div>
-    </div>
+      <DrillDownDrawer open={open} onOpenChange={setOpen} title={title} scope={scope} />
+    </>
+  );
+}
+
+function DrillDownDrawer({
+  open,
+  onOpenChange,
+  title,
+  scope,
+}: {
+  open: boolean;
+  onOpenChange: (o: boolean) => void;
+  title: string;
+  scope: Tab;
+}) {
+  const scopedFilters: Record<Tab, string[]> = {
+    reach: ["Date range", "Platform", "Content type", "Campaign", "Creator"],
+    engagement: ["Date range", "Platform", "Content type", "Post", "Reaction type"],
+    audience: ["Age band", "Gender", "Interests", "Follower tier", "Language"],
+    device: ["Device class", "OS", "Browser", "Screen size"],
+    country: ["Country", "Region", "City", "Language", "Timezone"],
+  };
+  const downloads = [
+    { label: "CSV", icon: <FileSpreadsheet className="h-3.5 w-3.5" /> },
+    { label: "XLSX", icon: <FileSpreadsheet className="h-3.5 w-3.5" /> },
+    { label: "PDF report", icon: <FileText className="h-3.5 w-3.5" /> },
+    { label: "PNG chart", icon: <ImageIcon className="h-3.5 w-3.5" /> },
+  ];
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogPortal>
+        <DialogOverlay />
+        <DialogPrimitive.Content
+          className="fixed right-0 top-0 z-50 h-full w-full sm:max-w-[720px] bg-background border-l border-border shadow-2xl flex flex-col outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right"
+        >
+          <div className="h-12 px-4 border-b border-border flex items-center gap-2">
+            <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{scope}</div>
+            <div className="text-[13px] font-semibold truncate">{title}</div>
+            <button onClick={() => onOpenChange(false)} className="ml-auto h-8 w-8 grid place-items-center rounded-md hover:bg-muted">
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+          <div className="px-4 py-3 border-b border-border bg-surface-muted/40">
+            <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1.5">Filters scoped to {scope}</div>
+            <div className="flex flex-wrap gap-1.5">
+              {scopedFilters[scope].map((f) => (
+                <button key={f} className="h-7 px-2 inline-flex items-center gap-1 rounded-md border border-dashed border-border bg-background hover:bg-muted text-[11.5px]">
+                  <Filter className="h-3 w-3" />
+                  {f}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            <div className="rounded-md border border-border bg-surface overflow-hidden">
+              <div className="h-9 px-3 border-b border-border bg-surface-muted flex items-center text-[12px] font-semibold">Full breakdown</div>
+              <div className="p-3"><MiniChart height={220} /></div>
+            </div>
+            <div className="rounded-md border border-border bg-surface">
+              <div className="h-9 px-3 border-b border-border bg-surface-muted flex items-center text-[12px] font-semibold">Detail table</div>
+              <EmptySurface title="No rows yet" description="Detail rows populate once data is ingested for this window." />
+            </div>
+          </div>
+          <div className="border-t border-border p-3 flex items-center gap-2 bg-surface-muted/40">
+            <div className="text-[11.5px] text-muted-foreground mr-auto">Download insights</div>
+            {downloads.map((d) => (
+              <button
+                key={d.label}
+                onClick={() => toast.success(`Preparing ${d.label} export…`)}
+                className="h-8 px-2.5 inline-flex items-center gap-1.5 rounded-md border border-border bg-background hover:bg-muted text-[12px]"
+              >
+                {d.icon}
+                {d.label}
+              </button>
+            ))}
+          </div>
+        </DialogPrimitive.Content>
+      </DialogPortal>
+    </Dialog>
   );
 }
 
