@@ -24,11 +24,25 @@ import { EmptySurface } from "@/components/influencer/wall-page";
 type ViewMode = "month" | "week";
 type Lane = "draft" | "scheduled" | "published";
 
+type HistoryEntry = {
+  id: string;
+  at: string;
+  kind: "move" | "transition" | "conflict";
+  title: string;
+  fromLane: Lane;
+  toLane: Lane;
+  fromISO: string;
+  toISO: string;
+  message?: string;
+  undone?: boolean;
+};
+
 const LANES: { key: Lane; label: string; tone: string }[] = [
   { key: "draft", label: "Draft", tone: "bg-muted text-muted-foreground border-border" },
   { key: "scheduled", label: "Scheduled", tone: "bg-amber-500/10 text-amber-600 border-amber-500/20 dark:text-amber-400" },
   { key: "published", label: "Published", tone: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400" },
 ];
+
 
 export function ContentCalendar() {
   const [view, setView] = useState<ViewMode>("month");
