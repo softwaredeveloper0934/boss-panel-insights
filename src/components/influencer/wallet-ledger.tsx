@@ -404,12 +404,26 @@ function MethodsPanel() {
             {verifiedCount} verified · {primary ? `Primary: ${METHOD_TEMPLATES.find((t) => t.key === primary)?.label}` : "No primary set"}
           </div>
         </div>
-        <button
-          onClick={() => toast.message("Add payout method")}
-          className="h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12.5px] inline-flex items-center gap-1.5"
-        >
-          <Plus className="h-3.5 w-3.5" /> Add method
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setAuditOpen(true)}
+            className="h-8 px-2.5 rounded-md border border-border bg-surface hover:bg-muted text-[12.5px] inline-flex items-center gap-1.5 relative"
+          >
+            <History className="h-3.5 w-3.5" /> Audit trail
+            {audit.length ? (
+              <span className="ml-0.5 h-4 min-w-4 px-1 rounded-full bg-primary text-primary-foreground text-[10px] font-semibold tabular-nums grid place-items-center">
+                {audit.length}
+              </span>
+            ) : null}
+          </button>
+          <button
+            onClick={() => toast.message("Add payout method")}
+            className="h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12.5px] inline-flex items-center gap-1.5"
+          >
+            <Plus className="h-3.5 w-3.5" /> Add method
+          </button>
+        </div>
+
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
