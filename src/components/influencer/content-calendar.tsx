@@ -240,7 +240,14 @@ type DragPayload = {
   scheduledAt?: string;
 };
 
-function WeekGrid({ cursor }: { cursor: Date }) {
+function WeekGrid({
+  cursor,
+  onHistory,
+}: {
+  cursor: Date;
+  onHistory: (entry: Omit<HistoryEntry, "id" | "at">) => void;
+}) {
+
   const days = useWeekDays(cursor);
   const [dragOverKey, setDragOverKey] = useState<string | null>(null);
   const [conflict, setConflict] = useState<{ key: string; message: string } | null>(null);
