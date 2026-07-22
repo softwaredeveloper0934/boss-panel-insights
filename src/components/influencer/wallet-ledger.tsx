@@ -501,7 +501,27 @@ function MethodsPanel() {
         onClose={() => setVerifyFor(null)}
         onSubmit={(next) => {
           if (!verifyFor) return;
+          const prev = statuses[verifyFor.key];
           setStatuses((s) => ({ ...s, [verifyFor.key]: next }));
+          addAudit({
+            method: verifyFor.key,
+            methodLabel: verifyFor.label,
+            actor: "You",
+            action:
+              next === "failed"
+                ? "verification_failed"
+                : next === "verified"
+                  ? "status_changed"
+                  : "verification_submitted",
+            fromStatus: prev,
+            toStatus: next,
+            note:
+              next === "verified"
+                ? "All requirements checklist items confirmed"
+                : next === "failed"
+                  ? "Simulated compliance rejection"
+                  : "Submitted for automated review",
+          });
           toast.success(
             next === "verified"
               ? `${verifyFor.label} verified`
@@ -519,14 +539,33 @@ function MethodsPanel() {
         onCancel={() => setConfirmPrimary(null)}
         onConfirm={() => {
           if (!confirmPrimary) return;
+          const previousPrimaryLabel = primary
+            ? METHOD_TEMPLATES.find((t) => t.key === primary)?.label ?? null
+            : null;
           setPrimary(confirmPrimary.key);
+          addAudit({
+            method: confirmPrimary.key,
+            methodLabel: confirmPrimary.label,
+            actor: "You",
+            action: previousPrimaryLabel ? "primary_replaced" : "primary_set",
+            note: previousPrimaryLabel
+              ? `Replaced previous primary: ${previousPrimaryLabel}`
+              : "First primary payout method configured",
+          });
           toast.success(`${confirmPrimary.label} is now the primary payout method`);
           setConfirmPrimary(null);
         }}
       />
+
+      <AuditTrailDrawer
+        open={auditOpen}
+        entries={audit}
+        onClose={() => setAuditOpen(false)}
+      />
     </div>
   );
 }
+
 
 /* ------------------------- Verification drawer ------------------------- */
 
