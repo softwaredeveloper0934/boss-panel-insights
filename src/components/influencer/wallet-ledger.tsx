@@ -358,11 +358,21 @@ function MethodsPanel() {
   const [primary, setPrimary] = useState<MethodKey | null>(null);
   const [verifyFor, setVerifyFor] = useState<MethodTemplate | null>(null);
   const [confirmPrimary, setConfirmPrimary] = useState<MethodTemplate | null>(null);
+  const [audit, setAudit] = useState<AuditEntry[]>([]);
+  const [auditOpen, setAuditOpen] = useState(false);
+
+  function addAudit(entry: Omit<AuditEntry, "id" | "at">) {
+    setAudit((a) => [
+      { ...entry, id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, at: new Date().toISOString() },
+      ...a,
+    ]);
+  }
 
   const verifiedCount = useMemo(
     () => Object.values(statuses).filter((s) => s === "verified").length,
     [statuses],
   );
+
 
   return (
     <div className="space-y-4">
