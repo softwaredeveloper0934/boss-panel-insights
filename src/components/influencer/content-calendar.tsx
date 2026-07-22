@@ -113,6 +113,17 @@ export function ContentCalendar() {
           </button>
         ))}
         <button
+          onClick={() => setHistoryOpen(true)}
+          className="h-8 px-2.5 inline-flex items-center gap-1.5 rounded-md border border-border bg-background hover:bg-muted text-[12px] relative"
+        >
+          <History className="h-3.5 w-3.5" /> History
+          {history.length ? (
+            <span className="ml-0.5 h-4 min-w-4 px-1 rounded-full bg-primary text-primary-foreground text-[10px] font-semibold tabular-nums grid place-items-center">
+              {history.length}
+            </span>
+          ) : null}
+        </button>
+        <button
           onClick={() => toast.message("New content item")}
           className="h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12px] inline-flex items-center gap-1.5"
         >
@@ -122,10 +133,27 @@ export function ContentCalendar() {
 
       <LegendRow />
 
-      {view === "month" ? <MonthGrid cursor={cursor} /> : <WeekGrid cursor={cursor} />}
+      {view === "month" ? (
+        <MonthGrid cursor={cursor} />
+      ) : (
+        <WeekGrid cursor={cursor} onHistory={addHistory} />
+      )}
+
+      <HistoryDrawer
+        open={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+        entries={history}
+        onUndo={(id) =>
+          setHistory((h) =>
+            h.map((e) => (e.id === id ? { ...e, undone: true } : e)),
+          )
+        }
+        onClear={() => setHistory([])}
+      />
     </div>
   );
 }
+
 
 function LegendRow() {
   return (
