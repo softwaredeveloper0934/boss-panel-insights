@@ -8,17 +8,34 @@ import {
   Clock,
   Filter,
   GripVertical,
+  History,
   MoreHorizontal,
   Plus,
   Search,
   Send,
   Sparkles,
+  Undo2,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { EmptySurface } from "@/components/influencer/wall-page";
 
+
 type ViewMode = "month" | "week";
 type Lane = "draft" | "scheduled" | "published";
+
+type HistoryEntry = {
+  id: string;
+  at: string;
+  kind: "move" | "transition" | "conflict";
+  title: string;
+  fromLane: Lane;
+  toLane: Lane;
+  fromISO: string;
+  toISO: string;
+  message?: string;
+  undone?: boolean;
+};
 
 const LANES: { key: Lane; label: string; tone: string }[] = [
   { key: "draft", label: "Draft", tone: "bg-muted text-muted-foreground border-border" },
@@ -26,9 +43,20 @@ const LANES: { key: Lane; label: string; tone: string }[] = [
   { key: "published", label: "Published", tone: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400" },
 ];
 
+
 export function ContentCalendar() {
   const [view, setView] = useState<ViewMode>("month");
   const [cursor, setCursor] = useState(() => new Date());
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [historyOpen, setHistoryOpen] = useState(false);
+
+  function addHistory(entry: Omit<HistoryEntry, "id" | "at">) {
+    setHistory((h) => [
+      { ...entry, id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, at: new Date().toISOString() },
+      ...h,
+    ]);
+  }
+
 
   return (
     <div className="space-y-4">
@@ -85,6 +113,17 @@ export function ContentCalendar() {
           </button>
         ))}
         <button
+          onClick={() => setHistoryOpen(true)}
+          className="h-8 px-2.5 inline-flex items-center gap-1.5 rounded-md border border-border bg-background hover:bg-muted text-[12px] relative"
+        >
+          <History className="h-3.5 w-3.5" /> History
+          {history.length ? (
+            <span className="ml-0.5 h-4 min-w-4 px-1 rounded-full bg-primary text-primary-foreground text-[10px] font-semibold tabular-nums grid place-items-center">
+              {history.length}
+            </span>
+          ) : null}
+        </button>
+        <button
           onClick={() => toast.message("New content item")}
           className="h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12px] inline-flex items-center gap-1.5"
         >
@@ -94,10 +133,27 @@ export function ContentCalendar() {
 
       <LegendRow />
 
-      {view === "month" ? <MonthGrid cursor={cursor} /> : <WeekGrid cursor={cursor} />}
+      {view === "month" ? (
+        <MonthGrid cursor={cursor} />
+      ) : (
+        <WeekGrid cursor={cursor} onHistory={addHistory} />
+      )}
+
+      <HistoryDrawer
+        open={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+        entries={history}
+        onUndo={(id) =>
+          setHistory((h) =>
+            h.map((e) => (e.id === id ? { ...e, undone: true } : e)),
+          )
+        }
+        onClear={() => setHistory([])}
+      />
     </div>
   );
 }
+
 
 function LegendRow() {
   return (
@@ -184,7 +240,14 @@ type DragPayload = {
   scheduledAt?: string;
 };
 
-function WeekGrid({ cursor }: { cursor: Date }) {
+function WeekGrid({
+  cursor,
+  onHistory,
+}: {
+  cursor: Date;
+  onHistory: (entry: Omit<HistoryEntry, "id" | "at">) => void;
+}) {
+
   const days = useWeekDays(cursor);
   const [dragOverKey, setDragOverKey] = useState<string | null>(null);
   const [conflict, setConflict] = useState<{ key: string; message: string } | null>(null);
@@ -268,17 +331,53 @@ function WeekGrid({ cursor }: { cursor: Date }) {
                   if (!raw) return;
                   const payload = JSON.parse(raw) as DragPayload;
                   const msg = evaluateConflict(lane.key, d, payload.fromLane);
+                  const toISO = d.toISOString().slice(0, 10);
                   if (msg) {
+                    onHistory({
+                      kind: "conflict",
+                      title: payload.title,
+                      fromLane: payload.fromLane,
+                      toLane: lane.key,
+                      fromISO: payload.fromISO,
+                      toISO,
+                      message: msg,
+                    });
                     toast.error(msg);
                     setConflict(null);
                     return;
                   }
                   const dateLabel = d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
                   const transitioned = payload.fromLane !== lane.key;
+                  const entry: Omit<HistoryEntry, "id" | "at"> = {
+                    kind: transitioned ? "transition" : "move",
+                    title: payload.title,
+                    fromLane: payload.fromLane,
+                    toLane: lane.key,
+                    fromISO: payload.fromISO,
+                    toISO,
+                  };
+                  onHistory(entry);
                   toast.success(
                     transitioned
                       ? `Moved "${payload.title}" → ${lane.label} · ${dateLabel}`
                       : `Rescheduled "${payload.title}" to ${dateLabel}`,
+                    {
+                      action: {
+                        label: "Undo",
+                        onClick: () => {
+                          onHistory({
+                            ...entry,
+                            kind: entry.kind,
+                            fromLane: entry.toLane,
+                            toLane: entry.fromLane,
+                            fromISO: entry.toISO,
+                            toISO: entry.fromISO,
+                            message: "Reverted by user",
+                          });
+                          toast.message(`Reverted "${payload.title}"`);
+                        },
+                      },
+                    },
                   );
                   setConflict(null);
                 }}
@@ -287,6 +386,7 @@ function WeekGrid({ cursor }: { cursor: Date }) {
                   isOver && !hasConflict ? "bg-primary/10 outline outline-2 outline-primary/40 -outline-offset-2" : "",
                   isOver && hasConflict ? "bg-red-500/10 outline outline-2 outline-red-500/40 -outline-offset-2" : "",
                 ].join(" ")}
+
               >
                 <button
                   type="button"
@@ -417,3 +517,123 @@ function dayName(d: Date) {
 
 // suppress unused-import lint
 void CalendarDays;
+
+/* ------------------------------ History drawer ------------------------------ */
+
+function HistoryDrawer({
+  open,
+  onClose,
+  entries,
+  onUndo,
+  onClear,
+}: {
+  open: boolean;
+  onClose: () => void;
+  entries: HistoryEntry[];
+  onUndo: (id: string) => void;
+  onClear: () => void;
+}) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex">
+      <div className="flex-1 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+      <aside className="w-full max-w-[440px] bg-background border-l border-border shadow-2xl flex flex-col">
+        <div className="h-14 border-b border-border bg-surface flex items-center px-4 gap-3">
+          <div className="h-8 w-8 rounded-md bg-muted grid place-items-center">
+            <History className="h-4 w-4" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[13px] font-semibold">Change history</div>
+            <div className="text-[11.5px] text-muted-foreground">
+              {entries.length} event{entries.length === 1 ? "" : "s"} · reschedules, transitions & conflicts
+            </div>
+          </div>
+          <button
+            onClick={onClear}
+            disabled={!entries.length}
+            className="h-8 px-2.5 rounded-md border border-border bg-surface hover:bg-muted text-[12px] disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Clear
+          </button>
+          <button onClick={onClose} className="h-8 w-8 grid place-items-center rounded-md hover:bg-muted">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          {entries.length === 0 ? (
+            <EmptySurface
+              title="No changes yet"
+              description="Reschedules, swimlane transitions and blocked conflicts will appear here in order."
+              scope="content calendar history"
+            />
+          ) : (
+            <ol className="p-3 space-y-2">
+              {entries.map((e) => {
+                const fromLane = LANES.find((l) => l.key === e.fromLane)!;
+                const toLane = LANES.find((l) => l.key === e.toLane)!;
+                const isConflict = e.kind === "conflict";
+                return (
+                  <li
+                    key={e.id}
+                    className={[
+                      "rounded-md border p-3 text-[12px] bg-surface",
+                      isConflict ? "border-red-500/30" : "border-border",
+                      e.undone ? "opacity-60" : "",
+                    ].join(" ")}
+                  >
+                    <div className="flex items-center gap-2">
+                      {isConflict ? (
+                        <span className="h-5 px-1.5 inline-flex items-center gap-1 rounded text-[10.5px] font-medium border bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400">
+                          <AlertTriangle className="h-3 w-3" /> Conflict blocked
+                        </span>
+                      ) : e.kind === "transition" ? (
+                        <span className="h-5 px-1.5 inline-flex items-center gap-1 rounded text-[10.5px] font-medium border bg-primary/10 text-primary border-primary/20">
+                          <Send className="h-3 w-3" /> Transition
+                        </span>
+                      ) : (
+                        <span className="h-5 px-1.5 inline-flex items-center gap-1 rounded text-[10.5px] font-medium border bg-muted text-muted-foreground border-border">
+                          <Clock className="h-3 w-3" /> Reschedule
+                        </span>
+                      )}
+                      <span className="text-[11px] text-muted-foreground ml-auto tabular-nums">
+                        {new Date(e.at).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}
+                      </span>
+                    </div>
+                    <div className="mt-1.5 font-medium truncate">{e.title}</div>
+                    <div className="mt-1 flex items-center gap-1.5 flex-wrap text-[11.5px] text-muted-foreground">
+                      <span className={["inline-flex items-center h-4 px-1.5 rounded border text-[10.5px]", fromLane.tone].join(" ")}>
+                        {fromLane.label}
+                      </span>
+                      <span className="tabular-nums">{e.fromISO}</span>
+                      <span>→</span>
+                      <span className={["inline-flex items-center h-4 px-1.5 rounded border text-[10.5px]", toLane.tone].join(" ")}>
+                        {toLane.label}
+                      </span>
+                      <span className="tabular-nums">{e.toISO}</span>
+                    </div>
+                    {e.message ? (
+                      <div className="mt-1 text-[11.5px] text-muted-foreground">{e.message}</div>
+                    ) : null}
+                    {!isConflict && !e.undone ? (
+                      <div className="mt-2 flex items-center justify-end">
+                        <button
+                          onClick={() => onUndo(e.id)}
+                          className="h-7 px-2 rounded-md border border-border bg-surface hover:bg-muted text-[11.5px] inline-flex items-center gap-1"
+                        >
+                          <Undo2 className="h-3 w-3" /> Undo
+                        </button>
+                      </div>
+                    ) : e.undone ? (
+                      <div className="mt-1 text-[11px] text-muted-foreground italic">Undone</div>
+                    ) : null}
+                  </li>
+                );
+              })}
+            </ol>
+          )}
+        </div>
+      </aside>
+    </div>
+  );
+}
+
