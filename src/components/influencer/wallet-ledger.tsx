@@ -756,3 +756,144 @@ function PrimaryConfirmDialog({
     </Dialog>
   );
 }
+
+/* ------------------------- Audit trail drawer ------------------------- */
+
+function actionLabel(a: AuditEntry["action"]): string {
+  switch (a) {
+    case "status_changed":
+      return "Status changed";
+    case "primary_set":
+      return "Primary set";
+    case "primary_replaced":
+      return "Primary replaced";
+    case "verification_submitted":
+      return "Verification submitted";
+    case "verification_failed":
+      return "Verification failed";
+  }
+}
+
+function statusText(s?: MethodStatus): string {
+  if (!s) return "—";
+  if (s === "not_configured") return "Not configured";
+  if (s === "pending") return "Pending";
+  if (s === "verified") return "Verified";
+  return "Failed";
+}
+
+function AuditTrailDrawer({
+  open,
+  entries,
+  onClose,
+}: {
+  open: boolean;
+  entries: AuditEntry[];
+  onClose: () => void;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={(o) => (!o ? onClose() : null)}>
+      <DialogPortal>
+        <DialogOverlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" />
+        <DialogPrimitive.Content className="fixed inset-y-0 right-0 z-50 w-full max-w-[520px] bg-background border-l border-border shadow-2xl flex flex-col outline-none">
+          <DialogContent asChild>
+            <div className="flex flex-col h-full">
+              <div className="h-14 border-b border-border bg-surface flex items-center px-4 gap-3">
+                <div className="h-8 w-8 rounded-md bg-muted grid place-items-center">
+                  <History className="h-4 w-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[13px] font-semibold">Payout methods audit trail</div>
+                  <div className="text-[11.5px] text-muted-foreground">
+                    Who verified what, when it changed, and the previous status
+                  </div>
+                </div>
+                <button onClick={onClose} className="h-8 w-8 grid place-items-center rounded-md hover:bg-muted">
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto">
+                {entries.length === 0 ? (
+                  <EmptySurface
+                    title="No changes yet"
+                    description="Verifications, primary switches and failed attempts on every payout method will be recorded here."
+                    scope="payout methods audit"
+                  />
+                ) : (
+                  <ol className="p-3 space-y-2">
+                    {entries.map((e) => {
+                      const isFailure = e.action === "verification_failed";
+                      const isPrimary = e.action === "primary_set" || e.action === "primary_replaced";
+                      return (
+                        <li
+                          key={e.id}
+                          className={[
+                            "rounded-md border p-3 text-[12px] bg-surface",
+                            isFailure ? "border-red-500/30" : "border-border",
+                          ].join(" ")}
+                        >
+                          <div className="flex items-center gap-2">
+                            {isFailure ? (
+                              <span className="h-5 px-1.5 inline-flex items-center gap-1 rounded text-[10.5px] font-medium border bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400">
+                                <XCircle className="h-3 w-3" /> {actionLabel(e.action)}
+                              </span>
+                            ) : isPrimary ? (
+                              <span className="h-5 px-1.5 inline-flex items-center gap-1 rounded text-[10.5px] font-medium border bg-primary/10 text-primary border-primary/20">
+                                <Star className="h-3 w-3 fill-current" /> {actionLabel(e.action)}
+                              </span>
+                            ) : (
+                              <span className="h-5 px-1.5 inline-flex items-center gap-1 rounded text-[10.5px] font-medium border bg-muted text-muted-foreground border-border">
+                                <ShieldCheck className="h-3 w-3" /> {actionLabel(e.action)}
+                              </span>
+                            )}
+                            <span className="text-[11px] text-muted-foreground ml-auto tabular-nums">
+                              {new Date(e.at).toLocaleString(undefined, {
+                                month: "short",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </span>
+                          </div>
+                          <div className="mt-1.5 font-medium truncate">{e.methodLabel}</div>
+                          <dl className="mt-1.5 grid grid-cols-[92px_1fr] gap-y-1 text-[11.5px]">
+                            <dt className="text-muted-foreground">Actor</dt>
+                            <dd className="font-medium">{e.actor}</dd>
+                            {e.fromStatus || e.toStatus ? (
+                              <>
+                                <dt className="text-muted-foreground">Previous</dt>
+                                <dd>{statusText(e.fromStatus)}</dd>
+                                <dt className="text-muted-foreground">New</dt>
+                                <dd className="font-medium">{statusText(e.toStatus)}</dd>
+                              </>
+                            ) : null}
+                            {e.note ? (
+                              <>
+                                <dt className="text-muted-foreground">Note</dt>
+                                <dd className="text-muted-foreground">{e.note}</dd>
+                              </>
+                            ) : null}
+                          </dl>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                )}
+              </div>
+
+              <div className="border-t border-border bg-surface p-3 flex items-center justify-between gap-2">
+                <div className="text-[11.5px] text-muted-foreground">
+                  {entries.length} event{entries.length === 1 ? "" : "s"} recorded this session
+                </div>
+                <button onClick={onClose} className="h-8 px-3 rounded-md border border-border bg-surface hover:bg-muted text-[12.5px]">
+                  Close
+                </button>
+              </div>
+            </div>
+          </DialogContent>
+        </DialogPrimitive.Content>
+      </DialogPortal>
+    </Dialog>
+  );
+}
