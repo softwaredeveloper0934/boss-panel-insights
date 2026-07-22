@@ -243,6 +243,24 @@ function TransactionDetailDrawer({ open, onClose }: { open: boolean; onClose: ()
 type MethodKey = "bank" | "upi" | "paypal" | "wise" | "payoneer" | "card";
 type MethodStatus = "not_configured" | "pending" | "verified" | "failed";
 
+type AuditEntry = {
+  id: string;
+  at: string;
+  method: MethodKey;
+  methodLabel: string;
+  actor: string;
+  action:
+    | "status_changed"
+    | "primary_set"
+    | "primary_replaced"
+    | "verification_submitted"
+    | "verification_failed";
+  fromStatus?: MethodStatus;
+  toStatus?: MethodStatus;
+  note?: string;
+};
+
+
 type MethodTemplate = {
   key: MethodKey;
   label: string;
