@@ -8,14 +8,18 @@ import {
   Clock,
   Filter,
   GripVertical,
+  History,
   MoreHorizontal,
   Plus,
   Search,
   Send,
   Sparkles,
+  Undo2,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { EmptySurface } from "@/components/influencer/wall-page";
+
 
 type ViewMode = "month" | "week";
 type Lane = "draft" | "scheduled" | "published";
