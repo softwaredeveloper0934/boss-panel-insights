@@ -33,6 +33,16 @@ const LANES: { key: Lane; label: string; tone: string }[] = [
 export function ContentCalendar() {
   const [view, setView] = useState<ViewMode>("month");
   const [cursor, setCursor] = useState(() => new Date());
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [historyOpen, setHistoryOpen] = useState(false);
+
+  function addHistory(entry: Omit<HistoryEntry, "id" | "at">) {
+    setHistory((h) => [
+      { ...entry, id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, at: new Date().toISOString() },
+      ...h,
+    ]);
+  }
+
 
   return (
     <div className="space-y-4">
