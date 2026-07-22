@@ -331,17 +331,53 @@ function WeekGrid({
                   if (!raw) return;
                   const payload = JSON.parse(raw) as DragPayload;
                   const msg = evaluateConflict(lane.key, d, payload.fromLane);
+                  const toISO = d.toISOString().slice(0, 10);
                   if (msg) {
+                    onHistory({
+                      kind: "conflict",
+                      title: payload.title,
+                      fromLane: payload.fromLane,
+                      toLane: lane.key,
+                      fromISO: payload.fromISO,
+                      toISO,
+                      message: msg,
+                    });
                     toast.error(msg);
                     setConflict(null);
                     return;
                   }
                   const dateLabel = d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
                   const transitioned = payload.fromLane !== lane.key;
+                  const entry: Omit<HistoryEntry, "id" | "at"> = {
+                    kind: transitioned ? "transition" : "move",
+                    title: payload.title,
+                    fromLane: payload.fromLane,
+                    toLane: lane.key,
+                    fromISO: payload.fromISO,
+                    toISO,
+                  };
+                  onHistory(entry);
                   toast.success(
                     transitioned
                       ? `Moved "${payload.title}" → ${lane.label} · ${dateLabel}`
                       : `Rescheduled "${payload.title}" to ${dateLabel}`,
+                    {
+                      action: {
+                        label: "Undo",
+                        onClick: () => {
+                          onHistory({
+                            ...entry,
+                            kind: entry.kind,
+                            fromLane: entry.toLane,
+                            toLane: entry.fromLane,
+                            fromISO: entry.toISO,
+                            toISO: entry.fromISO,
+                            message: "Reverted by user",
+                          });
+                          toast.message(`Reverted "${payload.title}"`);
+                        },
+                      },
+                    },
                   );
                   setConflict(null);
                 }}
@@ -350,6 +386,7 @@ function WeekGrid({
                   isOver && !hasConflict ? "bg-primary/10 outline outline-2 outline-primary/40 -outline-offset-2" : "",
                   isOver && hasConflict ? "bg-red-500/10 outline outline-2 outline-red-500/40 -outline-offset-2" : "",
                 ].join(" ")}
+
               >
                 <button
                   type="button"
