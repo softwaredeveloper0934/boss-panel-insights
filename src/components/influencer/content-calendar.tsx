@@ -517,3 +517,123 @@ function dayName(d: Date) {
 
 // suppress unused-import lint
 void CalendarDays;
+
+/* ------------------------------ History drawer ------------------------------ */
+
+function HistoryDrawer({
+  open,
+  onClose,
+  entries,
+  onUndo,
+  onClear,
+}: {
+  open: boolean;
+  onClose: () => void;
+  entries: HistoryEntry[];
+  onUndo: (id: string) => void;
+  onClear: () => void;
+}) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex">
+      <div className="flex-1 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+      <aside className="w-full max-w-[440px] bg-background border-l border-border shadow-2xl flex flex-col">
+        <div className="h-14 border-b border-border bg-surface flex items-center px-4 gap-3">
+          <div className="h-8 w-8 rounded-md bg-muted grid place-items-center">
+            <History className="h-4 w-4" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[13px] font-semibold">Change history</div>
+            <div className="text-[11.5px] text-muted-foreground">
+              {entries.length} event{entries.length === 1 ? "" : "s"} · reschedules, transitions & conflicts
+            </div>
+          </div>
+          <button
+            onClick={onClear}
+            disabled={!entries.length}
+            className="h-8 px-2.5 rounded-md border border-border bg-surface hover:bg-muted text-[12px] disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Clear
+          </button>
+          <button onClick={onClose} className="h-8 w-8 grid place-items-center rounded-md hover:bg-muted">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          {entries.length === 0 ? (
+            <EmptySurface
+              title="No changes yet"
+              description="Reschedules, swimlane transitions and blocked conflicts will appear here in order."
+              scope="content calendar history"
+            />
+          ) : (
+            <ol className="p-3 space-y-2">
+              {entries.map((e) => {
+                const fromLane = LANES.find((l) => l.key === e.fromLane)!;
+                const toLane = LANES.find((l) => l.key === e.toLane)!;
+                const isConflict = e.kind === "conflict";
+                return (
+                  <li
+                    key={e.id}
+                    className={[
+                      "rounded-md border p-3 text-[12px] bg-surface",
+                      isConflict ? "border-red-500/30" : "border-border",
+                      e.undone ? "opacity-60" : "",
+                    ].join(" ")}
+                  >
+                    <div className="flex items-center gap-2">
+                      {isConflict ? (
+                        <span className="h-5 px-1.5 inline-flex items-center gap-1 rounded text-[10.5px] font-medium border bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400">
+                          <AlertTriangle className="h-3 w-3" /> Conflict blocked
+                        </span>
+                      ) : e.kind === "transition" ? (
+                        <span className="h-5 px-1.5 inline-flex items-center gap-1 rounded text-[10.5px] font-medium border bg-primary/10 text-primary border-primary/20">
+                          <Send className="h-3 w-3" /> Transition
+                        </span>
+                      ) : (
+                        <span className="h-5 px-1.5 inline-flex items-center gap-1 rounded text-[10.5px] font-medium border bg-muted text-muted-foreground border-border">
+                          <Clock className="h-3 w-3" /> Reschedule
+                        </span>
+                      )}
+                      <span className="text-[11px] text-muted-foreground ml-auto tabular-nums">
+                        {new Date(e.at).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}
+                      </span>
+                    </div>
+                    <div className="mt-1.5 font-medium truncate">{e.title}</div>
+                    <div className="mt-1 flex items-center gap-1.5 flex-wrap text-[11.5px] text-muted-foreground">
+                      <span className={["inline-flex items-center h-4 px-1.5 rounded border text-[10.5px]", fromLane.tone].join(" ")}>
+                        {fromLane.label}
+                      </span>
+                      <span className="tabular-nums">{e.fromISO}</span>
+                      <span>→</span>
+                      <span className={["inline-flex items-center h-4 px-1.5 rounded border text-[10.5px]", toLane.tone].join(" ")}>
+                        {toLane.label}
+                      </span>
+                      <span className="tabular-nums">{e.toISO}</span>
+                    </div>
+                    {e.message ? (
+                      <div className="mt-1 text-[11.5px] text-muted-foreground">{e.message}</div>
+                    ) : null}
+                    {!isConflict && !e.undone ? (
+                      <div className="mt-2 flex items-center justify-end">
+                        <button
+                          onClick={() => onUndo(e.id)}
+                          className="h-7 px-2 rounded-md border border-border bg-surface hover:bg-muted text-[11.5px] inline-flex items-center gap-1"
+                        >
+                          <Undo2 className="h-3 w-3" /> Undo
+                        </button>
+                      </div>
+                    ) : e.undone ? (
+                      <div className="mt-1 text-[11px] text-muted-foreground italic">Undone</div>
+                    ) : null}
+                  </li>
+                );
+              })}
+            </ol>
+          )}
+        </div>
+      </aside>
+    </div>
+  );
+}
+
