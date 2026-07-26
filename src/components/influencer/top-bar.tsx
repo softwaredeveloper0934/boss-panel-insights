@@ -6,6 +6,7 @@ import {
   Building2,
   Check,
   Command,
+  CornerDownLeft,
   FileText,
   HelpCircle,
   Keyboard,
@@ -18,6 +19,7 @@ import {
   Settings2,
   User,
   UserPlus,
+  Users2,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -420,14 +422,55 @@ function SearchPalette({ onClose, onPick }: { onClose: () => void; onPick: (to: 
   const [q, setQ] = useState("");
   const [idx, setIdx] = useState(0);
 
-  const results = useMemo(() => {
+  type Row = {
+    key: string;
+    to: string;
+    label: string;
+    hint: string;
+    group: string;
+    icon: React.ComponentType<{ className?: string }>;
+  };
+
+  const rows = useMemo<Row[]>(() => {
     const needle = q.trim().toLowerCase();
-    const base = WALLS.map((w) => ({ to: w.to, label: w.shortTitle ?? w.title, hint: w.description }));
-    if (!needle) return base.slice(0, 12);
-    return base.filter((r) => r.label.toLowerCase().includes(needle) || r.hint.toLowerCase().includes(needle)).slice(0, 20);
+    const workspaces: Row[] = WALLS.map((w) => ({
+      key: `w:${w.slug}`,
+      to: w.to,
+      label: w.shortTitle ?? w.title,
+      hint: w.description,
+      group: "Workspaces",
+      icon: LayoutGrid,
+    }));
+
+    // Entity search jump-offs. When the query is non-empty, these navigate to
+    // the entity list; downstream pages will consume the query when wired.
+    const entities: Row[] = [
+      { key: "e:influencers", to: "/influencers", label: needle ? `Search influencers for "${q}"` : "Search influencers", hint: "Jump to the creator directory", group: "Influencers", icon: Users2 },
+      { key: "e:applications", to: "/applications", label: needle ? `Search applications for "${q}"` : "Search applications", hint: "Review incoming creator applications", group: "Applications", icon: FileText },
+      { key: "e:campaigns", to: "/campaigns", label: needle ? `Search campaigns for "${q}"` : "Search campaigns", hint: "Open the campaign pipeline", group: "Campaigns", icon: Megaphone },
+      { key: "e:brands", to: "/brands", label: needle ? `Search brands for "${q}"` : "Search brands", hint: "Directory of partner brands", group: "Brands", icon: Building2 },
+    ];
+
+    if (!needle) return [...entities, ...workspaces];
+
+    const match = (r: Row) =>
+      r.label.toLowerCase().includes(needle) || r.hint.toLowerCase().includes(needle);
+    const filteredWorkspaces = workspaces.filter(match);
+    return [...entities, ...filteredWorkspaces].slice(0, 40);
   }, [q]);
 
   useEffect(() => setIdx(0), [q]);
+
+  // Group rows for rendering, preserving order.
+  const grouped = useMemo(() => {
+    const groups: { name: string; items: { row: Row; index: number }[] }[] = [];
+    rows.forEach((row, i) => {
+      const last = groups[groups.length - 1];
+      if (last && last.name === row.group) last.items.push({ row, index: i });
+      else groups.push({ name: row.group, items: [{ row, index: i }] });
+    });
+    return groups;
+  }, [rows]);
 
   return (
     <div
@@ -445,11 +488,11 @@ function SearchPalette({ onClose, onPick }: { onClose: () => void; onPick: (to: 
             value={q}
             onChange={(e) => setQ(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "ArrowDown") { e.preventDefault(); setIdx((i) => Math.min(i + 1, results.length - 1)); }
+              if (e.key === "ArrowDown") { e.preventDefault(); setIdx((i) => Math.min(i + 1, rows.length - 1)); }
               if (e.key === "ArrowUp") { e.preventDefault(); setIdx((i) => Math.max(i - 1, 0)); }
-              if (e.key === "Enter" && results[idx]) { e.preventDefault(); onPick(results[idx].to); }
+              if (e.key === "Enter" && rows[idx]) { e.preventDefault(); onPick(rows[idx].to); }
             }}
-            placeholder="Jump to a workspace, influencer, campaign…"
+            placeholder="Search influencers, campaigns, brands, workspaces…"
             className="flex-1 bg-transparent outline-none text-[13px] placeholder:text-muted-foreground"
           />
           <button type="button" onClick={onClose} aria-label="Close" className="h-6 w-6 grid place-items-center rounded hover:bg-muted cursor-pointer">
@@ -457,24 +500,39 @@ function SearchPalette({ onClose, onPick }: { onClose: () => void; onPick: (to: 
           </button>
         </div>
         <div className="max-h-96 overflow-y-auto py-1">
-          {results.length === 0 ? (
+          {rows.length === 0 ? (
             <div className="px-4 py-8 text-center text-[12.5px] text-muted-foreground">No matches.</div>
           ) : (
-            results.map((r, i) => (
-              <button
-                key={r.to}
-                type="button"
-                onMouseEnter={() => setIdx(i)}
-                onClick={() => onPick(r.to)}
-                className={`w-full text-left px-3 py-2 flex items-start gap-2 cursor-pointer ${i === idx ? "bg-muted" : ""}`}
-              >
-                <LayoutGrid className="h-3.5 w-3.5 mt-0.5 text-muted-foreground" />
-                <div className="min-w-0 flex-1">
-                  <div className="text-[12.5px] font-medium truncate">{r.label}</div>
-                  <div className="text-[11px] text-muted-foreground truncate">{r.hint}</div>
+            grouped.map((g) => (
+              <div key={g.name}>
+                <div className="px-3 pt-2 pb-1 text-[10.5px] font-semibold uppercase tracking-wide text-muted-foreground">
+                  {g.name}
                 </div>
-                <span className="text-[10.5px] text-muted-foreground">{r.to}</span>
-              </button>
+                {g.items.map(({ row, index }) => {
+                  const Icon = row.icon;
+                  const active = index === idx;
+                  return (
+                    <button
+                      key={row.key}
+                      type="button"
+                      onMouseEnter={() => setIdx(index)}
+                      onClick={() => onPick(row.to)}
+                      className={`w-full text-left px-3 py-2 flex items-start gap-2 cursor-pointer ${active ? "bg-muted" : ""}`}
+                    >
+                      <Icon className="h-3.5 w-3.5 mt-0.5 text-muted-foreground" />
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[12.5px] font-medium truncate">{row.label}</div>
+                        <div className="text-[11px] text-muted-foreground truncate">{row.hint}</div>
+                      </div>
+                      {active ? (
+                        <CornerDownLeft className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                      ) : (
+                        <span className="text-[10.5px] text-muted-foreground shrink-0">{row.to}</span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             ))
           )}
         </div>
