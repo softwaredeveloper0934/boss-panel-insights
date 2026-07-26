@@ -1,18 +1,23 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
-  ShieldCheck,
-  ShieldAlert,
-  IdCard,
-  Globe2,
-  Users2,
-  ClipboardList,
-  FileSignature,
   CheckCircle2,
-  XCircle,
+  ClipboardList,
+  Download,
   Eye,
+  FileSignature,
+  Globe2,
+  IdCard,
   Plus,
+  ShieldAlert,
+  ShieldCheck,
+  ThumbsDown,
+  ThumbsUp,
+  Users2,
+  UserPlus,
+  XCircle,
 } from "lucide-react";
+import { toast } from "sonner";
 import { WALL_BY_SLUG } from "@/lib/influencer-walls";
 import {
   PageHeader,
@@ -24,6 +29,7 @@ import {
   TableSkeleton,
 } from "@/components/influencer/wall-page";
 import { ApplicationDetailDrawer } from "@/components/influencer/application-detail-drawer";
+import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
 
 const wall = WALL_BY_SLUG["applications"];
 
@@ -68,6 +74,7 @@ const SECTIONS = [
 function ApplicationsPage() {
   const [active, setActive] = useState(0);
   const [drawer, setDrawer] = useState(false);
+  const [selected, setSelected] = useState(0);
 
   return (
     <div className="flex flex-col">
