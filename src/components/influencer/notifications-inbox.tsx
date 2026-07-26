@@ -8,6 +8,7 @@ import {
   CheckCheck,
   ChevronRight,
   CircleDot,
+  Download,
   Filter,
   Inbox,
   Mail,
@@ -23,6 +24,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { EmptySurface } from "@/components/influencer/wall-page";
+import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
 
 const SMART_FILTERS = [
   { key: "all", label: "All", icon: Inbox },
