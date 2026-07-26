@@ -77,6 +77,7 @@ function InfluencersPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState("profile");
+  const [selected, setSelected] = useState(0);
 
   // Reserved for future bulk-actions wiring.
   const _ignored = useMemo(() => ({ query, sortKey }), [query, sortKey]);
