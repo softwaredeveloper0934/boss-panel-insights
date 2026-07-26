@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
+  Ban,
+  CheckCircle2,
   ChevronRight,
   Download,
   Eye,
@@ -8,13 +10,18 @@ import {
   Inbox,
   LayoutGrid,
   ListFilter,
+  Mail,
   MoreHorizontal,
   Plus,
   RefreshCw,
   Search,
   Sliders,
+  Tag,
   Upload,
+  UserCheck,
+  UserX,
 } from "lucide-react";
+import { toast } from "sonner";
 import { WALL_BY_SLUG } from "@/lib/influencer-walls";
 import {
   KpiStrip,
@@ -23,6 +30,7 @@ import {
   SectionTabs,
 } from "@/components/influencer/wall-page";
 import { InfluencerDetailDrawer } from "@/components/influencer/influencer-detail-drawer";
+import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
 
 export const Route = createFileRoute("/influencers")({
   head: () => ({
