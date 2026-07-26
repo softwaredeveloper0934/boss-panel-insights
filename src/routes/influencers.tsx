@@ -163,6 +163,8 @@ function InfluencersPage() {
                       <input
                         type="checkbox"
                         aria-label="Select all"
+                        checked={selected > 0}
+                        onChange={(e) => setSelected(e.target.checked ? 12 : 0)}
                         className="h-3.5 w-3.5 rounded border-border accent-[color:var(--color-primary)]"
                       />
                     </th>
