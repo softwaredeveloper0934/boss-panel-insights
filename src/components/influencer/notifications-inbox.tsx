@@ -141,52 +141,8 @@ export function NotificationsInbox() {
   );
 }
 
-/* ------------------------------- Bulk bar ------------------------------- */
+/* ------------------------------- Icon button ------------------------------- */
 
-function BulkBar({ count, onClear }: { count: number; onClear: () => void }) {
-  return (
-    <div className="flex flex-wrap items-center gap-2 rounded-md border border-border bg-surface-muted/50 px-3 py-2 text-[12.5px]">
-      <span className="text-muted-foreground">
-        <span className="font-semibold text-foreground tabular-nums">{count}</span> selected
-      </span>
-      <span className="text-muted-foreground">·</span>
-      <BulkBtn icon={<MailOpen className="h-3.5 w-3.5" />}>Mark read</BulkBtn>
-      <BulkBtn icon={<Mail className="h-3.5 w-3.5" />}>Mark unread</BulkBtn>
-      <BulkBtn icon={<Archive className="h-3.5 w-3.5" />}>Archive</BulkBtn>
-      <BulkBtn icon={<BellOff className="h-3.5 w-3.5" />}>Mute source</BulkBtn>
-      <BulkBtn icon={<ThumbsUp className="h-3.5 w-3.5" />} primary>Approve</BulkBtn>
-      <BulkBtn icon={<ThumbsDown className="h-3.5 w-3.5" />}>Reject</BulkBtn>
-      <BulkBtn icon={<Trash2 className="h-3.5 w-3.5" />}>Delete</BulkBtn>
-      <button onClick={onClear} className="ml-auto h-7 px-2 rounded border border-border bg-surface hover:bg-muted text-[11.5px]">
-        Clear
-      </button>
-    </div>
-  );
-}
-
-function BulkBtn({
-  icon,
-  children,
-  primary,
-}: {
-  icon: React.ReactNode;
-  children: React.ReactNode;
-  primary?: boolean;
-}) {
-  return (
-    <button
-      className={[
-        "h-7 px-2.5 inline-flex items-center gap-1.5 rounded-md text-[12px] font-medium border",
-        primary
-          ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
-          : "bg-surface text-foreground border-border hover:bg-muted",
-      ].join(" ")}
-    >
-      {icon}
-      {children}
-    </button>
-  );
-}
 
 function IconBtn({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
   return (
