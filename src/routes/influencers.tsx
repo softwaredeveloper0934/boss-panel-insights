@@ -270,6 +270,20 @@ function InfluencersPage() {
       </div>
 
       <InfluencerDetailDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
+
+      <StickyBulkBar
+        count={selected}
+        entity="influencers"
+        onClear={() => setSelected(0)}
+        actions={[
+          { key: "approve", label: "Approve", tone: "primary", icon: <UserCheck className="h-3.5 w-3.5" />, onClick: () => { toast.success(`Approved ${selected} influencers`); setSelected(0); } },
+          { key: "reject", label: "Reject", tone: "danger", icon: <UserX className="h-3.5 w-3.5" />, onClick: () => { toast.message(`Rejected ${selected} influencers`); setSelected(0); } },
+          { key: "message", label: "Message", icon: <Mail className="h-3.5 w-3.5" />, onClick: () => toast.message("Bulk message composer") },
+          { key: "tag", label: "Add tag", icon: <Tag className="h-3.5 w-3.5" />, onClick: () => toast.message("Tag picker opened") },
+          { key: "suspend", label: "Suspend", tone: "danger", icon: <Ban className="h-3.5 w-3.5" />, onClick: () => toast.message("Suspension confirmed") },
+          { key: "export", label: "Export", icon: <Download className="h-3.5 w-3.5" />, onClick: () => toast.success(`Exporting ${selected} records`) },
+        ]}
+      />
     </div>
   );
 }
