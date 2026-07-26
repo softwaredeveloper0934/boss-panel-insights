@@ -211,6 +211,14 @@ function InfluencersPage() {
                           </button>
                           <button
                             type="button"
+                            onClick={() => setSelected((n) => (n === 0 ? 12 : 0))}
+                            className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface hover:bg-muted text-[12.5px] font-medium text-foreground"
+                          >
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                            Preview bulk selection
+                          </button>
+                          <button
+                            type="button"
                             className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md bg-primary hover:bg-primary/90 text-primary-foreground text-[12.5px] font-medium"
                           >
                             <Plus className="h-3.5 w-3.5" />
