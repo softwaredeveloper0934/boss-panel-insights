@@ -1,18 +1,23 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
-  ShieldCheck,
-  ShieldAlert,
-  IdCard,
-  Globe2,
-  Users2,
-  ClipboardList,
-  FileSignature,
   CheckCircle2,
-  XCircle,
+  ClipboardList,
+  Download,
   Eye,
+  FileSignature,
+  Globe2,
+  IdCard,
   Plus,
+  ShieldAlert,
+  ShieldCheck,
+  ThumbsDown,
+  ThumbsUp,
+  Users2,
+  UserPlus,
+  XCircle,
 } from "lucide-react";
+import { toast } from "sonner";
 import { WALL_BY_SLUG } from "@/lib/influencer-walls";
 import {
   PageHeader,
@@ -24,6 +29,7 @@ import {
   TableSkeleton,
 } from "@/components/influencer/wall-page";
 import { ApplicationDetailDrawer } from "@/components/influencer/application-detail-drawer";
+import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
 
 const wall = WALL_BY_SLUG["applications"];
 
@@ -68,6 +74,7 @@ const SECTIONS = [
 function ApplicationsPage() {
   const [active, setActive] = useState(0);
   const [drawer, setDrawer] = useState(false);
+  const [selected, setSelected] = useState(0);
 
   return (
     <div className="flex flex-col">
@@ -89,7 +96,7 @@ function ApplicationsPage() {
         <main className="space-y-4">
           <FilterBar extraChips={["Stage", "Country", "Risk", "Reviewer", "Source"]} />
 
-          {active === 0 && <QueueView onOpen={() => setDrawer(true)} />}
+          {active === 0 && <QueueView onOpen={() => setDrawer(true)} onPreviewBulk={() => setSelected((n) => (n === 0 ? 8 : 0))} /> }
           {active === 1 && <PipelineView onOpen={() => setDrawer(true)} />}
           {active === 2 && <VerificationView kind="Identity" />}
           {active === 3 && <VerificationView kind="KYC" />}
@@ -106,18 +113,37 @@ function ApplicationsPage() {
       </div>
 
       <ApplicationDetailDrawer open={drawer} onClose={() => setDrawer(false)} />
+
+      <StickyBulkBar
+        count={selected}
+        entity="applications"
+        onClear={() => setSelected(0)}
+        actions={[
+          { key: "approve", label: "Approve", tone: "primary", icon: <ThumbsUp className="h-3.5 w-3.5" />, onClick: () => { toast.success(`Approved ${selected} applications`); setSelected(0); } },
+          { key: "reject", label: "Reject", tone: "danger", icon: <ThumbsDown className="h-3.5 w-3.5" />, onClick: () => { toast.message(`Rejected ${selected} applications`); setSelected(0); } },
+          { key: "assign", label: "Assign reviewer", icon: <UserPlus className="h-3.5 w-3.5" />, onClick: () => toast.message("Assignee picker opened") },
+          { key: "stage", label: "Advance stage", icon: <CheckCircle2 className="h-3.5 w-3.5" />, onClick: () => toast.message("Moved to next stage") },
+          { key: "export", label: "Export", icon: <Download className="h-3.5 w-3.5" />, onClick: () => toast.success(`Exporting ${selected} applications`) },
+        ]}
+      />
     </div>
   );
 }
 
 /* ---------- Views ---------- */
 
-function QueueView({ onOpen }: { onOpen: () => void }) {
+function QueueView({ onOpen, onPreviewBulk }: { onOpen: () => void; onPreviewBulk: () => void }) {
   return (
     <div className="rounded-md border border-border bg-surface overflow-hidden">
       <div className="flex items-center justify-between px-4 h-10 border-b border-border bg-surface-muted">
         <div className="text-[12.5px] font-semibold text-foreground">Application Queue</div>
         <div className="flex items-center gap-2">
+          <button
+            onClick={onPreviewBulk}
+            className="h-7 px-2.5 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface hover:bg-muted text-[12px] text-foreground"
+          >
+            <CheckCircle2 className="h-3.5 w-3.5" /> Preview bulk selection
+          </button>
           <button
             onClick={onOpen}
             className="h-7 px-2.5 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface hover:bg-muted text-[12px] text-foreground"

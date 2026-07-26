@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import type { WallConfig } from "@/lib/influencer-walls";
+import { SavedViews } from "@/components/influencer/saved-views";
 
 /* ----------------------------- shared helpers ----------------------------- */
 
@@ -266,6 +267,15 @@ export function FilterBar({
         <ListFilter className="h-3.5 w-3.5" />
         More filters
       </button>
+      <SavedViews
+        scopeKey={scope}
+        getCurrentFilters={() => ({ query })}
+        onApply={(f) => {
+          if (f && typeof (f as { query?: unknown }).query === "string") {
+            setQuery((f as { query: string }).query);
+          }
+        }}
+      />
       <div className="ml-auto flex items-center gap-1">
         <IconAction title="Refresh" onClick={() => notify("Refresh")}>
           <RefreshCw className="h-3.5 w-3.5" />

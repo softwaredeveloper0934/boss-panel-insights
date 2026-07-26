@@ -8,6 +8,7 @@ import {
   CheckCheck,
   ChevronRight,
   CircleDot,
+  Download,
   Filter,
   Inbox,
   Mail,
@@ -23,6 +24,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { EmptySurface } from "@/components/influencer/wall-page";
+import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
 
 const SMART_FILTERS = [
   { key: "all", label: "All", icon: Inbox },
@@ -94,7 +96,7 @@ export function NotificationsInbox() {
           ))}
         </div>
 
-        <BulkBar count={selected} onClear={() => setSelected(0)} />
+        
 
         <div className="rounded-md border border-border bg-surface overflow-hidden">
           <div className="flex items-center justify-between px-4 h-10 border-b border-border bg-surface-muted">
@@ -119,56 +121,28 @@ export function NotificationsInbox() {
           />
         </div>
       </section>
+
+      <StickyBulkBar
+        count={selected}
+        entity="notifications"
+        onClear={() => setSelected(0)}
+        actions={[
+          { key: "approve", label: "Approve", tone: "primary", icon: <ThumbsUp className="h-3.5 w-3.5" />, onClick: () => { toast.success(`Approved ${selected}`); setSelected(0); } },
+          { key: "reject", label: "Reject", tone: "danger", icon: <ThumbsDown className="h-3.5 w-3.5" />, onClick: () => { toast.message(`Rejected ${selected}`); setSelected(0); } },
+          { key: "read", label: "Mark read", icon: <MailOpen className="h-3.5 w-3.5" />, onClick: () => toast.message("Marked as read") },
+          { key: "unread", label: "Mark unread", icon: <Mail className="h-3.5 w-3.5" />, onClick: () => toast.message("Marked as unread") },
+          { key: "archive", label: "Archive", icon: <Archive className="h-3.5 w-3.5" />, onClick: () => toast.message("Archived") },
+          { key: "mute", label: "Mute source", icon: <BellOff className="h-3.5 w-3.5" />, onClick: () => toast.message("Source muted") },
+          { key: "export", label: "Export", icon: <Download className="h-3.5 w-3.5" />, onClick: () => toast.message("Export queued") },
+          { key: "delete", label: "Delete", tone: "danger", icon: <Trash2 className="h-3.5 w-3.5" />, onClick: () => { toast.message("Deleted"); setSelected(0); } },
+        ]}
+      />
     </div>
   );
 }
 
-/* ------------------------------- Bulk bar ------------------------------- */
+/* ------------------------------- Icon button ------------------------------- */
 
-function BulkBar({ count, onClear }: { count: number; onClear: () => void }) {
-  return (
-    <div className="flex flex-wrap items-center gap-2 rounded-md border border-border bg-surface-muted/50 px-3 py-2 text-[12.5px]">
-      <span className="text-muted-foreground">
-        <span className="font-semibold text-foreground tabular-nums">{count}</span> selected
-      </span>
-      <span className="text-muted-foreground">·</span>
-      <BulkBtn icon={<MailOpen className="h-3.5 w-3.5" />}>Mark read</BulkBtn>
-      <BulkBtn icon={<Mail className="h-3.5 w-3.5" />}>Mark unread</BulkBtn>
-      <BulkBtn icon={<Archive className="h-3.5 w-3.5" />}>Archive</BulkBtn>
-      <BulkBtn icon={<BellOff className="h-3.5 w-3.5" />}>Mute source</BulkBtn>
-      <BulkBtn icon={<ThumbsUp className="h-3.5 w-3.5" />} primary>Approve</BulkBtn>
-      <BulkBtn icon={<ThumbsDown className="h-3.5 w-3.5" />}>Reject</BulkBtn>
-      <BulkBtn icon={<Trash2 className="h-3.5 w-3.5" />}>Delete</BulkBtn>
-      <button onClick={onClear} className="ml-auto h-7 px-2 rounded border border-border bg-surface hover:bg-muted text-[11.5px]">
-        Clear
-      </button>
-    </div>
-  );
-}
-
-function BulkBtn({
-  icon,
-  children,
-  primary,
-}: {
-  icon: React.ReactNode;
-  children: React.ReactNode;
-  primary?: boolean;
-}) {
-  return (
-    <button
-      className={[
-        "h-7 px-2.5 inline-flex items-center gap-1.5 rounded-md text-[12px] font-medium border",
-        primary
-          ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
-          : "bg-surface text-foreground border-border hover:bg-muted",
-      ].join(" ")}
-    >
-      {icon}
-      {children}
-    </button>
-  );
-}
 
 function IconBtn({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
   return (

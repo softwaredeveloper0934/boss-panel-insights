@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
+  Ban,
+  CheckCircle2,
   ChevronRight,
   Download,
   Eye,
@@ -8,13 +10,18 @@ import {
   Inbox,
   LayoutGrid,
   ListFilter,
+  Mail,
   MoreHorizontal,
   Plus,
   RefreshCw,
   Search,
   Sliders,
+  Tag,
   Upload,
+  UserCheck,
+  UserX,
 } from "lucide-react";
+import { toast } from "sonner";
 import { WALL_BY_SLUG } from "@/lib/influencer-walls";
 import {
   KpiStrip,
@@ -23,6 +30,7 @@ import {
   SectionTabs,
 } from "@/components/influencer/wall-page";
 import { InfluencerDetailDrawer } from "@/components/influencer/influencer-detail-drawer";
+import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
 
 export const Route = createFileRoute("/influencers")({
   head: () => ({
@@ -69,6 +77,7 @@ function InfluencersPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState("profile");
+  const [selected, setSelected] = useState(0);
 
   // Reserved for future bulk-actions wiring.
   const _ignored = useMemo(() => ({ query, sortKey }), [query, sortKey]);
@@ -154,6 +163,8 @@ function InfluencersPage() {
                       <input
                         type="checkbox"
                         aria-label="Select all"
+                        checked={selected > 0}
+                        onChange={(e) => setSelected(e.target.checked ? 12 : 0)}
                         className="h-3.5 w-3.5 rounded border-border accent-[color:var(--color-primary)]"
                       />
                     </th>
@@ -197,6 +208,14 @@ function InfluencersPage() {
                           >
                             <Eye className="h-3.5 w-3.5" />
                             Preview detail drawer
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setSelected((n) => (n === 0 ? 12 : 0))}
+                            className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface hover:bg-muted text-[12.5px] font-medium text-foreground"
+                          >
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                            Preview bulk selection
                           </button>
                           <button
                             type="button"
@@ -251,6 +270,20 @@ function InfluencersPage() {
       </div>
 
       <InfluencerDetailDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
+
+      <StickyBulkBar
+        count={selected}
+        entity="influencers"
+        onClear={() => setSelected(0)}
+        actions={[
+          { key: "approve", label: "Approve", tone: "primary", icon: <UserCheck className="h-3.5 w-3.5" />, onClick: () => { toast.success(`Approved ${selected} influencers`); setSelected(0); } },
+          { key: "reject", label: "Reject", tone: "danger", icon: <UserX className="h-3.5 w-3.5" />, onClick: () => { toast.message(`Rejected ${selected} influencers`); setSelected(0); } },
+          { key: "message", label: "Message", icon: <Mail className="h-3.5 w-3.5" />, onClick: () => toast.message("Bulk message composer") },
+          { key: "tag", label: "Add tag", icon: <Tag className="h-3.5 w-3.5" />, onClick: () => toast.message("Tag picker opened") },
+          { key: "suspend", label: "Suspend", tone: "danger", icon: <Ban className="h-3.5 w-3.5" />, onClick: () => toast.message("Suspension confirmed") },
+          { key: "export", label: "Export", icon: <Download className="h-3.5 w-3.5" />, onClick: () => toast.success(`Exporting ${selected} records`) },
+        ]}
+      />
     </div>
   );
 }
