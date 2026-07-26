@@ -121,6 +121,22 @@ export function NotificationsInbox() {
           />
         </div>
       </section>
+
+      <StickyBulkBar
+        count={selected}
+        entity="notifications"
+        onClear={() => setSelected(0)}
+        actions={[
+          { key: "approve", label: "Approve", tone: "primary", icon: <ThumbsUp className="h-3.5 w-3.5" />, onClick: () => { toast.success(`Approved ${selected}`); setSelected(0); } },
+          { key: "reject", label: "Reject", tone: "danger", icon: <ThumbsDown className="h-3.5 w-3.5" />, onClick: () => { toast.message(`Rejected ${selected}`); setSelected(0); } },
+          { key: "read", label: "Mark read", icon: <MailOpen className="h-3.5 w-3.5" />, onClick: () => toast.message("Marked as read") },
+          { key: "unread", label: "Mark unread", icon: <Mail className="h-3.5 w-3.5" />, onClick: () => toast.message("Marked as unread") },
+          { key: "archive", label: "Archive", icon: <Archive className="h-3.5 w-3.5" />, onClick: () => toast.message("Archived") },
+          { key: "mute", label: "Mute source", icon: <BellOff className="h-3.5 w-3.5" />, onClick: () => toast.message("Source muted") },
+          { key: "export", label: "Export", icon: <Download className="h-3.5 w-3.5" />, onClick: () => toast.message("Export queued") },
+          { key: "delete", label: "Delete", tone: "danger", icon: <Trash2 className="h-3.5 w-3.5" />, onClick: () => { toast.message("Deleted"); setSelected(0); } },
+        ]}
+      />
     </div>
   );
 }
