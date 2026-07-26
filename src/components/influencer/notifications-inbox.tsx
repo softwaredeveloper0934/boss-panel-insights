@@ -96,7 +96,7 @@ export function NotificationsInbox() {
           ))}
         </div>
 
-        <BulkBar count={selected} onClear={() => setSelected(0)} />
+        
 
         <div className="rounded-md border border-border bg-surface overflow-hidden">
           <div className="flex items-center justify-between px-4 h-10 border-b border-border bg-surface-muted">
