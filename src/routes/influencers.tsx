@@ -276,14 +276,85 @@ function InfluencersPage() {
         entity="influencers"
         onClear={() => setSelected(0)}
         actions={[
-          { key: "approve", label: "Approve", tone: "primary", icon: <UserCheck className="h-3.5 w-3.5" />, onClick: () => { toast.success(`Approved ${selected} influencers`); setSelected(0); } },
-          { key: "reject", label: "Reject", tone: "danger", icon: <UserX className="h-3.5 w-3.5" />, onClick: () => { toast.message(`Rejected ${selected} influencers`); setSelected(0); } },
+          {
+            key: "approve",
+            label: "Approve",
+            tone: "primary",
+            icon: <UserCheck className="h-3.5 w-3.5" />,
+            onClick: () =>
+              requestConfirm({
+                title: "Approve influencers",
+                description: `${selected} selected influencer${selected === 1 ? "" : "s"} will be moved to Active and notified. Verification requirements stay unchanged.`,
+                confirmLabel: "Approve",
+                tone: "primary",
+                withNote: true,
+                noteLabel: "Approval note (optional)",
+                onConfirm: (note) => {
+                  toast.success(`Approved ${selected} influencer${selected === 1 ? "" : "s"}`, {
+                    description: note || "Status set to Active.",
+                  });
+                  setSelected(0);
+                },
+              }),
+          },
+          {
+            key: "reject",
+            label: "Reject",
+            tone: "danger",
+            icon: <UserX className="h-3.5 w-3.5" />,
+            onClick: () =>
+              requestConfirm({
+                title: "Reject influencers",
+                description: `${selected} selected influencer${selected === 1 ? "" : "s"} will be rejected. This is recorded on each activity timeline.`,
+                confirmLabel: "Reject",
+                tone: "danger",
+                withNote: true,
+                noteLabel: "Rejection reason",
+                onConfirm: (note) => {
+                  toast.message(`Rejected ${selected} influencer${selected === 1 ? "" : "s"}`, {
+                    description: note || "No reason provided.",
+                  });
+                  setSelected(0);
+                },
+              }),
+          },
           { key: "message", label: "Message", icon: <Mail className="h-3.5 w-3.5" />, onClick: () => toast.message("Bulk message composer") },
           { key: "tag", label: "Add tag", icon: <Tag className="h-3.5 w-3.5" />, onClick: () => toast.message("Tag picker opened") },
-          { key: "suspend", label: "Suspend", tone: "danger", icon: <Ban className="h-3.5 w-3.5" />, onClick: () => toast.message("Suspension confirmed") },
-          { key: "export", label: "Export", icon: <Download className="h-3.5 w-3.5" />, onClick: () => toast.success(`Exporting ${selected} records`) },
+          {
+            key: "suspend",
+            label: "Suspend",
+            tone: "danger",
+            icon: <Ban className="h-3.5 w-3.5" />,
+            onClick: () =>
+              requestConfirm({
+                title: "Suspend influencers",
+                description: `${selected} selected influencer${selected === 1 ? "" : "s"} will lose panel access until reactivated.`,
+                confirmLabel: "Suspend",
+                tone: "danger",
+                withNote: true,
+                noteLabel: "Suspension reason",
+                onConfirm: (note) => {
+                  toast.message(`Suspended ${selected}`, { description: note || "No reason provided." });
+                  setSelected(0);
+                },
+              }),
+          },
+          {
+            key: "export",
+            label: "Export",
+            icon: <Download className="h-3.5 w-3.5" />,
+            onClick: () =>
+              requestExport({
+                count: selected,
+                entity: "influencers",
+                onExport: () => setSelected(0),
+              }),
+          },
         ]}
       />
+
+      {dialogs}
+
     </div>
   );
 }
