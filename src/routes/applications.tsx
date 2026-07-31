@@ -77,6 +77,8 @@ function ApplicationsPage() {
   const [active, setActive] = useState(0);
   const [drawer, setDrawer] = useState(false);
   const [selected, setSelected] = useState(0);
+  const { requestConfirm, requestExport, dialogs } = useBulkDialogs();
+
 
   return (
     <div className="flex flex-col">
