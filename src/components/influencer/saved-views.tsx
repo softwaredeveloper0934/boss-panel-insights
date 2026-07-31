@@ -35,6 +35,22 @@ function writeViews(scopeKey: string, views: SavedView[]) {
   window.localStorage.setItem(STORAGE_PREFIX + scopeKey, JSON.stringify(views));
 }
 
+/** Portable backup envelope so presets can move between workspaces. */
+type ViewBundle = {
+  kind: "influencer-manager.saved-views";
+  version: 1;
+  scopeKey: string;
+  exportedAt: string;
+  views: SavedView[];
+};
+
+function isBundle(value: unknown): value is ViewBundle {
+  if (!value || typeof value !== "object") return false;
+  const v = value as Partial<ViewBundle>;
+  return v.kind === "influencer-manager.saved-views" && Array.isArray(v.views);
+}
+
+
 export function SavedViews({
   scopeKey,
   getCurrentFilters,
