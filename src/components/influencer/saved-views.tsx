@@ -71,6 +71,8 @@ export function SavedViews({
   const [views, setViews] = useState<SavedView[]>(() => readViews(scopeKey));
   const [activeId, setActiveId] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
 
   useEffect(() => {
     setViews(readViews(scopeKey));
