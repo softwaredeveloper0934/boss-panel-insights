@@ -30,6 +30,8 @@ import {
 } from "@/components/influencer/wall-page";
 import { ApplicationDetailDrawer } from "@/components/influencer/application-detail-drawer";
 import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
+import { useBulkDialogs } from "@/components/influencer/bulk-dialogs";
+
 
 const wall = WALL_BY_SLUG["applications"];
 
