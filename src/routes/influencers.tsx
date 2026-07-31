@@ -78,6 +78,8 @@ function InfluencersPage() {
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState("profile");
   const [selected, setSelected] = useState(0);
+  const { requestConfirm, requestExport, dialogs } = useBulkDialogs();
+
 
   // Reserved for future bulk-actions wiring.
   const _ignored = useMemo(() => ({ query, sortKey }), [query, sortKey]);
