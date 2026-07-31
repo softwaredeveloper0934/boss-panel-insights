@@ -31,6 +31,8 @@ import {
 } from "@/components/influencer/wall-page";
 import { InfluencerDetailDrawer } from "@/components/influencer/influencer-detail-drawer";
 import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
+import { useBulkDialogs } from "@/components/influencer/bulk-dialogs";
+
 
 export const Route = createFileRoute("/influencers")({
   head: () => ({
