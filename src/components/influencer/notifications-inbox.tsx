@@ -43,6 +43,8 @@ type Filter = (typeof SMART_FILTERS)[number]["key"];
 export function NotificationsInbox() {
   const [filter, setFilter] = useState<Filter>("all");
   const [selected, setSelected] = useState<number>(0);
+  const { requestConfirm, requestExport, dialogs } = useBulkDialogs();
+
 
   return (
     <div className="grid gap-4 lg:grid-cols-[220px_1fr]">
