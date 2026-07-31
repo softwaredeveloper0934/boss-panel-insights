@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bookmark, Check, ChevronDown, Plus, Star, Trash2 } from "lucide-react";
+import { Bookmark, Check, ChevronDown, Download, Plus, Star, Trash2, Upload } from "lucide-react";
+
 import { toast } from "sonner";
 
 /**
