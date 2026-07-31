@@ -332,9 +332,37 @@ export function SavedViews({
               ))
             )}
           </div>
-          <div className="px-3 py-1.5 border-t border-border text-[10.5px] text-muted-foreground">
-            Stored locally per page. Wires to API when backend is connected.
+          <div className="border-t border-border px-2 py-1.5 flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              className="h-7 px-2 rounded border border-border bg-background hover:bg-muted text-[11.5px] inline-flex items-center gap-1.5 cursor-pointer"
+            >
+              <Upload className="h-3 w-3" /> Import
+            </button>
+            <button
+              type="button"
+              onClick={exportViews}
+              className="h-7 px-2 rounded border border-border bg-background hover:bg-muted text-[11.5px] inline-flex items-center gap-1.5 cursor-pointer"
+            >
+              <Download className="h-3 w-3" /> Export
+            </button>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="application/json,.json"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                e.target.value = "";
+                if (file) void importViews(file);
+              }}
+            />
           </div>
+          <div className="px-3 py-1.5 border-t border-border text-[10.5px] text-muted-foreground">
+            Stored locally per page. Export a JSON bundle to back up or move these views to another workspace.
+          </div>
+
         </div>
       ) : null}
     </div>
