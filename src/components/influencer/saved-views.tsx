@@ -139,7 +139,67 @@ export function SavedViews({
     persist(views.map((x) => (x.id === v.id ? { ...x, pinned: !x.pinned } : x)));
   };
 
+  const exportViews = () => {
+    if (views.length === 0) {
+      toast.error("Nothing to export yet");
+      return;
+    }
+    const bundle: ViewBundle = {
+      kind: "influencer-manager.saved-views",
+      version: 1,
+      scopeKey,
+      exportedAt: new Date().toISOString(),
+      views,
+    };
+    const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `saved-views${scopeKey.replace(/[^a-z0-9]+/gi, "-")}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(`Exported ${views.length} view${views.length === 1 ? "" : "s"}`);
+  };
+
+  const importViews = async (file: File) => {
+    try {
+      const parsed: unknown = JSON.parse(await file.text());
+      const incoming = isBundle(parsed)
+        ? parsed.views
+        : Array.isArray(parsed)
+          ? (parsed as SavedView[])
+          : null;
+      if (!incoming) {
+        toast.error("Unrecognised file", { description: "Expected a saved-views export." });
+        return;
+      }
+      const valid = incoming.filter(
+        (v) => v && typeof v.name === "string" && typeof v.filters === "object",
+      );
+      if (valid.length === 0) {
+        toast.error("No valid views found in that file");
+        return;
+      }
+      const existing = new Set(views.map((v) => v.name.toLowerCase()));
+      const merged: SavedView[] = [
+        ...valid.map((v) => ({
+          id: crypto.randomUUID(),
+          name: existing.has(v.name.toLowerCase()) ? `${v.name} (imported)` : v.name,
+          createdAt: typeof v.createdAt === "number" ? v.createdAt : Date.now(),
+          filters: (v.filters ?? {}) as Record<string, unknown>,
+          pinned: !!v.pinned,
+        })),
+        ...views,
+      ];
+      persist(merged);
+      toast.success(`Imported ${valid.length} view${valid.length === 1 ? "" : "s"}`);
+    } catch {
+      toast.error("Could not read that file", { description: "Invalid JSON." });
+    }
+  };
+
   const activeName = views.find((v) => v.id === activeId)?.name;
+
 
   return (
     <div ref={ref} className="relative">
