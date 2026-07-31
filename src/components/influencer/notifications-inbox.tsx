@@ -25,6 +25,8 @@ import {
 import { toast } from "sonner";
 import { EmptySurface } from "@/components/influencer/wall-page";
 import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
+import { useBulkDialogs } from "@/components/influencer/bulk-dialogs";
+
 
 const SMART_FILTERS = [
   { key: "all", label: "All", icon: Inbox },
@@ -41,6 +43,8 @@ type Filter = (typeof SMART_FILTERS)[number]["key"];
 export function NotificationsInbox() {
   const [filter, setFilter] = useState<Filter>("all");
   const [selected, setSelected] = useState<number>(0);
+  const { requestConfirm, requestExport, dialogs } = useBulkDialogs();
+
 
   return (
     <div className="grid gap-4 lg:grid-cols-[220px_1fr]">
@@ -127,16 +131,81 @@ export function NotificationsInbox() {
         entity="notifications"
         onClear={() => setSelected(0)}
         actions={[
-          { key: "approve", label: "Approve", tone: "primary", icon: <ThumbsUp className="h-3.5 w-3.5" />, onClick: () => { toast.success(`Approved ${selected}`); setSelected(0); } },
-          { key: "reject", label: "Reject", tone: "danger", icon: <ThumbsDown className="h-3.5 w-3.5" />, onClick: () => { toast.message(`Rejected ${selected}`); setSelected(0); } },
+          {
+            key: "approve",
+            label: "Approve",
+            tone: "primary",
+            icon: <ThumbsUp className="h-3.5 w-3.5" />,
+            onClick: () =>
+              requestConfirm({
+                title: "Approve requests",
+                description: `${selected} selected approval request${selected === 1 ? "" : "s"} will be approved and the requester notified.`,
+                confirmLabel: "Approve",
+                tone: "primary",
+                withNote: true,
+                noteLabel: "Approval note (optional)",
+                onConfirm: (note) => {
+                  toast.success(`Approved ${selected}`, { description: note || "Requests approved." });
+                  setSelected(0);
+                },
+              }),
+          },
+          {
+            key: "reject",
+            label: "Reject",
+            tone: "danger",
+            icon: <ThumbsDown className="h-3.5 w-3.5" />,
+            onClick: () =>
+              requestConfirm({
+                title: "Reject requests",
+                description: `${selected} selected approval request${selected === 1 ? "" : "s"} will be rejected.`,
+                confirmLabel: "Reject",
+                tone: "danger",
+                withNote: true,
+                noteLabel: "Rejection reason",
+                onConfirm: (note) => {
+                  toast.message(`Rejected ${selected}`, { description: note || "No reason provided." });
+                  setSelected(0);
+                },
+              }),
+          },
           { key: "read", label: "Mark read", icon: <MailOpen className="h-3.5 w-3.5" />, onClick: () => toast.message("Marked as read") },
           { key: "unread", label: "Mark unread", icon: <Mail className="h-3.5 w-3.5" />, onClick: () => toast.message("Marked as unread") },
           { key: "archive", label: "Archive", icon: <Archive className="h-3.5 w-3.5" />, onClick: () => toast.message("Archived") },
           { key: "mute", label: "Mute source", icon: <BellOff className="h-3.5 w-3.5" />, onClick: () => toast.message("Source muted") },
-          { key: "export", label: "Export", icon: <Download className="h-3.5 w-3.5" />, onClick: () => toast.message("Export queued") },
-          { key: "delete", label: "Delete", tone: "danger", icon: <Trash2 className="h-3.5 w-3.5" />, onClick: () => { toast.message("Deleted"); setSelected(0); } },
+          {
+            key: "export",
+            label: "Export",
+            icon: <Download className="h-3.5 w-3.5" />,
+            onClick: () =>
+              requestExport({
+                count: selected,
+                entity: "notifications",
+                onExport: () => setSelected(0),
+              }),
+          },
+          {
+            key: "delete",
+            label: "Delete",
+            tone: "danger",
+            icon: <Trash2 className="h-3.5 w-3.5" />,
+            onClick: () =>
+              requestConfirm({
+                title: "Delete notifications",
+                description: `${selected} selected notification${selected === 1 ? "" : "s"} will be permanently deleted. This cannot be undone.`,
+                confirmLabel: "Delete",
+                tone: "danger",
+                onConfirm: () => {
+                  toast.message(`Deleted ${selected}`);
+                  setSelected(0);
+                },
+              }),
+          },
         ]}
       />
+
+      {dialogs}
+
     </div>
   );
 }

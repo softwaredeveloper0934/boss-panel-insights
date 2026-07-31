@@ -30,6 +30,8 @@ import {
 } from "@/components/influencer/wall-page";
 import { ApplicationDetailDrawer } from "@/components/influencer/application-detail-drawer";
 import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
+import { useBulkDialogs } from "@/components/influencer/bulk-dialogs";
+
 
 const wall = WALL_BY_SLUG["applications"];
 
@@ -75,6 +77,8 @@ function ApplicationsPage() {
   const [active, setActive] = useState(0);
   const [drawer, setDrawer] = useState(false);
   const [selected, setSelected] = useState(0);
+  const { requestConfirm, requestExport, dialogs } = useBulkDialogs();
+
 
   return (
     <div className="flex flex-col">
@@ -119,13 +123,66 @@ function ApplicationsPage() {
         entity="applications"
         onClear={() => setSelected(0)}
         actions={[
-          { key: "approve", label: "Approve", tone: "primary", icon: <ThumbsUp className="h-3.5 w-3.5" />, onClick: () => { toast.success(`Approved ${selected} applications`); setSelected(0); } },
-          { key: "reject", label: "Reject", tone: "danger", icon: <ThumbsDown className="h-3.5 w-3.5" />, onClick: () => { toast.message(`Rejected ${selected} applications`); setSelected(0); } },
+          {
+            key: "approve",
+            label: "Approve",
+            tone: "primary",
+            icon: <ThumbsUp className="h-3.5 w-3.5" />,
+            onClick: () =>
+              requestConfirm({
+                title: "Approve applications",
+                description: `${selected} selected application${selected === 1 ? "" : "s"} will be approved and moved out of the review queue.`,
+                confirmLabel: "Approve",
+                tone: "primary",
+                withNote: true,
+                noteLabel: "Reviewer note (optional)",
+                onConfirm: (note) => {
+                  toast.success(`Approved ${selected} application${selected === 1 ? "" : "s"}`, {
+                    description: note || "Applicants will be notified.",
+                  });
+                  setSelected(0);
+                },
+              }),
+          },
+          {
+            key: "reject",
+            label: "Reject",
+            tone: "danger",
+            icon: <ThumbsDown className="h-3.5 w-3.5" />,
+            onClick: () =>
+              requestConfirm({
+                title: "Reject applications",
+                description: `${selected} selected application${selected === 1 ? "" : "s"} will be rejected. The reason is stored on the application record.`,
+                confirmLabel: "Reject",
+                tone: "danger",
+                withNote: true,
+                noteLabel: "Rejection reason",
+                onConfirm: (note) => {
+                  toast.message(`Rejected ${selected} application${selected === 1 ? "" : "s"}`, {
+                    description: note || "No reason provided.",
+                  });
+                  setSelected(0);
+                },
+              }),
+          },
           { key: "assign", label: "Assign reviewer", icon: <UserPlus className="h-3.5 w-3.5" />, onClick: () => toast.message("Assignee picker opened") },
           { key: "stage", label: "Advance stage", icon: <CheckCircle2 className="h-3.5 w-3.5" />, onClick: () => toast.message("Moved to next stage") },
-          { key: "export", label: "Export", icon: <Download className="h-3.5 w-3.5" />, onClick: () => toast.success(`Exporting ${selected} applications`) },
+          {
+            key: "export",
+            label: "Export",
+            icon: <Download className="h-3.5 w-3.5" />,
+            onClick: () =>
+              requestExport({
+                count: selected,
+                entity: "applications",
+                onExport: () => setSelected(0),
+              }),
+          },
         ]}
       />
+
+      {dialogs}
+
     </div>
   );
 }

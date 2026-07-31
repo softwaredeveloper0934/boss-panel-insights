@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bookmark, Check, ChevronDown, Plus, Star, Trash2 } from "lucide-react";
+import { Bookmark, Check, ChevronDown, Download, Plus, Star, Trash2, Upload } from "lucide-react";
+
 import { toast } from "sonner";
 
 /**
@@ -34,6 +35,22 @@ function writeViews(scopeKey: string, views: SavedView[]) {
   window.localStorage.setItem(STORAGE_PREFIX + scopeKey, JSON.stringify(views));
 }
 
+/** Portable backup envelope so presets can move between workspaces. */
+type ViewBundle = {
+  kind: "influencer-manager.saved-views";
+  version: 1;
+  scopeKey: string;
+  exportedAt: string;
+  views: SavedView[];
+};
+
+function isBundle(value: unknown): value is ViewBundle {
+  if (!value || typeof value !== "object") return false;
+  const v = value as Partial<ViewBundle>;
+  return v.kind === "influencer-manager.saved-views" && Array.isArray(v.views);
+}
+
+
 export function SavedViews({
   scopeKey,
   getCurrentFilters,
@@ -54,6 +71,8 @@ export function SavedViews({
   const [views, setViews] = useState<SavedView[]>(() => readViews(scopeKey));
   const [activeId, setActiveId] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
 
   useEffect(() => {
     setViews(readViews(scopeKey));
@@ -122,7 +141,67 @@ export function SavedViews({
     persist(views.map((x) => (x.id === v.id ? { ...x, pinned: !x.pinned } : x)));
   };
 
+  const exportViews = () => {
+    if (views.length === 0) {
+      toast.error("Nothing to export yet");
+      return;
+    }
+    const bundle: ViewBundle = {
+      kind: "influencer-manager.saved-views",
+      version: 1,
+      scopeKey,
+      exportedAt: new Date().toISOString(),
+      views,
+    };
+    const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `saved-views${scopeKey.replace(/[^a-z0-9]+/gi, "-")}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(`Exported ${views.length} view${views.length === 1 ? "" : "s"}`);
+  };
+
+  const importViews = async (file: File) => {
+    try {
+      const parsed: unknown = JSON.parse(await file.text());
+      const incoming = isBundle(parsed)
+        ? parsed.views
+        : Array.isArray(parsed)
+          ? (parsed as SavedView[])
+          : null;
+      if (!incoming) {
+        toast.error("Unrecognised file", { description: "Expected a saved-views export." });
+        return;
+      }
+      const valid = incoming.filter(
+        (v) => v && typeof v.name === "string" && typeof v.filters === "object",
+      );
+      if (valid.length === 0) {
+        toast.error("No valid views found in that file");
+        return;
+      }
+      const existing = new Set(views.map((v) => v.name.toLowerCase()));
+      const merged: SavedView[] = [
+        ...valid.map((v) => ({
+          id: crypto.randomUUID(),
+          name: existing.has(v.name.toLowerCase()) ? `${v.name} (imported)` : v.name,
+          createdAt: typeof v.createdAt === "number" ? v.createdAt : Date.now(),
+          filters: (v.filters ?? {}) as Record<string, unknown>,
+          pinned: !!v.pinned,
+        })),
+        ...views,
+      ];
+      persist(merged);
+      toast.success(`Imported ${valid.length} view${valid.length === 1 ? "" : "s"}`);
+    } catch {
+      toast.error("Could not read that file", { description: "Invalid JSON." });
+    }
+  };
+
   const activeName = views.find((v) => v.id === activeId)?.name;
+
 
   return (
     <div ref={ref} className="relative">
@@ -253,9 +332,37 @@ export function SavedViews({
               ))
             )}
           </div>
-          <div className="px-3 py-1.5 border-t border-border text-[10.5px] text-muted-foreground">
-            Stored locally per page. Wires to API when backend is connected.
+          <div className="border-t border-border px-2 py-1.5 flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              className="h-7 px-2 rounded border border-border bg-background hover:bg-muted text-[11.5px] inline-flex items-center gap-1.5 cursor-pointer"
+            >
+              <Upload className="h-3 w-3" /> Import
+            </button>
+            <button
+              type="button"
+              onClick={exportViews}
+              className="h-7 px-2 rounded border border-border bg-background hover:bg-muted text-[11.5px] inline-flex items-center gap-1.5 cursor-pointer"
+            >
+              <Download className="h-3 w-3" /> Export
+            </button>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="application/json,.json"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                e.target.value = "";
+                if (file) void importViews(file);
+              }}
+            />
           </div>
+          <div className="px-3 py-1.5 border-t border-border text-[10.5px] text-muted-foreground">
+            Stored locally per page. Export a JSON bundle to back up or move these views to another workspace.
+          </div>
+
         </div>
       ) : null}
     </div>
