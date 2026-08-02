@@ -23,6 +23,7 @@ import {
   Youtube,
 } from "lucide-react";
 import { toast } from "sonner";
+import { KycDocumentCenter } from "@/components/influencer/kyc-document-viewer";
 import { Sheet, SheetOverlay, SheetPortal } from "@/components/ui/sheet";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 
@@ -180,7 +181,11 @@ export function KycWizard() {
         </footer>
       </section>
 
-      <DocumentViewer viewer={viewer} onClose={() => setViewer(null)} />
+      <KycDocumentCenter
+        open={!!viewer}
+        title={viewer?.title ?? "Document"}
+        onClose={() => setViewer(null)}
+      />
       <ApprovalStatusDrawer open={statusOpen} onOpenChange={setStatusOpen} />
     </div>
   );
@@ -437,51 +442,6 @@ function StatusPill({
     </span>
   );
 }
-
-/* ---------- Document viewer ---------- */
-
-function DocumentViewer({
-  viewer,
-  onClose,
-}: {
-  viewer: { title: string; kind: "id" | "generic" } | null;
-  onClose: () => void;
-}) {
-  const open = !!viewer;
-  return (
-    <Sheet open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
-      <SheetPortal>
-        <SheetOverlay className="bg-foreground/40" />
-        <SheetPrimitive.Content className="fixed inset-y-0 right-0 z-50 h-full w-full max-w-[560px] border-l border-border bg-surface shadow-xl flex flex-col data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right">
-          <div className="h-11 px-4 flex items-center justify-between border-b border-border">
-            <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-muted-foreground" />
-              <div className="text-[13px] font-semibold">{viewer?.title ?? "Document"}</div>
-              <span className="text-[11px] text-muted-foreground">Preview</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <IconBtn label="Download" onClick={() => toast.success("Download queued")}><Download className="h-3.5 w-3.5" /></IconBtn>
-              <IconBtn label="Close" onClick={onClose}><X className="h-4 w-4" /></IconBtn>
-            </div>
-          </div>
-          <div className="flex-1 overflow-y-auto bg-background p-5">
-            <div className="mx-auto max-w-[420px] aspect-[1/1.4] rounded-md border border-border bg-surface shadow-sm grid place-items-center text-muted-foreground">
-              <div className="text-center px-5">
-                <FileText className="h-10 w-10 mx-auto opacity-50" />
-                <div className="mt-2 text-[13px] font-semibold text-foreground">No document uploaded</div>
-                <div className="mt-1 text-[12px]">
-                  Once uploaded, the {viewer?.kind === "id" ? "identity document" : "document"} renders here with zoom, page navigation and download.
-                </div>
-              </div>
-            </div>
-          </div>
-        </SheetPrimitive.Content>
-      </SheetPortal>
-    </Sheet>
-  );
-}
-
-/* ---------- Approval status drawer ---------- */
 
 function ApprovalStatusDrawer({
   open,
