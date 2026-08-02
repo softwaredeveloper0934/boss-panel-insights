@@ -109,14 +109,14 @@ export function subscribeActivity(fn: () => void) {
 
 /** React binding for the activity/audit log. */
 export function useActivityLog(scope?: string) {
-  const [, force] = useState(0);
+  const [version, force] = useState(0);
   useEffect(() => {
     const unsubscribe = subscribeActivity(() => force((n) => n + 1));
     return () => {
       unsubscribe();
     };
   }, []);
-  return useMemo(() => getActivity(scope), [scope]);
+  return useMemo(() => getActivity(scope), [scope, version]);
 }
 
 export type OptimisticTask = {
