@@ -131,11 +131,7 @@ function colName(index: number) {
   return name;
 }
 
-export function toXlsxBlob(
-  columns: ExportColumn[],
-  rows: ExportRow[],
-  sheetName = "Export",
-): Blob {
+export function toXlsxBlob(columns: ExportColumn[], rows: ExportRow[], sheetName = "Export"): Blob {
   const encoder = new TextEncoder();
   const rowXml = (values: string[], rowIndex: number) =>
     `<row r="${rowIndex}">${values

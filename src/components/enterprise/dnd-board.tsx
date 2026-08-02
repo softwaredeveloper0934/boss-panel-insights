@@ -1,11 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  History,
-  Keyboard,
-  Lock,
-  MousePointerClick,
-  Undo2,
-} from "lucide-react";
+import { History, Keyboard, Lock, MousePointerClick, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   formatActivityTime,
@@ -173,7 +167,10 @@ export function DndBoard<T>({
         if (!el) return false;
         const r = el.getBoundingClientRect();
         return (
-          ev.clientX >= r.left && ev.clientX <= r.right && ev.clientY >= r.top && ev.clientY <= r.bottom
+          ev.clientX >= r.left &&
+          ev.clientX <= r.right &&
+          ev.clientY >= r.top &&
+          ev.clientY <= r.bottom
         );
       });
       setOverColumn(hit?.[0] ?? null);
@@ -383,7 +380,11 @@ export function DndBoard<T>({
         </div>
       ) : null}
 
-      <BoardHistoryDrawer open={historyOpen} onClose={() => setHistoryOpen(false)} entity={entity} />
+      <BoardHistoryDrawer
+        open={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+        entity={entity}
+      />
 
       {dragging ? (
         <div
@@ -427,7 +428,9 @@ export function BoardHistoryDrawer({
         className="relative z-10 h-full w-full max-w-[420px] border-l border-border bg-surface flex flex-col animate-in slide-in-from-right duration-200"
       >
         <header className="h-11 px-3 flex items-center justify-between border-b border-border">
-          <div className="text-[12.5px] font-semibold text-foreground">Change history &amp; audit</div>
+          <div className="text-[12.5px] font-semibold text-foreground">
+            Change history &amp; audit
+          </div>
           <button
             type="button"
             onClick={onClose}

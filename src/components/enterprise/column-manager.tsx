@@ -188,9 +188,7 @@ export function ColumnManager<T>({
                     <span className="truncate text-[12.5px] text-foreground">
                       {def.header}
                       {def.required ? (
-                        <span className="ml-1 text-[10.5px] text-muted-foreground">
-                          required
-                        </span>
+                        <span className="ml-1 text-[10.5px] text-muted-foreground">required</span>
                       ) : null}
                     </span>
                   </label>

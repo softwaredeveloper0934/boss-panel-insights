@@ -580,10 +580,18 @@ export function KycDocumentCenter({
                 Auto enhance
               </button>
               <span className="mx-1 h-5 w-px bg-border" />
-              <ToolBtn onClick={() => setMode("ocr")} label="Mark OCR region" active={mode === "ocr"}>
+              <ToolBtn
+                onClick={() => setMode("ocr")}
+                label="Mark OCR region"
+                active={mode === "ocr"}
+              >
                 <ScanText className="h-3.5 w-3.5" />
               </ToolBtn>
-              <ToolBtn onClick={() => setMode("face")} label="Mark face region" active={mode === "face"}>
+              <ToolBtn
+                onClick={() => setMode("face")}
+                label="Mark face region"
+                active={mode === "face"}
+              >
                 <ScanFace className="h-3.5 w-3.5" />
               </ToolBtn>
               <ToolBtn
@@ -768,7 +776,10 @@ export function KycDocumentCenter({
                     <MetaRow label="File name" value={active.name} />
                     <MetaRow label="MIME type" value={active.type} />
                     <MetaRow label="Size" value={bytes(active.size)} />
-                    <MetaRow label="Uploaded" value={new Date(active.uploadedAt).toLocaleString()} />
+                    <MetaRow
+                      label="Uploaded"
+                      value={new Date(active.uploadedAt).toLocaleString()}
+                    />
                     <MetaRow label="Source" value={active.note} />
                     <MetaRow
                       label="Dimensions"

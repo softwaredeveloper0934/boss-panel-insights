@@ -11,11 +11,7 @@ import {
   Sliders,
 } from "lucide-react";
 import { ColumnManager } from "./column-manager";
-import {
-  DENSITY_ROW_HEIGHT,
-  type ColumnDef,
-  type TableLayoutApi,
-} from "./table-layout";
+import { DENSITY_ROW_HEIGHT, type ColumnDef, type TableLayoutApi } from "./table-layout";
 
 const SELECT_W = 40;
 const ACTION_W = 56;
@@ -346,11 +342,7 @@ export function DataTable<T>({
           ) : loading ? (
             <SkeletonRows rows={Math.max(6, viewportRows)} cols={cols.length} height={rowHeight} />
           ) : rows.length === 0 ? (
-            <EmptyState
-              title={emptyTitle}
-              description={emptyDescription}
-              action={emptyAction}
-            />
+            <EmptyState title={emptyTitle} description={emptyDescription} action={emptyAction} />
           ) : (
             <div style={{ height: rows.length * rowHeight }} className="relative">
               <div
@@ -458,7 +450,9 @@ const TableRow = memo(function TableRow<T>({
       <div
         className={[
           "sticky left-0 z-20 flex items-center justify-center border-r border-border",
-          selected ? "bg-[color-mix(in_oklab,var(--color-primary)_6%,var(--color-surface))]" : "bg-surface group-hover:bg-muted/50",
+          selected
+            ? "bg-[color-mix(in_oklab,var(--color-primary)_6%,var(--color-surface))]"
+            : "bg-surface group-hover:bg-muted/50",
         ].join(" ")}
         style={{ width: SELECT_W, minWidth: SELECT_W }}
         onClick={(e) => e.stopPropagation()}
@@ -498,7 +492,9 @@ const TableRow = memo(function TableRow<T>({
             ].join(" ")}
           >
             <div className="truncate w-full">
-              {c.def.render ? c.def.render(row) : String((row as Record<string, unknown>)[c.def.key] ?? "—")}
+              {c.def.render
+                ? c.def.render(row)
+                : String((row as Record<string, unknown>)[c.def.key] ?? "—")}
             </div>
           </div>
         );
@@ -586,15 +582,7 @@ function ResizeHandle({
   );
 }
 
-function SkeletonRows({
-  rows,
-  cols,
-  height,
-}: {
-  rows: number;
-  cols: number;
-  height: number;
-}) {
+function SkeletonRows({ rows, cols, height }: { rows: number; cols: number; height: number }) {
   return (
     <div aria-hidden>
       {Array.from({ length: rows }).map((_, i) => (

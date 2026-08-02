@@ -9,12 +9,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
-export type ActivityStatus =
-  | "pending"
-  | "done"
-  | "undone"
-  | "failed"
-  | "rolled-back";
+export type ActivityStatus = "pending" | "done" | "undone" | "failed" | "rolled-back";
 
 export type ActivityEntry = {
   id: string;
