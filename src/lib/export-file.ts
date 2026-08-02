@@ -107,7 +107,9 @@ function zip(entries: ZipEntry[]): Blob {
     ...u16(0),
   ]);
 
-  return new Blob([...chunks, ...central, end], { type: "application/zip" });
+  return new Blob([...chunks, ...central, end] as unknown as BlobPart[], {
+    type: "application/zip",
+  });
 }
 
 function xmlEscape(v: string) {
