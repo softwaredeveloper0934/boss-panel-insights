@@ -23,13 +23,19 @@ import {
   Youtube,
 } from "lucide-react";
 import { toast } from "sonner";
+import { KycDocumentCenter } from "@/components/influencer/kyc-document-viewer";
 import { Sheet, SheetOverlay, SheetPortal } from "@/components/ui/sheet";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 
 const STEPS = [
   { key: "identity", label: "Identity", icon: IdCard, hint: "Government-issued ID and liveness" },
   { key: "social", label: "Social", icon: Youtube, hint: "Verify ownership of social handles" },
-  { key: "company", label: "Company", icon: Building2, hint: "Legal entity and registered address" },
+  {
+    key: "company",
+    label: "Company",
+    icon: Building2,
+    hint: "Legal entity and registered address",
+  },
   { key: "bank", label: "Bank", icon: Landmark, hint: "Payout destination and beneficiary" },
   { key: "tax", label: "Tax", icon: Percent, hint: "Tax residency and withholding forms" },
 ] as const;
@@ -68,9 +74,7 @@ export function KycWizard() {
                   onClick={() => setStepIdx(i)}
                   className={[
                     "w-full text-left px-2 py-2 rounded-md flex items-start gap-2 border transition-colors",
-                    active
-                      ? "border-primary/40 bg-primary/5"
-                      : "border-transparent hover:bg-muted",
+                    active ? "border-primary/40 bg-primary/5" : "border-transparent hover:bg-muted",
                   ].join(" ")}
                 >
                   <div
@@ -129,11 +133,17 @@ export function KycWizard() {
         </header>
 
         <div className="p-5">
-          {step.key === "identity" ? <IdentityStep onView={(t) => setViewer({ title: t, kind: "id" })} /> : null}
+          {step.key === "identity" ? (
+            <IdentityStep onView={(t) => setViewer({ title: t, kind: "id" })} />
+          ) : null}
           {step.key === "social" ? <SocialStep /> : null}
-          {step.key === "company" ? <CompanyStep onView={(t) => setViewer({ title: t, kind: "generic" })} /> : null}
+          {step.key === "company" ? (
+            <CompanyStep onView={(t) => setViewer({ title: t, kind: "generic" })} />
+          ) : null}
           {step.key === "bank" ? <BankStep /> : null}
-          {step.key === "tax" ? <TaxStep onView={(t) => setViewer({ title: t, kind: "generic" })} /> : null}
+          {step.key === "tax" ? (
+            <TaxStep onView={(t) => setViewer({ title: t, kind: "generic" })} />
+          ) : null}
         </div>
 
         <footer className="h-12 px-4 flex items-center justify-between border-t border-border bg-surface">
@@ -180,7 +190,11 @@ export function KycWizard() {
         </footer>
       </section>
 
-      <DocumentViewer viewer={viewer} onClose={() => setViewer(null)} />
+      <KycDocumentCenter
+        open={!!viewer}
+        title={viewer?.title ?? "Document"}
+        onClose={() => setViewer(null)}
+      />
       <ApprovalStatusDrawer open={statusOpen} onOpenChange={setStatusOpen} />
     </div>
   );
@@ -191,10 +205,18 @@ export function KycWizard() {
 function IdentityStep({ onView }: { onView: (title: string) => void }) {
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      <Field label="Legal full name"><Input placeholder="As printed on your ID" /></Field>
-      <Field label="Date of birth"><Input type="date" /></Field>
-      <Field label="Country of residence"><Input placeholder="Select country" /></Field>
-      <Field label="Nationality"><Input placeholder="Select nationality" /></Field>
+      <Field label="Legal full name">
+        <Input placeholder="As printed on your ID" />
+      </Field>
+      <Field label="Date of birth">
+        <Input type="date" />
+      </Field>
+      <Field label="Country of residence">
+        <Input placeholder="Select country" />
+      </Field>
+      <Field label="Nationality">
+        <Input placeholder="Select nationality" />
+      </Field>
       <Field label="ID type">
         <select className="w-full h-9 px-2.5 rounded-md border border-border bg-background text-[13px]">
           <option>Passport</option>
@@ -202,7 +224,9 @@ function IdentityStep({ onView }: { onView: (title: string) => void }) {
           <option>Driver&apos;s license</option>
         </select>
       </Field>
-      <Field label="ID number"><Input placeholder="Document number" /></Field>
+      <Field label="ID number">
+        <Input placeholder="Document number" />
+      </Field>
       <div className="md:col-span-2">
         <div className="grid gap-2 sm:grid-cols-3">
           <UploadTile label="ID front" onView={() => onView("ID front")} />
@@ -226,7 +250,8 @@ function SocialStep() {
   return (
     <div className="space-y-3">
       <div className="rounded-md border border-dashed border-border bg-surface-muted/50 px-3 py-2 text-[12px] text-muted-foreground">
-        Ownership is verified via OAuth handshake or a one-time verification code posted to the account bio.
+        Ownership is verified via OAuth handshake or a one-time verification code posted to the
+        account bio.
       </div>
       <ul className="divide-y divide-border rounded-md border border-border bg-surface">
         {platforms.map((p) => (
@@ -265,15 +290,30 @@ function CompanyStep({ onView }: { onView: (title: string) => void }) {
           <option>Company (Ltd)</option>
         </select>
       </Field>
-      <Field label="Legal entity name"><Input placeholder="Registered name" /></Field>
-      <Field label="Registration number"><Input placeholder="CIN / EIN / Reg #" /></Field>
-      <Field label="Country of registration"><Input placeholder="Country" /></Field>
-      <Field label="Registered address">
-        <textarea rows={2} className="w-full px-2.5 py-2 rounded-md border border-border bg-background text-[13px] outline-none focus:border-ring" placeholder="Street, city, state, postal code" />
+      <Field label="Legal entity name">
+        <Input placeholder="Registered name" />
       </Field>
-      <Field label="Business email"><Input type="email" placeholder="finance@company.com" /></Field>
+      <Field label="Registration number">
+        <Input placeholder="CIN / EIN / Reg #" />
+      </Field>
+      <Field label="Country of registration">
+        <Input placeholder="Country" />
+      </Field>
+      <Field label="Registered address">
+        <textarea
+          rows={2}
+          className="w-full px-2.5 py-2 rounded-md border border-border bg-background text-[13px] outline-none focus:border-ring"
+          placeholder="Street, city, state, postal code"
+        />
+      </Field>
+      <Field label="Business email">
+        <Input type="email" placeholder="finance@company.com" />
+      </Field>
       <div className="md:col-span-2 grid gap-2 sm:grid-cols-2">
-        <UploadTile label="Certificate of incorporation" onView={() => onView("Certificate of incorporation")} />
+        <UploadTile
+          label="Certificate of incorporation"
+          onView={() => onView("Certificate of incorporation")}
+        />
         <UploadTile label="Address proof" onView={() => onView("Address proof")} />
       </div>
     </div>
@@ -285,7 +325,9 @@ function BankStep() {
   return (
     <div className="space-y-4">
       <div>
-        <div className="text-[11px] uppercase tracking-wide font-medium text-muted-foreground mb-1">Payout method</div>
+        <div className="text-[11px] uppercase tracking-wide font-medium text-muted-foreground mb-1">
+          Payout method
+        </div>
         <div className="grid grid-cols-4 gap-1.5">
           {[
             { k: "bank", l: "Bank" },
@@ -310,23 +352,47 @@ function BankStep() {
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
-        <Field label="Beneficiary name"><Input placeholder="As per bank records" /></Field>
-        <Field label="Account currency"><Input placeholder="INR / USD / EUR" /></Field>
+        <Field label="Beneficiary name">
+          <Input placeholder="As per bank records" />
+        </Field>
+        <Field label="Account currency">
+          <Input placeholder="INR / USD / EUR" />
+        </Field>
         {method === "bank" ? (
           <>
-            <Field label="Account number"><Input placeholder="Account #" /></Field>
-            <Field label="IFSC / SWIFT / IBAN"><Input placeholder="Routing code" /></Field>
-            <Field label="Bank name"><Input placeholder="Bank" /></Field>
-            <Field label="Branch address"><Input placeholder="Branch" /></Field>
+            <Field label="Account number">
+              <Input placeholder="Account #" />
+            </Field>
+            <Field label="IFSC / SWIFT / IBAN">
+              <Input placeholder="Routing code" />
+            </Field>
+            <Field label="Bank name">
+              <Input placeholder="Bank" />
+            </Field>
+            <Field label="Branch address">
+              <Input placeholder="Branch" />
+            </Field>
           </>
         ) : null}
-        {method === "upi" ? <Field label="UPI ID"><Input placeholder="name@bank" /></Field> : null}
-        {method === "paypal" ? <Field label="PayPal email"><Input type="email" placeholder="paypal@email.com" /></Field> : null}
-        {method === "wise" ? <Field label="Wise account email"><Input type="email" placeholder="wise@email.com" /></Field> : null}
+        {method === "upi" ? (
+          <Field label="UPI ID">
+            <Input placeholder="name@bank" />
+          </Field>
+        ) : null}
+        {method === "paypal" ? (
+          <Field label="PayPal email">
+            <Input type="email" placeholder="paypal@email.com" />
+          </Field>
+        ) : null}
+        {method === "wise" ? (
+          <Field label="Wise account email">
+            <Input type="email" placeholder="wise@email.com" />
+          </Field>
+        ) : null}
       </div>
       <div className="rounded-md border border-warning/30 bg-warning/5 px-3 py-2 flex items-start gap-2 text-[12px]">
-        <ShieldAlert className="h-3.5 w-3.5 text-warning mt-0.5 shrink-0" />
-        A micro-deposit or name-match check runs before this destination is unlocked for payouts.
+        <ShieldAlert className="h-3.5 w-3.5 text-warning mt-0.5 shrink-0" />A micro-deposit or
+        name-match check runs before this destination is unlocked for payouts.
       </div>
     </div>
   );
@@ -335,15 +401,21 @@ function BankStep() {
 function TaxStep({ onView }: { onView: (title: string) => void }) {
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      <Field label="Tax residency"><Input placeholder="Country" /></Field>
-      <Field label="Tax identification number"><Input placeholder="PAN / EIN / VAT / TIN" /></Field>
+      <Field label="Tax residency">
+        <Input placeholder="Country" />
+      </Field>
+      <Field label="Tax identification number">
+        <Input placeholder="PAN / EIN / VAT / TIN" />
+      </Field>
       <Field label="GST / VAT registered">
         <select className="w-full h-9 px-2.5 rounded-md border border-border bg-background text-[13px]">
           <option>Not registered</option>
           <option>Registered</option>
         </select>
       </Field>
-      <Field label="GST / VAT number"><Input placeholder="Registration number" /></Field>
+      <Field label="GST / VAT number">
+        <Input placeholder="Registration number" />
+      </Field>
       <Field label="Withholding form">
         <select className="w-full h-9 px-2.5 rounded-md border border-border bg-background text-[13px]">
           <option>W-9 (US person)</option>
@@ -360,7 +432,10 @@ function TaxStep({ onView }: { onView: (title: string) => void }) {
       </Field>
       <div className="md:col-span-2 grid gap-2 sm:grid-cols-2">
         <UploadTile label="Tax certificate" onView={() => onView("Tax certificate")} />
-        <UploadTile label="Signed withholding form" onView={() => onView("Signed withholding form")} />
+        <UploadTile
+          label="Signed withholding form"
+          onView={() => onView("Signed withholding form")}
+        />
       </div>
     </div>
   );
@@ -371,7 +446,9 @@ function TaxStep({ onView }: { onView: (title: string) => void }) {
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="block">
-      <div className="text-[11px] uppercase tracking-wide font-medium text-muted-foreground mb-1">{label}</div>
+      <div className="text-[11px] uppercase tracking-wide font-medium text-muted-foreground mb-1">
+        {label}
+      </div>
       {children}
     </label>
   );
@@ -432,56 +509,13 @@ function StatusPill({
           ? "bg-destructive/10 text-destructive border-destructive/20"
           : "bg-muted text-muted-foreground border-border";
   return (
-    <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10.5px] font-medium ${cls}`}>
+    <span
+      className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10.5px] font-medium ${cls}`}
+    >
       {children}
     </span>
   );
 }
-
-/* ---------- Document viewer ---------- */
-
-function DocumentViewer({
-  viewer,
-  onClose,
-}: {
-  viewer: { title: string; kind: "id" | "generic" } | null;
-  onClose: () => void;
-}) {
-  const open = !!viewer;
-  return (
-    <Sheet open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
-      <SheetPortal>
-        <SheetOverlay className="bg-foreground/40" />
-        <SheetPrimitive.Content className="fixed inset-y-0 right-0 z-50 h-full w-full max-w-[560px] border-l border-border bg-surface shadow-xl flex flex-col data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right">
-          <div className="h-11 px-4 flex items-center justify-between border-b border-border">
-            <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-muted-foreground" />
-              <div className="text-[13px] font-semibold">{viewer?.title ?? "Document"}</div>
-              <span className="text-[11px] text-muted-foreground">Preview</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <IconBtn label="Download" onClick={() => toast.success("Download queued")}><Download className="h-3.5 w-3.5" /></IconBtn>
-              <IconBtn label="Close" onClick={onClose}><X className="h-4 w-4" /></IconBtn>
-            </div>
-          </div>
-          <div className="flex-1 overflow-y-auto bg-background p-5">
-            <div className="mx-auto max-w-[420px] aspect-[1/1.4] rounded-md border border-border bg-surface shadow-sm grid place-items-center text-muted-foreground">
-              <div className="text-center px-5">
-                <FileText className="h-10 w-10 mx-auto opacity-50" />
-                <div className="mt-2 text-[13px] font-semibold text-foreground">No document uploaded</div>
-                <div className="mt-1 text-[12px]">
-                  Once uploaded, the {viewer?.kind === "id" ? "identity document" : "document"} renders here with zoom, page navigation and download.
-                </div>
-              </div>
-            </div>
-          </div>
-        </SheetPrimitive.Content>
-      </SheetPortal>
-    </Sheet>
-  );
-}
-
-/* ---------- Approval status drawer ---------- */
 
 function ApprovalStatusDrawer({
   open,
@@ -507,11 +541,15 @@ function ApprovalStatusDrawer({
               <ShieldCheck className="h-4 w-4 text-muted-foreground" />
               <div className="text-[13px] font-semibold">Approval status</div>
             </div>
-            <IconBtn label="Close" onClick={() => onOpenChange(false)}><X className="h-4 w-4" /></IconBtn>
+            <IconBtn label="Close" onClick={() => onOpenChange(false)}>
+              <X className="h-4 w-4" />
+            </IconBtn>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             <div className="rounded-md border border-border bg-surface-muted/40 p-3">
-              <div className="text-[11.5px] uppercase tracking-wide font-medium text-muted-foreground">Overall</div>
+              <div className="text-[11.5px] uppercase tracking-wide font-medium text-muted-foreground">
+                Overall
+              </div>
               <div className="mt-1 flex items-center gap-2">
                 <StatusPill tone="warn">In progress</StatusPill>
                 <div className="text-[12px] text-muted-foreground">0 of 5 steps complete</div>
@@ -523,7 +561,9 @@ function ApprovalStatusDrawer({
             <ul className="divide-y divide-border rounded-md border border-border bg-surface">
               {items.map((it) => (
                 <li key={it.label} className="px-3 py-2.5 flex items-center gap-3">
-                  <span className={`h-2 w-2 rounded-full ${it.state === "pending" ? "bg-warning" : "bg-success"}`} />
+                  <span
+                    className={`h-2 w-2 rounded-full ${it.state === "pending" ? "bg-warning" : "bg-success"}`}
+                  />
                   <div className="min-w-0 flex-1">
                     <div className="text-[12.5px] font-medium text-foreground">{it.label}</div>
                     <div className="text-[11px] text-muted-foreground">{it.hint}</div>
@@ -533,7 +573,8 @@ function ApprovalStatusDrawer({
               ))}
             </ul>
             <div className="rounded-md border border-dashed border-border bg-surface-muted/40 p-3 text-[12px] text-muted-foreground">
-              Reviewers see this exact status when your submission enters the queue. Approvals typically clear within 24–72 hours.
+              Reviewers see this exact status when your submission enters the queue. Approvals
+              typically clear within 24–72 hours.
             </div>
           </div>
           <div className="h-12 px-4 flex items-center justify-end gap-2 border-t border-border">
