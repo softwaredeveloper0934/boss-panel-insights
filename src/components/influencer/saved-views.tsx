@@ -1,0 +1,370 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Bookmark, Check, ChevronDown, Download, Plus, Star, Trash2, Upload } from "lucide-react";
+
+import { toast } from "sonner";
+
+/**
+ * Named filter presets scoped by pathname. Persisted to localStorage so the
+ * UI works end-to-end without a backend; the shape is future-proof for API sync.
+ */
+export type SavedView = {
+  id: string;
+  name: string;
+  createdAt: number;
+  /** Free-form filter snapshot — arbitrary JSON so callers can store anything. */
+  filters: Record<string, unknown>;
+  pinned?: boolean;
+};
+
+const STORAGE_PREFIX = "iv:savedViews:";
+
+function readViews(scopeKey: string): SavedView[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(STORAGE_PREFIX + scopeKey);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as SavedView[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeViews(scopeKey: string, views: SavedView[]) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(STORAGE_PREFIX + scopeKey, JSON.stringify(views));
+}
+
+/** Portable backup envelope so presets can move between workspaces. */
+type ViewBundle = {
+  kind: "influencer-manager.saved-views";
+  version: 1;
+  scopeKey: string;
+  exportedAt: string;
+  views: SavedView[];
+};
+
+function isBundle(value: unknown): value is ViewBundle {
+  if (!value || typeof value !== "object") return false;
+  const v = value as Partial<ViewBundle>;
+  return v.kind === "influencer-manager.saved-views" && Array.isArray(v.views);
+}
+
+
+export function SavedViews({
+  scopeKey,
+  getCurrentFilters,
+  onApply,
+  label = "Views",
+}: {
+  /** Unique key per page/section, e.g. pathname or "/influencers#directory". */
+  scopeKey: string;
+  /** Callback that returns the current filter snapshot at save time. */
+  getCurrentFilters: () => Record<string, unknown>;
+  /** Called with a saved snapshot when the user picks a view. */
+  onApply: (filters: Record<string, unknown>) => void;
+  label?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [name, setName] = useState("");
+  const [views, setViews] = useState<SavedView[]>(() => readViews(scopeKey));
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+
+  useEffect(() => {
+    setViews(readViews(scopeKey));
+    setActiveId(null);
+  }, [scopeKey]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+        setCreating(false);
+      }
+    };
+    window.addEventListener("mousedown", onDown);
+    return () => window.removeEventListener("mousedown", onDown);
+  }, [open]);
+
+  const sorted = useMemo(
+    () =>
+      [...views].sort((a, b) => {
+        if (!!b.pinned !== !!a.pinned) return b.pinned ? 1 : -1;
+        return b.createdAt - a.createdAt;
+      }),
+    [views],
+  );
+
+  const persist = (next: SavedView[]) => {
+    setViews(next);
+    writeViews(scopeKey, next);
+  };
+
+  const save = () => {
+    const trimmed = name.trim();
+    if (!trimmed) {
+      toast.error("Give the view a name");
+      return;
+    }
+    const view: SavedView = {
+      id: crypto.randomUUID(),
+      name: trimmed,
+      createdAt: Date.now(),
+      filters: getCurrentFilters(),
+    };
+    persist([view, ...views]);
+    setActiveId(view.id);
+    setName("");
+    setCreating(false);
+    toast.success(`View "${trimmed}" saved`);
+  };
+
+  const apply = (v: SavedView) => {
+    onApply(v.filters);
+    setActiveId(v.id);
+    setOpen(false);
+    toast.success(`Applied view "${v.name}"`);
+  };
+
+  const remove = (v: SavedView) => {
+    persist(views.filter((x) => x.id !== v.id));
+    if (activeId === v.id) setActiveId(null);
+    toast.message(`Deleted "${v.name}"`);
+  };
+
+  const togglePin = (v: SavedView) => {
+    persist(views.map((x) => (x.id === v.id ? { ...x, pinned: !x.pinned } : x)));
+  };
+
+  const exportViews = () => {
+    if (views.length === 0) {
+      toast.error("Nothing to export yet");
+      return;
+    }
+    const bundle: ViewBundle = {
+      kind: "influencer-manager.saved-views",
+      version: 1,
+      scopeKey,
+      exportedAt: new Date().toISOString(),
+      views,
+    };
+    const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `saved-views${scopeKey.replace(/[^a-z0-9]+/gi, "-")}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(`Exported ${views.length} view${views.length === 1 ? "" : "s"}`);
+  };
+
+  const importViews = async (file: File) => {
+    try {
+      const parsed: unknown = JSON.parse(await file.text());
+      const incoming = isBundle(parsed)
+        ? parsed.views
+        : Array.isArray(parsed)
+          ? (parsed as SavedView[])
+          : null;
+      if (!incoming) {
+        toast.error("Unrecognised file", { description: "Expected a saved-views export." });
+        return;
+      }
+      const valid = incoming.filter(
+        (v) => v && typeof v.name === "string" && typeof v.filters === "object",
+      );
+      if (valid.length === 0) {
+        toast.error("No valid views found in that file");
+        return;
+      }
+      const existing = new Set(views.map((v) => v.name.toLowerCase()));
+      const merged: SavedView[] = [
+        ...valid.map((v) => ({
+          id: crypto.randomUUID(),
+          name: existing.has(v.name.toLowerCase()) ? `${v.name} (imported)` : v.name,
+          createdAt: typeof v.createdAt === "number" ? v.createdAt : Date.now(),
+          filters: (v.filters ?? {}) as Record<string, unknown>,
+          pinned: !!v.pinned,
+        })),
+        ...views,
+      ];
+      persist(merged);
+      toast.success(`Imported ${valid.length} view${valid.length === 1 ? "" : "s"}`);
+    } catch {
+      toast.error("Could not read that file", { description: "Invalid JSON." });
+    }
+  };
+
+  const activeName = views.find((v) => v.id === activeId)?.name;
+
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className={[
+          "h-8 px-2.5 inline-flex items-center gap-1.5 rounded-md border border-dashed text-[12px] transition-colors cursor-pointer",
+          activeId
+            ? "border-primary text-foreground bg-muted"
+            : "border-border text-foreground bg-background hover:bg-muted",
+        ].join(" ")}
+      >
+        <Bookmark className="h-3.5 w-3.5" />
+        {activeName ? (
+          <span className="max-w-[140px] truncate">{activeName}</span>
+        ) : (
+          label
+        )}
+        {views.length > 0 ? (
+          <span className="text-[10.5px] text-muted-foreground tabular-nums">
+            {views.length}
+          </span>
+        ) : null}
+        <ChevronDown className="h-3 w-3 text-muted-foreground" />
+      </button>
+      {open ? (
+        <div className="absolute z-30 mt-1.5 left-0 w-72 rounded-md border border-border bg-popover text-popover-foreground shadow-(--shadow-popover)">
+          <div className="px-3 py-1.5 text-[10.5px] font-semibold uppercase tracking-wide text-muted-foreground border-b border-border flex items-center justify-between">
+            <span>Saved views</span>
+            {!creating ? (
+              <button
+                type="button"
+                onClick={() => setCreating(true)}
+                className="normal-case tracking-normal text-[11px] font-medium text-primary hover:underline cursor-pointer inline-flex items-center gap-1"
+              >
+                <Plus className="h-3 w-3" /> Save current
+              </button>
+            ) : null}
+          </div>
+          {creating ? (
+            <div className="p-2 border-b border-border flex items-center gap-1.5">
+              <input
+                autoFocus
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") save();
+                  if (e.key === "Escape") {
+                    setCreating(false);
+                    setName("");
+                  }
+                }}
+                placeholder="e.g. High-risk this week"
+                className="flex-1 h-7 px-2 rounded border border-border bg-background text-[12.5px] outline-none focus:border-ring"
+              />
+              <button
+                type="button"
+                onClick={save}
+                className="h-7 px-2 rounded bg-primary text-primary-foreground text-[11.5px] cursor-pointer"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setCreating(false);
+                  setName("");
+                }}
+                className="h-7 px-2 rounded border border-border text-[11.5px] cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          ) : null}
+          <div className="max-h-72 overflow-y-auto py-1">
+            {sorted.length === 0 ? (
+              <div className="px-3 py-6 text-center text-[12px] text-muted-foreground">
+                No views yet.
+                <div className="text-[11px] mt-0.5">
+                  Save the current filters to reapply them later.
+                </div>
+              </div>
+            ) : (
+              sorted.map((v) => (
+                <div
+                  key={v.id}
+                  className={[
+                    "flex items-center gap-1 px-2 py-1.5 text-[12.5px]",
+                    activeId === v.id ? "bg-muted/60" : "hover:bg-muted",
+                  ].join(" ")}
+                >
+                  <button
+                    type="button"
+                    onClick={() => apply(v)}
+                    className="flex-1 min-w-0 flex items-center gap-2 text-left cursor-pointer"
+                  >
+                    <span
+                      className={[
+                        "h-3.5 w-3.5 shrink-0 grid place-items-center",
+                        activeId === v.id ? "text-primary" : "text-transparent",
+                      ].join(" ")}
+                    >
+                      <Check className="h-3.5 w-3.5" />
+                    </span>
+                    <span className="truncate text-foreground">{v.name}</span>
+                  </button>
+                  <button
+                    type="button"
+                    aria-label={v.pinned ? "Unpin view" : "Pin view"}
+                    onClick={() => togglePin(v)}
+                    className={[
+                      "h-6 w-6 grid place-items-center rounded hover:bg-background cursor-pointer",
+                      v.pinned ? "text-primary" : "text-muted-foreground",
+                    ].join(" ")}
+                  >
+                    <Star className={`h-3.5 w-3.5 ${v.pinned ? "fill-current" : ""}`} />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Delete view"
+                    onClick={() => remove(v)}
+                    className="h-6 w-6 grid place-items-center rounded text-muted-foreground hover:text-destructive hover:bg-background cursor-pointer"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+          <div className="border-t border-border px-2 py-1.5 flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              className="h-7 px-2 rounded border border-border bg-background hover:bg-muted text-[11.5px] inline-flex items-center gap-1.5 cursor-pointer"
+            >
+              <Upload className="h-3 w-3" /> Import
+            </button>
+            <button
+              type="button"
+              onClick={exportViews}
+              className="h-7 px-2 rounded border border-border bg-background hover:bg-muted text-[11.5px] inline-flex items-center gap-1.5 cursor-pointer"
+            >
+              <Download className="h-3 w-3" /> Export
+            </button>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="application/json,.json"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                e.target.value = "";
+                if (file) void importViews(file);
+              }}
+            />
+          </div>
+          <div className="px-3 py-1.5 border-t border-border text-[10.5px] text-muted-foreground">
+            Stored locally per page. Export a JSON bundle to back up or move these views to another workspace.
+          </div>
+
+        </div>
+      ) : null}
+    </div>
+  );
+}
