@@ -11,8 +11,12 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { TopBar } from "../components/influencer/top-bar";
-import { Toaster } from "sonner";
+import { TopBar } from "@/components/layout/TopBar";
+import { AppSidebar, useSidebarState } from "@/components/layout/AppSidebar";
+import { AuthzProvider } from "@/lib/rbac/AuthzProvider";
+import { I18nProvider } from "@/lib/i18n/I18nProvider";
+import { Mascot } from "@/components/mascot/Mascot";
+import { ModuleGuard } from "@/components/auth/ModuleGuard";
 
 function NotFoundComponent() {
   return (
@@ -28,7 +32,7 @@ function NotFoundComponent() {
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Go to Dashboard
+            Go home
           </Link>
         </div>
       </div>
@@ -79,26 +83,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Influencer Manager — Software Vala Boss Panel" },
-      {
-        name: "description",
-        content:
-          "Enterprise control center to manage influencers, campaigns, commissions and payouts across the Software Vala network.",
-      },
-      { name: "author", content: "Software Vala" },
+      { title: "Influencer Dashboard — Software Vala" },
+      { name: "description", content: "Promote products, generate sales, earn commission, grow your personal brand." },
+      { property: "og:title", content: "Influencer Dashboard — Software Vala" },
+      { property: "og:description", content: "Promote products, generate sales, earn commission, grow your personal brand." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "twitter:site", content: "@SoftwareVala" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      {
-        rel: "preconnect",
-        href: "https://fonts.gstatic.com",
-        crossOrigin: "anonymous",
-      },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
-      },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" },
     ],
   }),
   shellComponent: RootShell,
@@ -112,7 +109,6 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
-        <style>{`.no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}`}</style>
       </head>
       <body>
         {children}
@@ -124,14 +120,31 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { collapsed, toggleCollapsed, mobileOpen, setMobileOpen } = useSidebarState();
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen bg-background text-foreground">
-        <TopBar />
-        <Outlet />
-        <Toaster position="bottom-right" richColors closeButton />
-      </div>
+      <AuthzProvider>
+        <I18nProvider>
+          <div className="min-h-screen flex w-full">
+            <AppSidebar
+              collapsed={collapsed}
+              onToggleCollapsed={toggleCollapsed}
+              mobileOpen={mobileOpen}
+              onCloseMobile={() => setMobileOpen(false)}
+            />
+            <div className="flex-1 min-w-0 flex flex-col">
+              <TopBar onOpenMenu={() => setMobileOpen(true)} />
+              <main className="flex-1 min-w-0">
+                <ModuleGuard>
+                  <Outlet />
+                </ModuleGuard>
+              </main>
+            </div>
+            <Mascot />
+          </div>
+        </I18nProvider>
+      </AuthzProvider>
     </QueryClientProvider>
   );
 }

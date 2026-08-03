@@ -1,17 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { WallPage } from "@/components/influencer/wall-page";
-import { WALL_BY_SLUG } from "@/lib/influencer-walls";
+import { Settings as SettingsIcon } from "lucide-react";
+import { StubPage } from "@/components/layout/StubPage";
 
 export const Route = createFileRoute("/settings")({
-  head: () => ({
-    meta: [
-      { title: "Settings — Influencer Manager" },
-      { name: "description", content: WALL_BY_SLUG["settings"].description },
-    ],
-  }),
-  component: SettingsPage,
+  head: () => ({ meta: [
+    { title: "Settings — Influencer Dashboard" },
+    { name: "description", content: "Profile, social, payment, language, security and privacy." },
+    { property: "og:title", content: "Settings" },
+    { property: "og:description", content: "Profile, social, payment, language, security and privacy." },
+  ]}),
+  component: () => <StubPage title="Settings" subtitle="Profile, social accounts, payment, language, currency, security and privacy." icon={SettingsIcon}
+    sections={["Profile", "Social Accounts", "Payment Accounts", "Language", "Currency", "Security", "Notifications", "Privacy"]} />,
 });
-
-function SettingsPage() {
-  return <WallPage wall={WALL_BY_SLUG["settings"]} />;
-}

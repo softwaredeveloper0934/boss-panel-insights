@@ -1,17 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { WallPage } from "@/components/influencer/wall-page";
-import { WALL_BY_SLUG } from "@/lib/influencer-walls";
+import { Star } from "lucide-react";
+import { StubPage } from "@/components/layout/StubPage";
 
 export const Route = createFileRoute("/reviews")({
-  head: () => ({
-    meta: [
-      { title: "Reviews — Influencer Manager" },
-      { name: "description", content: WALL_BY_SLUG["reviews"].description },
-    ],
-  }),
-  component: ReviewsPage,
+  head: () => ({ meta: [
+    { title: "Reviews — Creator Dashboard" },
+    { name: "description", content: "Reviews, replies, moderation, spam, ratings and sentiment analysis." },
+  ]}),
+  component: () => <StubPage title="Reviews" subtitle="All product reviews — reply, moderate, fight spam and analyze sentiment." icon={Star}
+    sections={["All","Reply","Moderation","Spam","Rating Analytics","Sentiment Analysis"]} />,
 });
-
-function ReviewsPage() {
-  return <WallPage wall={WALL_BY_SLUG["reviews"]} />;
-}

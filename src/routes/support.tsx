@@ -1,17 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { WallPage } from "@/components/influencer/wall-page";
-import { WALL_BY_SLUG } from "@/lib/influencer-walls";
+import { LifeBuoy } from "lucide-react";
+import { StubPage } from "@/components/layout/StubPage";
 
 export const Route = createFileRoute("/support")({
-  head: () => ({
-    meta: [
-      { title: "Support — Influencer Manager" },
-      { name: "description", content: WALL_BY_SLUG["support"].description },
-    ],
-  }),
-  component: SupportPage,
+  head: () => ({ meta: [
+    { title: "Support — Influencer Dashboard" },
+    { name: "description", content: "Get help, contact the team and read the docs." },
+    { property: "og:title", content: "Support" },
+    { property: "og:description", content: "Get help, contact the team and read the docs." },
+  ]}),
+  component: () => <StubPage title="Support" subtitle="Reach the Software Vala team and browse help articles." icon={LifeBuoy}
+    sections={["Help Center", "Contact", "Docs", "Status"]} />,
 });
-
-function SupportPage() {
-  return <WallPage wall={WALL_BY_SLUG["support"]} />;
-}
