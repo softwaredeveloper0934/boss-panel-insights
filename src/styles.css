@@ -4,18 +4,25 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * Software Vala — Influencer Manager
+ * Design language cloned from Creator's Launchpad: dark-first, vivid purple
+ * primary with magenta / amber / emerald accents. Enterprise token set kept
+ * intact so every module surface keeps working.
+ */
+
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-3xl: 24px;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
   --color-surface-foreground: var(--surface-foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
@@ -35,47 +42,65 @@
   --color-accent-emerald: var(--accent-emerald);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  --color-topbar: var(--topbar);
+  --color-topbar-foreground: var(--topbar-foreground);
+  --color-topbar-muted: var(--topbar-muted);
+  --color-topbar-border: var(--topbar-border);
+  --color-topbar-active: var(--topbar-active);
+
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, sans-serif;
   --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
 
-  --shadow-card: 0 1px 0 0 oklch(1 0 0 / 0.04) inset, 0 20px 40px -20px oklch(0 0 0 / 0.6);
+  --shadow-card: 0 1px 0 0 oklch(1 0 0 / 0.04) inset,
+    0 20px 40px -20px oklch(0 0 0 / 0.6);
+  --shadow-popover: 0 24px 60px -20px oklch(0 0 0 / 0.7),
+    0 2px 8px -2px oklch(0 0 0 / 0.4);
   --shadow-hero: 0 30px 80px -30px oklch(0.55 0.25 295 / 0.55);
 }
 
 :root {
-  --radius: 1rem;
+  --radius: 0.75rem;
 
-  /* Dark-first creator dashboard */
+  /* Dark-first creator palette */
   --background: oklch(0.16 0.02 285);
   --foreground: oklch(0.97 0.01 280);
 
   --surface: oklch(0.21 0.02 285);
   --surface-foreground: oklch(0.97 0.01 280);
+  --surface-muted: oklch(0.185 0.02 285);
 
-  --card: oklch(0.20 0.02 285);
+  --card: oklch(0.2 0.02 285);
   --card-foreground: oklch(0.97 0.01 280);
-
   --popover: oklch(0.22 0.02 285);
   --popover-foreground: oklch(0.97 0.01 280);
 
-  --primary: oklch(0.62 0.24 295);            /* vivid purple */
+  --primary: oklch(0.62 0.24 295);
   --primary-foreground: oklch(0.99 0.005 285);
   --primary-glow: oklch(0.72 0.22 305);
 
   --secondary: oklch(0.28 0.03 285);
   --secondary-foreground: oklch(0.97 0.01 280);
-
   --muted: oklch(0.26 0.02 285);
   --muted-foreground: oklch(0.72 0.03 280);
-
   --accent: oklch(0.32 0.05 295);
   --accent-foreground: oklch(0.98 0.01 280);
 
@@ -85,195 +110,79 @@
 
   --destructive: oklch(0.65 0.22 25);
   --destructive-foreground: oklch(0.99 0.005 280);
+  --success: oklch(0.74 0.16 165);
+  --success-foreground: oklch(0.17 0.02 285);
+  --warning: oklch(0.85 0.17 85);
+  --warning-foreground: oklch(0.2 0.03 85);
+  --info: oklch(0.72 0.16 260);
+  --info-foreground: oklch(0.17 0.02 285);
 
   --border: oklch(1 0 0 / 8%);
+  --border-strong: oklch(1 0 0 / 16%);
   --input: oklch(1 0 0 / 10%);
   --ring: oklch(0.62 0.24 295 / 60%);
+
+  --topbar: oklch(0.185 0.02 285);
+  --topbar-foreground: oklch(0.97 0.01 280);
+  --topbar-muted: oklch(0.72 0.03 280);
+  --topbar-border: oklch(1 0 0 / 8%);
+  --topbar-active: oklch(0.32 0.05 295);
 
   --chart-1: oklch(0.62 0.24 295);
   --chart-2: oklch(0.78 0.16 350);
   --chart-3: oklch(0.85 0.17 85);
   --chart-4: oklch(0.74 0.16 165);
-  --chart-5: oklch(0.62 0.20 250);
+  --chart-5: oklch(0.62 0.2 250);
 }
 
 .dark {
-  /* same tokens — app is dark-first */
+  /* app is dark-first — tokens are identical */
   --background: oklch(0.16 0.02 285);
   --foreground: oklch(0.97 0.01 280);
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
-  html, body { background-color: var(--color-background); color: var(--color-foreground); }
+  * {
+    border-color: var(--color-border);
+  }
+
+  html,
   body {
-    font-family: var(--font-display);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "cv11", "ss01", "ss03";
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
     background-image:
-      radial-gradient(60% 40% at 20% 0%, oklch(0.62 0.24 295 / 0.18), transparent 60%),
-      radial-gradient(50% 35% at 90% 10%, oklch(0.78 0.16 350 / 0.10), transparent 60%);
+      radial-gradient(
+        60% 40% at 20% 0%,
+        oklch(0.62 0.24 295 / 0.18),
+        transparent 60%
+      ),
+      radial-gradient(
+        50% 35% at 90% 10%,
+        oklch(0.78 0.16 350 / 0.1),
+        transparent 60%
+      );
+    background-repeat: no-repeat;
     background-attachment: fixed;
+  }
+
+  ::selection {
+    background: oklch(0.62 0.24 295 / 0.3);
   }
 }
 
-@utility bento-card {
-  background-color: var(--color-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-2xl);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-card);
-}
-
-@utility hero-surface {
-  background-image: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-glow) 100%);
-  color: var(--color-primary-foreground);
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-hero);
-}
-
-/* ─────────────── AI Mascot: "Vala Spark" ─────────────── */
-.sv-mascot { transform: translateZ(0); backface-visibility: hidden; contain: layout paint; }
-.sv-mascot__body { transform-origin: 50% 90%; }
-.sv-mascot__img { user-select: none; -webkit-user-drag: none; }
-
-/* Extra-subtle intensity: softer amplitude via CSS variable */
-.sv-mascot--xs { --sv-amp: 0.6; }
-.sv-mascot { --sv-amp: 1; }
-
-.sv-mascot--hidden { opacity: 0; pointer-events: none; transform: translateY(20px); }
-
-
-/* Peek: slide down from top-right, small idle bob, slide back up */
-.sv-mascot--peek {
-  top: 56px; right: 24px;
-  animation: sv-peek 4200ms cubic-bezier(.2,.8,.2,1) both;
-}
-.sv-mascot--peek .sv-mascot__body { animation: sv-bob 1600ms ease-in-out infinite; }
-@keyframes sv-peek {
-  0%   { transform: translateY(-140px) rotate(-6deg); opacity: 0; }
-  15%  { transform: translateY(-30px)  rotate(-4deg); opacity: 1; }
-  70%  { transform: translateY(-30px)  rotate(-4deg); opacity: 1; }
-  100% { transform: translateY(-160px) rotate(-8deg); opacity: 0; }
-}
-
-/* Walk: cross the viewport near the bottom, gentle sway */
-.sv-mascot--walk {
-  bottom: 24px; left: -160px;
-  animation: sv-walk 9000ms linear both;
-}
-.sv-mascot--walk .sv-mascot__body { animation: sv-step 520ms ease-in-out infinite; }
-@keyframes sv-walk {
-  0%   { transform: translateX(0); opacity: 0; }
-  8%   { opacity: 1; }
-  92%  { opacity: 1; }
-  100% { transform: translateX(calc(100vw + 200px)); opacity: 0; }
-}
-@keyframes sv-step {
-  0%,100% { transform: translateY(0) rotate(-2deg); }
-  50%     { transform: translateY(-6px) rotate(2deg); }
-}
-
-/* Wave: appear bottom-right, wiggle, disappear */
-.sv-mascot--wave {
-  bottom: 96px; right: 32px;
-  animation: sv-appear 2600ms ease-out both;
-}
-.sv-mascot--wave .sv-mascot__body { animation: sv-wave 640ms ease-in-out 3; transform-origin: 30% 70%; }
-@keyframes sv-appear {
-  0%   { transform: translateY(30px) scale(.9); opacity: 0; }
-  15%  { transform: translateY(0)    scale(1);  opacity: 1; }
-  80%  { transform: translateY(0)    scale(1);  opacity: 1; }
-  100% { transform: translateY(20px) scale(.95); opacity: 0; }
-}
-@keyframes sv-wave {
-  0%,100% { transform: rotate(-6deg); }
-  50%     { transform: rotate(10deg); }
-}
-
-/* Celebrate: centered pop with hop + sparkles */
-.sv-mascot--celebrate {
-  bottom: 96px; right: 32px;
-  animation: sv-appear 2600ms ease-out both;
-}
-.sv-mascot--celebrate .sv-mascot__body { animation: sv-hop 420ms ease-in-out 4; }
-@keyframes sv-hop {
-  0%,100% { transform: translateY(0) scale(1); }
-  50%     { transform: translateY(-18px) scale(1.05); }
-}
-.sv-mascot__sparkles span {
-  position: absolute; left: 50%; top: 50%;
-  width: 8px; height: 8px; border-radius: 999px;
-  background: radial-gradient(circle, var(--color-primary-glow) 0%, transparent 70%);
-  opacity: 0; animation: sv-spark 1400ms ease-out forwards;
-}
-.sv-mascot__sparkles span:nth-child(1){ --dx: -60px; --dy: -70px; animation-delay: 0ms; }
-.sv-mascot__sparkles span:nth-child(2){ --dx:  60px; --dy: -60px; background: radial-gradient(circle, var(--color-accent-pink) 0%, transparent 70%); animation-delay: 80ms; }
-.sv-mascot__sparkles span:nth-child(3){ --dx: -80px; --dy:  20px; background: radial-gradient(circle, var(--color-accent-amber) 0%, transparent 70%); animation-delay: 160ms; }
-.sv-mascot__sparkles span:nth-child(4){ --dx:  80px; --dy:  30px; background: radial-gradient(circle, var(--color-accent-emerald) 0%, transparent 70%); animation-delay: 240ms; }
-.sv-mascot__sparkles span:nth-child(5){ --dx:   0px; --dy: -90px; animation-delay: 320ms; }
-.sv-mascot__sparkles span:nth-child(6){ --dx:  30px; --dy:  60px; background: radial-gradient(circle, var(--color-accent-pink) 0%, transparent 70%); animation-delay: 400ms; }
-@keyframes sv-spark {
-  0%   { transform: translate(-50%, -50%) scale(.3); opacity: 0; }
-  30%  { opacity: 1; }
-  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1); opacity: 0; }
-}
-
-/* React: quick context-aware pop-in near the bottom-right with a caption */
-.sv-mascot--react {
-  bottom: 88px; right: 28px;
-  animation: sv-react 3000ms cubic-bezier(.2,.8,.2,1) both;
-}
-.sv-mascot--xs.sv-mascot--react { animation-duration: 2200ms; }
-.sv-mascot--react .sv-mascot__body { animation: sv-nod 900ms ease-in-out 2; }
-@keyframes sv-react {
-  0%   { transform: translateY(24px) scale(.94); opacity: 0; }
-  12%  { transform: translateY(0)    scale(1);   opacity: 1; }
-  82%  { transform: translateY(0)    scale(1);   opacity: 1; }
-  100% { transform: translateY(16px) scale(.96); opacity: 0; }
-}
-@keyframes sv-nod {
-  0%,100% { transform: translateY(0) rotate(0deg); }
-  35%     { transform: translateY(calc(-5px * var(--sv-amp, 1))) rotate(-3deg); }
-  70%     { transform: translateY(0) rotate(2deg); }
-}
-
-.sv-mascot__bubble {
-  position: absolute;
-  bottom: calc(100% - 6px);
-  right: 8px;
-  max-width: 15rem;
-  white-space: nowrap;
-  padding: 0.4rem 0.7rem;
-  font-size: 0.6875rem;
-  line-height: 1.1rem;
-  color: var(--color-popover-foreground);
-  background-color: var(--color-popover);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-  animation: sv-bubble 3000ms ease-out both;
-}
-@keyframes sv-bubble {
-  0%   { opacity: 0; transform: translateY(6px); }
-  14%  { opacity: 1; transform: translateY(0); }
-  80%  { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(4px); }
-}
-
-/* Optional colorways — same character, shifted hue only */
-.sv-mascot--skin-aurora { --sv-hue: 0deg; --sv-sat: 1; }
-.sv-mascot--skin-ember  { --sv-hue: 58deg; --sv-sat: 1.06; }
-.sv-mascot--skin-mint   { --sv-hue: -140deg; --sv-sat: 0.98; }
-.sv-mascot--skin-azure  { --sv-hue: -48deg; --sv-sat: 1.02; }
-.sv-mascot__img { filter: hue-rotate(var(--sv-hue, 0deg)) saturate(var(--sv-sat, 1)); }
-.sv-mascot__img.sv-blink { filter: hue-rotate(var(--sv-hue, 0deg)) saturate(var(--sv-sat, 1)) brightness(0.75); }
-
-/* Idle bob shared */
-@keyframes sv-bob {
-  0%,100% { transform: translateY(0); }
-  50%     { transform: translateY(-6px); }
-}
-
-
-@media (prefers-reduced-motion: reduce) {
-  .sv-mascot, .sv-mascot * { animation: none !important; }
+@utility sv-gradient-text {
+  background-image: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-primary-glow) 100%
+  );
+  background-clip: text;
+  color: transparent;
 }
