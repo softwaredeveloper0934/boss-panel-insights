@@ -16,7 +16,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import { Settings2, Sparkles, X } from "lucide-react";
-import mascotAsset from "@/assets/mascot.png.asset.json";
+import mascotAsset from "@/assets/mascot.png";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics/events";
 
@@ -475,7 +475,7 @@ export function Mascot() {
         >
           <div className="sv-mascot__body relative">
             <img
-              src={mascotAsset.url}
+              src={mascotAsset}
               alt=""
               width={128}
               height={128}
