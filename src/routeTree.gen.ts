@@ -9,39 +9,167 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WithdrawalsRouteImport } from './routes/withdrawals'
+import { Route as WhiteLabelRouteImport } from './routes/white-label'
+import { Route as WebsiteBuilderRouteImport } from './routes/website-builder'
 import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as VerificationRouteImport } from './routes/verification'
+import { Route as UtmBuilderRouteImport } from './routes/utm-builder'
+import { Route as TrophyRoomRouteImport } from './routes/trophy-room'
+import { Route as TopContentRouteImport } from './routes/top-content'
+import { Route as ThumbnailGeneratorRouteImport } from './routes/thumbnail-generator'
+import { Route as TeamRouteImport } from './routes/team'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as SuccessPlaybookRouteImport } from './routes/success-playbook'
+import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
+import { Route as StreaksRouteImport } from './routes/streaks'
+import { Route as SponsorshipRouteImport } from './routes/sponsorship'
+import { Route as SocialScoreRouteImport } from './routes/social-score'
 import { Route as SocialAccountsRouteImport } from './routes/social-accounts'
+import { Route as ShortLinksRouteImport } from './routes/short-links'
 import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as RewardsRouteImport } from './routes/rewards'
+import { Route as SecurityRouteImport } from './routes/security'
+import { Route as SecretAchievementsRouteImport } from './routes/secret-achievements'
+import { Route as SalesRouteImport } from './routes/sales'
 import { Route as ReviewsRouteImport } from './routes/reviews'
-import { Route as ReportsRouteImport } from './routes/reports'
-import { Route as ReferralLinksRouteImport } from './routes/referral-links'
-import { Route as PerformanceRouteImport } from './routes/performance'
+import { Route as RevenueRouteImport } from './routes/revenue'
+import { Route as ReputationRouteImport } from './routes/reputation'
+import { Route as ReferralsRouteImport } from './routes/referrals'
+import { Route as RecordBookRouteImport } from './routes/record-book'
+import { Route as RankRouteImport } from './routes/rank'
+import { Route as QrRouteImport } from './routes/qr'
+import { Route as PromotionsRouteImport } from './routes/promotions'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ProductsRouteImport } from './routes/products'
+import { Route as PrestigeRouteImport } from './routes/prestige'
+import { Route as PressKitRouteImport } from './routes/press-kit'
+import { Route as PowerScoreRouteImport } from './routes/power-score'
+import { Route as PersonalBrandRouteImport } from './routes/personal-brand'
 import { Route as PayoutsRouteImport } from './routes/payouts'
+import { Route as OrdersRouteImport } from './routes/orders'
+import { Route as OpportunityEngineRouteImport } from './routes/opportunity-engine'
 import { Route as NotificationsRouteImport } from './routes/notifications'
-import { Route as MediaAssetsRouteImport } from './routes/media-assets'
-import { Route as MarketplacePromotionsRouteImport } from './routes/marketplace-promotions'
+import { Route as MultiChannelRouteImport } from './routes/multi-channel'
+import { Route as MessagesRouteImport } from './routes/messages'
+import { Route as MemoryCapsuleRouteImport } from './routes/memory-capsule'
+import { Route as MediaValueRouteImport } from './routes/media-value'
+import { Route as MediaLibraryRouteImport } from './routes/media-library'
+import { Route as MediaKitRouteImport } from './routes/media-kit'
+import { Route as MarketplaceRouteImport } from './routes/marketplace'
+import { Route as MarketingRouteImport } from './routes/marketing'
+import { Route as MarketIntelligenceRouteImport } from './routes/market-intelligence'
+import { Route as LoyaltyRouteImport } from './routes/loyalty'
+import { Route as LivePerformanceRouteImport } from './routes/live-performance'
+import { Route as LinkInBioRouteImport } from './routes/link-in-bio'
+import { Route as LicensesRouteImport } from './routes/licenses'
 import { Route as LeadsRouteImport } from './routes/leads'
-import { Route as InfluencersRouteImport } from './routes/influencers'
-import { Route as DocumentsRouteImport } from './routes/documents'
+import { Route as LeaderboardRouteImport } from './routes/leaderboard'
+import { Route as KnowledgeVaultRouteImport } from './routes/knowledge-vault'
+import { Route as KnowledgeBaseRouteImport } from './routes/knowledge-base'
+import { Route as InfluencerStoreRouteImport } from './routes/influencer-store'
+import { Route as InfluenceMapRouteImport } from './routes/influence-map'
+import { Route as InboxRouteImport } from './routes/inbox'
+import { Route as HallOfFameRouteImport } from './routes/hall-of-fame'
+import { Route as GrowthDashboardRouteImport } from './routes/growth-dashboard'
+import { Route as FounderSpotlightRouteImport } from './routes/founder-spotlight'
+import { Route as FanClubRouteImport } from './routes/fan-club'
+import { Route as EventsRouteImport } from './routes/events'
+import { Route as EnterpriseChatRouteImport } from './routes/enterprise-chat'
+import { Route as EmployeesRouteImport } from './routes/employees'
+import { Route as DraftsRouteImport } from './routes/drafts'
+import { Route as DownloadCenterRouteImport } from './routes/download-center'
+import { Route as DocumentationRouteImport } from './routes/documentation'
+import { Route as DigitalTwinRouteImport } from './routes/digital-twin'
 import { Route as CustomersRouteImport } from './routes/customers'
-import { Route as CreatorProfilesRouteImport } from './routes/creator-profiles'
+import { Route as CreatorsRouteImport } from './routes/creators'
+import { Route as CreatorUniversityRouteImport } from './routes/creator-university'
+import { Route as CreatorTvRouteImport } from './routes/creator-tv'
+import { Route as CreatorTiersRouteImport } from './routes/creator-tiers'
+import { Route as CreatorTasksRouteImport } from './routes/creator-tasks'
+import { Route as CreatorSupportDeskRouteImport } from './routes/creator-support-desk'
+import { Route as CreatorSubscriptionsRouteImport } from './routes/creator-subscriptions'
+import { Route as CreatorReportsRouteImport } from './routes/creator-reports'
+import { Route as CreatorPerformanceRouteImport } from './routes/creator-performance'
+import { Route as CreatorPayoutsRouteImport } from './routes/creator-payouts'
+import { Route as CreatorPassportRouteImport } from './routes/creator-passport'
+import { Route as CreatorOnboardingRouteImport } from './routes/creator-onboarding'
+import { Route as CreatorMarketplaceRouteImport } from './routes/creator-marketplace'
+import { Route as CreatorMapRouteImport } from './routes/creator-map'
+import { Route as CreatorManagerRouteImport } from './routes/creator-manager'
+import { Route as CreatorLevelsRouteImport } from './routes/creator-levels'
+import { Route as CreatorIntelligenceRouteImport } from './routes/creator-intelligence'
+import { Route as CreatorErpRouteImport } from './routes/creator-erp'
+import { Route as CreatorEconomyScoreRouteImport } from './routes/creator-economy-score'
+import { Route as CreatorDnaRouteImport } from './routes/creator-dna'
+import { Route as CreatorCrmRouteImport } from './routes/creator-crm'
+import { Route as CreatorComplianceRouteImport } from './routes/creator-compliance'
+import { Route as CreatorBankingRouteImport } from './routes/creator-banking'
+import { Route as CreatorAssignmentsRouteImport } from './routes/creator-assignments'
+import { Route as CreatorApplicationsRouteImport } from './routes/creator-applications'
+import { Route as CreatorAppStoreRouteImport } from './routes/creator-app-store'
 import { Route as CouponsRouteImport } from './routes/coupons'
-import { Route as ContentLibraryRouteImport } from './routes/content-library'
-import { Route as ComplianceRouteImport } from './routes/compliance'
-import { Route as CommunicationRouteImport } from './routes/communication'
+import { Route as ContractsRouteImport } from './routes/contracts'
+import { Route as ContentVaultRouteImport } from './routes/content-vault'
+import { Route as ContentCenterRouteImport } from './routes/content-center'
+import { Route as ContentCalendarRouteImport } from './routes/content-calendar'
+import { Route as ContentApprovalRouteImport } from './routes/content-approval'
+import { Route as ContentRouteImport } from './routes/content'
+import { Route as CompetitorInsightsRouteImport } from './routes/competitor-insights'
+import { Route as CompanyModeRouteImport } from './routes/company-mode'
 import { Route as CommissionsRouteImport } from './routes/commissions'
-import { Route as CollaborationsRouteImport } from './routes/collaborations'
+import { Route as CommandCenterRouteImport } from './routes/command-center'
+import { Route as CollaborationRouteImport } from './routes/collaboration'
+import { Route as ChallengesRouteImport } from './routes/challenges'
+import { Route as CfoDashboardRouteImport } from './routes/cfo-dashboard'
+import { Route as CeoDashboardRouteImport } from './routes/ceo-dashboard'
 import { Route as CampaignsRouteImport } from './routes/campaigns'
-import { Route as BrandsRouteImport } from './routes/brands'
-import { Route as ApplicationsRouteImport } from './routes/applications'
+import { Route as CampaignSchedulerRouteImport } from './routes/campaign-scheduler'
+import { Route as CalendarRouteImport } from './routes/calendar'
+import { Route as BrandSafetyRouteImport } from './routes/brand-safety'
+import { Route as BrandMatchingRouteImport } from './routes/brand-matching'
+import { Route as BrandCollaborationRouteImport } from './routes/brand-collaboration'
+import { Route as BrandAssetsRouteImport } from './routes/brand-assets'
+import { Route as BookingRouteImport } from './routes/booking'
+import { Route as BannerGeneratorRouteImport } from './routes/banner-generator'
+import { Route as AwardCeremonyRouteImport } from './routes/award-ceremony'
+import { Route as AuditLogRouteImport } from './routes/audit-log'
+import { Route as AssetsVaultRouteImport } from './routes/assets-vault'
+import { Route as ApiCenterRouteImport } from './routes/api-center'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
-import { Route as AffiliateLinksRouteImport } from './routes/affiliate-links'
+import { Route as AmsRouteImport } from './routes/ams'
+import { Route as AiVideoFactoryRouteImport } from './routes/ai-video-factory'
+import { Route as AiToolsRouteImport } from './routes/ai-tools'
+import { Route as AiStudioRouteImport } from './routes/ai-studio'
+import { Route as AiSocialManagerRouteImport } from './routes/ai-social-manager'
+import { Route as AiSalesAgentRouteImport } from './routes/ai-sales-agent'
+import { Route as AiPodcastFactoryRouteImport } from './routes/ai-podcast-factory'
+import { Route as AiNewsroomRouteImport } from './routes/ai-newsroom'
+import { Route as AiContentFactoryRouteImport } from './routes/ai-content-factory'
+import { Route as AiCommunityManagerRouteImport } from './routes/ai-community-manager'
+import { Route as AiChatRouteImport } from './routes/ai-chat'
+import { Route as AiBrandNegotiatorRouteImport } from './routes/ai-brand-negotiator'
+import { Route as AiAvatarRouteImport } from './routes/ai-avatar'
+import { Route as AgencyModeRouteImport } from './routes/agency-mode'
+import { Route as ActivityRouteImport } from './routes/activity'
 import { Route as AchievementsRouteImport } from './routes/achievements'
+import { Route as AcademyRouteImport } from './routes/academy'
 import { Route as IndexRouteImport } from './routes/index'
 
+const WithdrawalsRoute = WithdrawalsRouteImport.update({
+  id: '/withdrawals',
+  path: '/withdrawals',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WhiteLabelRoute = WhiteLabelRouteImport.update({
+  id: '/white-label',
+  path: '/white-label',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WebsiteBuilderRoute = WebsiteBuilderRouteImport.update({
+  id: '/website-builder',
+  path: '/website-builder',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WalletRoute = WalletRouteImport.update({
   id: '/wallet',
   path: '/wallet',
@@ -52,9 +180,59 @@ const VerificationRoute = VerificationRouteImport.update({
   path: '/verification',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UtmBuilderRoute = UtmBuilderRouteImport.update({
+  id: '/utm-builder',
+  path: '/utm-builder',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrophyRoomRoute = TrophyRoomRouteImport.update({
+  id: '/trophy-room',
+  path: '/trophy-room',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopContentRoute = TopContentRouteImport.update({
+  id: '/top-content',
+  path: '/top-content',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ThumbnailGeneratorRoute = ThumbnailGeneratorRouteImport.update({
+  id: '/thumbnail-generator',
+  path: '/thumbnail-generator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamRoute = TeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SuccessPlaybookRoute = SuccessPlaybookRouteImport.update({
+  id: '/success-playbook',
+  path: '/success-playbook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubscriptionsRoute = SubscriptionsRouteImport.update({
+  id: '/subscriptions',
+  path: '/subscriptions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StreaksRoute = StreaksRouteImport.update({
+  id: '/streaks',
+  path: '/streaks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SponsorshipRoute = SponsorshipRouteImport.update({
+  id: '/sponsorship',
+  path: '/sponsorship',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SocialScoreRoute = SocialScoreRouteImport.update({
+  id: '/social-score',
+  path: '/social-score',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SocialAccountsRoute = SocialAccountsRouteImport.update({
@@ -62,14 +240,29 @@ const SocialAccountsRoute = SocialAccountsRouteImport.update({
   path: '/social-accounts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShortLinksRoute = ShortLinksRouteImport.update({
+  id: '/short-links',
+  path: '/short-links',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RewardsRoute = RewardsRouteImport.update({
-  id: '/rewards',
-  path: '/rewards',
+const SecurityRoute = SecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SecretAchievementsRoute = SecretAchievementsRouteImport.update({
+  id: '/secret-achievements',
+  path: '/secret-achievements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SalesRoute = SalesRouteImport.update({
+  id: '/sales',
+  path: '/sales',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReviewsRoute = ReviewsRouteImport.update({
@@ -77,19 +270,69 @@ const ReviewsRoute = ReviewsRouteImport.update({
   path: '/reviews',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ReportsRoute = ReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
+const RevenueRoute = RevenueRouteImport.update({
+  id: '/revenue',
+  path: '/revenue',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ReferralLinksRoute = ReferralLinksRouteImport.update({
-  id: '/referral-links',
-  path: '/referral-links',
+const ReputationRoute = ReputationRouteImport.update({
+  id: '/reputation',
+  path: '/reputation',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PerformanceRoute = PerformanceRouteImport.update({
-  id: '/performance',
-  path: '/performance',
+const ReferralsRoute = ReferralsRouteImport.update({
+  id: '/referrals',
+  path: '/referrals',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecordBookRoute = RecordBookRouteImport.update({
+  id: '/record-book',
+  path: '/record-book',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RankRoute = RankRouteImport.update({
+  id: '/rank',
+  path: '/rank',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QrRoute = QrRouteImport.update({
+  id: '/qr',
+  path: '/qr',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PromotionsRoute = PromotionsRouteImport.update({
+  id: '/promotions',
+  path: '/promotions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsRoute = ProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrestigeRoute = PrestigeRouteImport.update({
+  id: '/prestige',
+  path: '/prestige',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PressKitRoute = PressKitRouteImport.update({
+  id: '/press-kit',
+  path: '/press-kit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PowerScoreRoute = PowerScoreRouteImport.update({
+  id: '/power-score',
+  path: '/power-score',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PersonalBrandRoute = PersonalBrandRouteImport.update({
+  id: '/personal-brand',
+  path: '/personal-brand',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PayoutsRoute = PayoutsRouteImport.update({
@@ -97,19 +340,84 @@ const PayoutsRoute = PayoutsRouteImport.update({
   path: '/payouts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OpportunityEngineRoute = OpportunityEngineRouteImport.update({
+  id: '/opportunity-engine',
+  path: '/opportunity-engine',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MediaAssetsRoute = MediaAssetsRouteImport.update({
-  id: '/media-assets',
-  path: '/media-assets',
+const MultiChannelRoute = MultiChannelRouteImport.update({
+  id: '/multi-channel',
+  path: '/multi-channel',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MarketplacePromotionsRoute = MarketplacePromotionsRouteImport.update({
-  id: '/marketplace-promotions',
-  path: '/marketplace-promotions',
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemoryCapsuleRoute = MemoryCapsuleRouteImport.update({
+  id: '/memory-capsule',
+  path: '/memory-capsule',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MediaValueRoute = MediaValueRouteImport.update({
+  id: '/media-value',
+  path: '/media-value',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MediaLibraryRoute = MediaLibraryRouteImport.update({
+  id: '/media-library',
+  path: '/media-library',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MediaKitRoute = MediaKitRouteImport.update({
+  id: '/media-kit',
+  path: '/media-kit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketplaceRoute = MarketplaceRouteImport.update({
+  id: '/marketplace',
+  path: '/marketplace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketingRoute = MarketingRouteImport.update({
+  id: '/marketing',
+  path: '/marketing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketIntelligenceRoute = MarketIntelligenceRouteImport.update({
+  id: '/market-intelligence',
+  path: '/market-intelligence',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoyaltyRoute = LoyaltyRouteImport.update({
+  id: '/loyalty',
+  path: '/loyalty',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LivePerformanceRoute = LivePerformanceRouteImport.update({
+  id: '/live-performance',
+  path: '/live-performance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LinkInBioRoute = LinkInBioRouteImport.update({
+  id: '/link-in-bio',
+  path: '/link-in-bio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LicensesRoute = LicensesRouteImport.update({
+  id: '/licenses',
+  path: '/licenses',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LeadsRoute = LeadsRouteImport.update({
@@ -117,14 +425,89 @@ const LeadsRoute = LeadsRouteImport.update({
   path: '/leads',
   getParentRoute: () => rootRouteImport,
 } as any)
-const InfluencersRoute = InfluencersRouteImport.update({
-  id: '/influencers',
-  path: '/influencers',
+const LeaderboardRoute = LeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DocumentsRoute = DocumentsRouteImport.update({
-  id: '/documents',
-  path: '/documents',
+const KnowledgeVaultRoute = KnowledgeVaultRouteImport.update({
+  id: '/knowledge-vault',
+  path: '/knowledge-vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KnowledgeBaseRoute = KnowledgeBaseRouteImport.update({
+  id: '/knowledge-base',
+  path: '/knowledge-base',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InfluencerStoreRoute = InfluencerStoreRouteImport.update({
+  id: '/influencer-store',
+  path: '/influencer-store',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InfluenceMapRoute = InfluenceMapRouteImport.update({
+  id: '/influence-map',
+  path: '/influence-map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InboxRoute = InboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HallOfFameRoute = HallOfFameRouteImport.update({
+  id: '/hall-of-fame',
+  path: '/hall-of-fame',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GrowthDashboardRoute = GrowthDashboardRouteImport.update({
+  id: '/growth-dashboard',
+  path: '/growth-dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FounderSpotlightRoute = FounderSpotlightRouteImport.update({
+  id: '/founder-spotlight',
+  path: '/founder-spotlight',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FanClubRoute = FanClubRouteImport.update({
+  id: '/fan-club',
+  path: '/fan-club',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnterpriseChatRoute = EnterpriseChatRouteImport.update({
+  id: '/enterprise-chat',
+  path: '/enterprise-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmployeesRoute = EmployeesRouteImport.update({
+  id: '/employees',
+  path: '/employees',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DraftsRoute = DraftsRouteImport.update({
+  id: '/drafts',
+  path: '/drafts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DownloadCenterRoute = DownloadCenterRouteImport.update({
+  id: '/download-center',
+  path: '/download-center',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocumentationRoute = DocumentationRouteImport.update({
+  id: '/documentation',
+  path: '/documentation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DigitalTwinRoute = DigitalTwinRouteImport.update({
+  id: '/digital-twin',
+  path: '/digital-twin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CustomersRoute = CustomersRouteImport.update({
@@ -132,9 +515,134 @@ const CustomersRoute = CustomersRouteImport.update({
   path: '/customers',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CreatorProfilesRoute = CreatorProfilesRouteImport.update({
-  id: '/creator-profiles',
-  path: '/creator-profiles',
+const CreatorsRoute = CreatorsRouteImport.update({
+  id: '/creators',
+  path: '/creators',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorUniversityRoute = CreatorUniversityRouteImport.update({
+  id: '/creator-university',
+  path: '/creator-university',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorTvRoute = CreatorTvRouteImport.update({
+  id: '/creator-tv',
+  path: '/creator-tv',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorTiersRoute = CreatorTiersRouteImport.update({
+  id: '/creator-tiers',
+  path: '/creator-tiers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorTasksRoute = CreatorTasksRouteImport.update({
+  id: '/creator-tasks',
+  path: '/creator-tasks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorSupportDeskRoute = CreatorSupportDeskRouteImport.update({
+  id: '/creator-support-desk',
+  path: '/creator-support-desk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorSubscriptionsRoute = CreatorSubscriptionsRouteImport.update({
+  id: '/creator-subscriptions',
+  path: '/creator-subscriptions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorReportsRoute = CreatorReportsRouteImport.update({
+  id: '/creator-reports',
+  path: '/creator-reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorPerformanceRoute = CreatorPerformanceRouteImport.update({
+  id: '/creator-performance',
+  path: '/creator-performance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorPayoutsRoute = CreatorPayoutsRouteImport.update({
+  id: '/creator-payouts',
+  path: '/creator-payouts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorPassportRoute = CreatorPassportRouteImport.update({
+  id: '/creator-passport',
+  path: '/creator-passport',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorOnboardingRoute = CreatorOnboardingRouteImport.update({
+  id: '/creator-onboarding',
+  path: '/creator-onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorMarketplaceRoute = CreatorMarketplaceRouteImport.update({
+  id: '/creator-marketplace',
+  path: '/creator-marketplace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorMapRoute = CreatorMapRouteImport.update({
+  id: '/creator-map',
+  path: '/creator-map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorManagerRoute = CreatorManagerRouteImport.update({
+  id: '/creator-manager',
+  path: '/creator-manager',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorLevelsRoute = CreatorLevelsRouteImport.update({
+  id: '/creator-levels',
+  path: '/creator-levels',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorIntelligenceRoute = CreatorIntelligenceRouteImport.update({
+  id: '/creator-intelligence',
+  path: '/creator-intelligence',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorErpRoute = CreatorErpRouteImport.update({
+  id: '/creator-erp',
+  path: '/creator-erp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorEconomyScoreRoute = CreatorEconomyScoreRouteImport.update({
+  id: '/creator-economy-score',
+  path: '/creator-economy-score',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorDnaRoute = CreatorDnaRouteImport.update({
+  id: '/creator-dna',
+  path: '/creator-dna',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorCrmRoute = CreatorCrmRouteImport.update({
+  id: '/creator-crm',
+  path: '/creator-crm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorComplianceRoute = CreatorComplianceRouteImport.update({
+  id: '/creator-compliance',
+  path: '/creator-compliance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorBankingRoute = CreatorBankingRouteImport.update({
+  id: '/creator-banking',
+  path: '/creator-banking',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorAssignmentsRoute = CreatorAssignmentsRouteImport.update({
+  id: '/creator-assignments',
+  path: '/creator-assignments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorApplicationsRoute = CreatorApplicationsRouteImport.update({
+  id: '/creator-applications',
+  path: '/creator-applications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorAppStoreRoute = CreatorAppStoreRouteImport.update({
+  id: '/creator-app-store',
+  path: '/creator-app-store',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CouponsRoute = CouponsRouteImport.update({
@@ -142,19 +650,44 @@ const CouponsRoute = CouponsRouteImport.update({
   path: '/coupons',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ContentLibraryRoute = ContentLibraryRouteImport.update({
-  id: '/content-library',
-  path: '/content-library',
+const ContractsRoute = ContractsRouteImport.update({
+  id: '/contracts',
+  path: '/contracts',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ComplianceRoute = ComplianceRouteImport.update({
-  id: '/compliance',
-  path: '/compliance',
+const ContentVaultRoute = ContentVaultRouteImport.update({
+  id: '/content-vault',
+  path: '/content-vault',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CommunicationRoute = CommunicationRouteImport.update({
-  id: '/communication',
-  path: '/communication',
+const ContentCenterRoute = ContentCenterRouteImport.update({
+  id: '/content-center',
+  path: '/content-center',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContentCalendarRoute = ContentCalendarRouteImport.update({
+  id: '/content-calendar',
+  path: '/content-calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContentApprovalRoute = ContentApprovalRouteImport.update({
+  id: '/content-approval',
+  path: '/content-approval',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContentRoute = ContentRouteImport.update({
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompetitorInsightsRoute = CompetitorInsightsRouteImport.update({
+  id: '/competitor-insights',
+  path: '/competitor-insights',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanyModeRoute = CompanyModeRouteImport.update({
+  id: '/company-mode',
+  path: '/company-mode',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommissionsRoute = CommissionsRouteImport.update({
@@ -162,9 +695,29 @@ const CommissionsRoute = CommissionsRouteImport.update({
   path: '/commissions',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CollaborationsRoute = CollaborationsRouteImport.update({
-  id: '/collaborations',
-  path: '/collaborations',
+const CommandCenterRoute = CommandCenterRouteImport.update({
+  id: '/command-center',
+  path: '/command-center',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollaborationRoute = CollaborationRouteImport.update({
+  id: '/collaboration',
+  path: '/collaboration',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChallengesRoute = ChallengesRouteImport.update({
+  id: '/challenges',
+  path: '/challenges',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CfoDashboardRoute = CfoDashboardRouteImport.update({
+  id: '/cfo-dashboard',
+  path: '/cfo-dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CeoDashboardRoute = CeoDashboardRouteImport.update({
+  id: '/ceo-dashboard',
+  path: '/ceo-dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CampaignsRoute = CampaignsRouteImport.update({
@@ -172,14 +725,64 @@ const CampaignsRoute = CampaignsRouteImport.update({
   path: '/campaigns',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BrandsRoute = BrandsRouteImport.update({
-  id: '/brands',
-  path: '/brands',
+const CampaignSchedulerRoute = CampaignSchedulerRouteImport.update({
+  id: '/campaign-scheduler',
+  path: '/campaign-scheduler',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApplicationsRoute = ApplicationsRouteImport.update({
-  id: '/applications',
-  path: '/applications',
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandSafetyRoute = BrandSafetyRouteImport.update({
+  id: '/brand-safety',
+  path: '/brand-safety',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandMatchingRoute = BrandMatchingRouteImport.update({
+  id: '/brand-matching',
+  path: '/brand-matching',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandCollaborationRoute = BrandCollaborationRouteImport.update({
+  id: '/brand-collaboration',
+  path: '/brand-collaboration',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandAssetsRoute = BrandAssetsRouteImport.update({
+  id: '/brand-assets',
+  path: '/brand-assets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingRoute = BookingRouteImport.update({
+  id: '/booking',
+  path: '/booking',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BannerGeneratorRoute = BannerGeneratorRouteImport.update({
+  id: '/banner-generator',
+  path: '/banner-generator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AwardCeremonyRoute = AwardCeremonyRouteImport.update({
+  id: '/award-ceremony',
+  path: '/award-ceremony',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditLogRoute = AuditLogRouteImport.update({
+  id: '/audit-log',
+  path: '/audit-log',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssetsVaultRoute = AssetsVaultRouteImport.update({
+  id: '/assets-vault',
+  path: '/assets-vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCenterRoute = ApiCenterRouteImport.update({
+  id: '/api-center',
+  path: '/api-center',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnalyticsRoute = AnalyticsRouteImport.update({
@@ -187,14 +790,89 @@ const AnalyticsRoute = AnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AffiliateLinksRoute = AffiliateLinksRouteImport.update({
-  id: '/affiliate-links',
-  path: '/affiliate-links',
+const AmsRoute = AmsRouteImport.update({
+  id: '/ams',
+  path: '/ams',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiVideoFactoryRoute = AiVideoFactoryRouteImport.update({
+  id: '/ai-video-factory',
+  path: '/ai-video-factory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiToolsRoute = AiToolsRouteImport.update({
+  id: '/ai-tools',
+  path: '/ai-tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiStudioRoute = AiStudioRouteImport.update({
+  id: '/ai-studio',
+  path: '/ai-studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiSocialManagerRoute = AiSocialManagerRouteImport.update({
+  id: '/ai-social-manager',
+  path: '/ai-social-manager',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiSalesAgentRoute = AiSalesAgentRouteImport.update({
+  id: '/ai-sales-agent',
+  path: '/ai-sales-agent',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiPodcastFactoryRoute = AiPodcastFactoryRouteImport.update({
+  id: '/ai-podcast-factory',
+  path: '/ai-podcast-factory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiNewsroomRoute = AiNewsroomRouteImport.update({
+  id: '/ai-newsroom',
+  path: '/ai-newsroom',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiContentFactoryRoute = AiContentFactoryRouteImport.update({
+  id: '/ai-content-factory',
+  path: '/ai-content-factory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiCommunityManagerRoute = AiCommunityManagerRouteImport.update({
+  id: '/ai-community-manager',
+  path: '/ai-community-manager',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiChatRoute = AiChatRouteImport.update({
+  id: '/ai-chat',
+  path: '/ai-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiBrandNegotiatorRoute = AiBrandNegotiatorRouteImport.update({
+  id: '/ai-brand-negotiator',
+  path: '/ai-brand-negotiator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiAvatarRoute = AiAvatarRouteImport.update({
+  id: '/ai-avatar',
+  path: '/ai-avatar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgencyModeRoute = AgencyModeRouteImport.update({
+  id: '/agency-mode',
+  path: '/agency-mode',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ActivityRoute = ActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AchievementsRoute = AchievementsRouteImport.update({
   id: '/achievements',
   path: '/achievements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcademyRoute = AcademyRouteImport.update({
+  id: '/academy',
+  path: '/academy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -205,249 +883,1061 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/academy': typeof AcademyRoute
   '/achievements': typeof AchievementsRoute
-  '/affiliate-links': typeof AffiliateLinksRoute
+  '/activity': typeof ActivityRoute
+  '/agency-mode': typeof AgencyModeRoute
+  '/ai-avatar': typeof AiAvatarRoute
+  '/ai-brand-negotiator': typeof AiBrandNegotiatorRoute
+  '/ai-chat': typeof AiChatRoute
+  '/ai-community-manager': typeof AiCommunityManagerRoute
+  '/ai-content-factory': typeof AiContentFactoryRoute
+  '/ai-newsroom': typeof AiNewsroomRoute
+  '/ai-podcast-factory': typeof AiPodcastFactoryRoute
+  '/ai-sales-agent': typeof AiSalesAgentRoute
+  '/ai-social-manager': typeof AiSocialManagerRoute
+  '/ai-studio': typeof AiStudioRoute
+  '/ai-tools': typeof AiToolsRoute
+  '/ai-video-factory': typeof AiVideoFactoryRoute
+  '/ams': typeof AmsRoute
   '/analytics': typeof AnalyticsRoute
-  '/applications': typeof ApplicationsRoute
-  '/brands': typeof BrandsRoute
+  '/api-center': typeof ApiCenterRoute
+  '/assets-vault': typeof AssetsVaultRoute
+  '/audit-log': typeof AuditLogRoute
+  '/award-ceremony': typeof AwardCeremonyRoute
+  '/banner-generator': typeof BannerGeneratorRoute
+  '/booking': typeof BookingRoute
+  '/brand-assets': typeof BrandAssetsRoute
+  '/brand-collaboration': typeof BrandCollaborationRoute
+  '/brand-matching': typeof BrandMatchingRoute
+  '/brand-safety': typeof BrandSafetyRoute
+  '/calendar': typeof CalendarRoute
+  '/campaign-scheduler': typeof CampaignSchedulerRoute
   '/campaigns': typeof CampaignsRoute
-  '/collaborations': typeof CollaborationsRoute
+  '/ceo-dashboard': typeof CeoDashboardRoute
+  '/cfo-dashboard': typeof CfoDashboardRoute
+  '/challenges': typeof ChallengesRoute
+  '/collaboration': typeof CollaborationRoute
+  '/command-center': typeof CommandCenterRoute
   '/commissions': typeof CommissionsRoute
-  '/communication': typeof CommunicationRoute
-  '/compliance': typeof ComplianceRoute
-  '/content-library': typeof ContentLibraryRoute
+  '/company-mode': typeof CompanyModeRoute
+  '/competitor-insights': typeof CompetitorInsightsRoute
+  '/content': typeof ContentRoute
+  '/content-approval': typeof ContentApprovalRoute
+  '/content-calendar': typeof ContentCalendarRoute
+  '/content-center': typeof ContentCenterRoute
+  '/content-vault': typeof ContentVaultRoute
+  '/contracts': typeof ContractsRoute
   '/coupons': typeof CouponsRoute
-  '/creator-profiles': typeof CreatorProfilesRoute
+  '/creator-app-store': typeof CreatorAppStoreRoute
+  '/creator-applications': typeof CreatorApplicationsRoute
+  '/creator-assignments': typeof CreatorAssignmentsRoute
+  '/creator-banking': typeof CreatorBankingRoute
+  '/creator-compliance': typeof CreatorComplianceRoute
+  '/creator-crm': typeof CreatorCrmRoute
+  '/creator-dna': typeof CreatorDnaRoute
+  '/creator-economy-score': typeof CreatorEconomyScoreRoute
+  '/creator-erp': typeof CreatorErpRoute
+  '/creator-intelligence': typeof CreatorIntelligenceRoute
+  '/creator-levels': typeof CreatorLevelsRoute
+  '/creator-manager': typeof CreatorManagerRoute
+  '/creator-map': typeof CreatorMapRoute
+  '/creator-marketplace': typeof CreatorMarketplaceRoute
+  '/creator-onboarding': typeof CreatorOnboardingRoute
+  '/creator-passport': typeof CreatorPassportRoute
+  '/creator-payouts': typeof CreatorPayoutsRoute
+  '/creator-performance': typeof CreatorPerformanceRoute
+  '/creator-reports': typeof CreatorReportsRoute
+  '/creator-subscriptions': typeof CreatorSubscriptionsRoute
+  '/creator-support-desk': typeof CreatorSupportDeskRoute
+  '/creator-tasks': typeof CreatorTasksRoute
+  '/creator-tiers': typeof CreatorTiersRoute
+  '/creator-tv': typeof CreatorTvRoute
+  '/creator-university': typeof CreatorUniversityRoute
+  '/creators': typeof CreatorsRoute
   '/customers': typeof CustomersRoute
-  '/documents': typeof DocumentsRoute
-  '/influencers': typeof InfluencersRoute
+  '/digital-twin': typeof DigitalTwinRoute
+  '/documentation': typeof DocumentationRoute
+  '/download-center': typeof DownloadCenterRoute
+  '/drafts': typeof DraftsRoute
+  '/employees': typeof EmployeesRoute
+  '/enterprise-chat': typeof EnterpriseChatRoute
+  '/events': typeof EventsRoute
+  '/fan-club': typeof FanClubRoute
+  '/founder-spotlight': typeof FounderSpotlightRoute
+  '/growth-dashboard': typeof GrowthDashboardRoute
+  '/hall-of-fame': typeof HallOfFameRoute
+  '/inbox': typeof InboxRoute
+  '/influence-map': typeof InfluenceMapRoute
+  '/influencer-store': typeof InfluencerStoreRoute
+  '/knowledge-base': typeof KnowledgeBaseRoute
+  '/knowledge-vault': typeof KnowledgeVaultRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/leads': typeof LeadsRoute
-  '/marketplace-promotions': typeof MarketplacePromotionsRoute
-  '/media-assets': typeof MediaAssetsRoute
+  '/licenses': typeof LicensesRoute
+  '/link-in-bio': typeof LinkInBioRoute
+  '/live-performance': typeof LivePerformanceRoute
+  '/loyalty': typeof LoyaltyRoute
+  '/market-intelligence': typeof MarketIntelligenceRoute
+  '/marketing': typeof MarketingRoute
+  '/marketplace': typeof MarketplaceRoute
+  '/media-kit': typeof MediaKitRoute
+  '/media-library': typeof MediaLibraryRoute
+  '/media-value': typeof MediaValueRoute
+  '/memory-capsule': typeof MemoryCapsuleRoute
+  '/messages': typeof MessagesRoute
+  '/multi-channel': typeof MultiChannelRoute
   '/notifications': typeof NotificationsRoute
+  '/opportunity-engine': typeof OpportunityEngineRoute
+  '/orders': typeof OrdersRoute
   '/payouts': typeof PayoutsRoute
-  '/performance': typeof PerformanceRoute
-  '/referral-links': typeof ReferralLinksRoute
-  '/reports': typeof ReportsRoute
+  '/personal-brand': typeof PersonalBrandRoute
+  '/power-score': typeof PowerScoreRoute
+  '/press-kit': typeof PressKitRoute
+  '/prestige': typeof PrestigeRoute
+  '/products': typeof ProductsRoute
+  '/profile': typeof ProfileRoute
+  '/promotions': typeof PromotionsRoute
+  '/qr': typeof QrRoute
+  '/rank': typeof RankRoute
+  '/record-book': typeof RecordBookRoute
+  '/referrals': typeof ReferralsRoute
+  '/reputation': typeof ReputationRoute
+  '/revenue': typeof RevenueRoute
   '/reviews': typeof ReviewsRoute
-  '/rewards': typeof RewardsRoute
+  '/sales': typeof SalesRoute
+  '/secret-achievements': typeof SecretAchievementsRoute
+  '/security': typeof SecurityRoute
   '/settings': typeof SettingsRoute
+  '/short-links': typeof ShortLinksRoute
   '/social-accounts': typeof SocialAccountsRoute
+  '/social-score': typeof SocialScoreRoute
+  '/sponsorship': typeof SponsorshipRoute
+  '/streaks': typeof StreaksRoute
+  '/subscriptions': typeof SubscriptionsRoute
+  '/success-playbook': typeof SuccessPlaybookRoute
   '/support': typeof SupportRoute
+  '/team': typeof TeamRoute
+  '/thumbnail-generator': typeof ThumbnailGeneratorRoute
+  '/top-content': typeof TopContentRoute
+  '/trophy-room': typeof TrophyRoomRoute
+  '/utm-builder': typeof UtmBuilderRoute
   '/verification': typeof VerificationRoute
   '/wallet': typeof WalletRoute
+  '/website-builder': typeof WebsiteBuilderRoute
+  '/white-label': typeof WhiteLabelRoute
+  '/withdrawals': typeof WithdrawalsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/academy': typeof AcademyRoute
   '/achievements': typeof AchievementsRoute
-  '/affiliate-links': typeof AffiliateLinksRoute
+  '/activity': typeof ActivityRoute
+  '/agency-mode': typeof AgencyModeRoute
+  '/ai-avatar': typeof AiAvatarRoute
+  '/ai-brand-negotiator': typeof AiBrandNegotiatorRoute
+  '/ai-chat': typeof AiChatRoute
+  '/ai-community-manager': typeof AiCommunityManagerRoute
+  '/ai-content-factory': typeof AiContentFactoryRoute
+  '/ai-newsroom': typeof AiNewsroomRoute
+  '/ai-podcast-factory': typeof AiPodcastFactoryRoute
+  '/ai-sales-agent': typeof AiSalesAgentRoute
+  '/ai-social-manager': typeof AiSocialManagerRoute
+  '/ai-studio': typeof AiStudioRoute
+  '/ai-tools': typeof AiToolsRoute
+  '/ai-video-factory': typeof AiVideoFactoryRoute
+  '/ams': typeof AmsRoute
   '/analytics': typeof AnalyticsRoute
-  '/applications': typeof ApplicationsRoute
-  '/brands': typeof BrandsRoute
+  '/api-center': typeof ApiCenterRoute
+  '/assets-vault': typeof AssetsVaultRoute
+  '/audit-log': typeof AuditLogRoute
+  '/award-ceremony': typeof AwardCeremonyRoute
+  '/banner-generator': typeof BannerGeneratorRoute
+  '/booking': typeof BookingRoute
+  '/brand-assets': typeof BrandAssetsRoute
+  '/brand-collaboration': typeof BrandCollaborationRoute
+  '/brand-matching': typeof BrandMatchingRoute
+  '/brand-safety': typeof BrandSafetyRoute
+  '/calendar': typeof CalendarRoute
+  '/campaign-scheduler': typeof CampaignSchedulerRoute
   '/campaigns': typeof CampaignsRoute
-  '/collaborations': typeof CollaborationsRoute
+  '/ceo-dashboard': typeof CeoDashboardRoute
+  '/cfo-dashboard': typeof CfoDashboardRoute
+  '/challenges': typeof ChallengesRoute
+  '/collaboration': typeof CollaborationRoute
+  '/command-center': typeof CommandCenterRoute
   '/commissions': typeof CommissionsRoute
-  '/communication': typeof CommunicationRoute
-  '/compliance': typeof ComplianceRoute
-  '/content-library': typeof ContentLibraryRoute
+  '/company-mode': typeof CompanyModeRoute
+  '/competitor-insights': typeof CompetitorInsightsRoute
+  '/content': typeof ContentRoute
+  '/content-approval': typeof ContentApprovalRoute
+  '/content-calendar': typeof ContentCalendarRoute
+  '/content-center': typeof ContentCenterRoute
+  '/content-vault': typeof ContentVaultRoute
+  '/contracts': typeof ContractsRoute
   '/coupons': typeof CouponsRoute
-  '/creator-profiles': typeof CreatorProfilesRoute
+  '/creator-app-store': typeof CreatorAppStoreRoute
+  '/creator-applications': typeof CreatorApplicationsRoute
+  '/creator-assignments': typeof CreatorAssignmentsRoute
+  '/creator-banking': typeof CreatorBankingRoute
+  '/creator-compliance': typeof CreatorComplianceRoute
+  '/creator-crm': typeof CreatorCrmRoute
+  '/creator-dna': typeof CreatorDnaRoute
+  '/creator-economy-score': typeof CreatorEconomyScoreRoute
+  '/creator-erp': typeof CreatorErpRoute
+  '/creator-intelligence': typeof CreatorIntelligenceRoute
+  '/creator-levels': typeof CreatorLevelsRoute
+  '/creator-manager': typeof CreatorManagerRoute
+  '/creator-map': typeof CreatorMapRoute
+  '/creator-marketplace': typeof CreatorMarketplaceRoute
+  '/creator-onboarding': typeof CreatorOnboardingRoute
+  '/creator-passport': typeof CreatorPassportRoute
+  '/creator-payouts': typeof CreatorPayoutsRoute
+  '/creator-performance': typeof CreatorPerformanceRoute
+  '/creator-reports': typeof CreatorReportsRoute
+  '/creator-subscriptions': typeof CreatorSubscriptionsRoute
+  '/creator-support-desk': typeof CreatorSupportDeskRoute
+  '/creator-tasks': typeof CreatorTasksRoute
+  '/creator-tiers': typeof CreatorTiersRoute
+  '/creator-tv': typeof CreatorTvRoute
+  '/creator-university': typeof CreatorUniversityRoute
+  '/creators': typeof CreatorsRoute
   '/customers': typeof CustomersRoute
-  '/documents': typeof DocumentsRoute
-  '/influencers': typeof InfluencersRoute
+  '/digital-twin': typeof DigitalTwinRoute
+  '/documentation': typeof DocumentationRoute
+  '/download-center': typeof DownloadCenterRoute
+  '/drafts': typeof DraftsRoute
+  '/employees': typeof EmployeesRoute
+  '/enterprise-chat': typeof EnterpriseChatRoute
+  '/events': typeof EventsRoute
+  '/fan-club': typeof FanClubRoute
+  '/founder-spotlight': typeof FounderSpotlightRoute
+  '/growth-dashboard': typeof GrowthDashboardRoute
+  '/hall-of-fame': typeof HallOfFameRoute
+  '/inbox': typeof InboxRoute
+  '/influence-map': typeof InfluenceMapRoute
+  '/influencer-store': typeof InfluencerStoreRoute
+  '/knowledge-base': typeof KnowledgeBaseRoute
+  '/knowledge-vault': typeof KnowledgeVaultRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/leads': typeof LeadsRoute
-  '/marketplace-promotions': typeof MarketplacePromotionsRoute
-  '/media-assets': typeof MediaAssetsRoute
+  '/licenses': typeof LicensesRoute
+  '/link-in-bio': typeof LinkInBioRoute
+  '/live-performance': typeof LivePerformanceRoute
+  '/loyalty': typeof LoyaltyRoute
+  '/market-intelligence': typeof MarketIntelligenceRoute
+  '/marketing': typeof MarketingRoute
+  '/marketplace': typeof MarketplaceRoute
+  '/media-kit': typeof MediaKitRoute
+  '/media-library': typeof MediaLibraryRoute
+  '/media-value': typeof MediaValueRoute
+  '/memory-capsule': typeof MemoryCapsuleRoute
+  '/messages': typeof MessagesRoute
+  '/multi-channel': typeof MultiChannelRoute
   '/notifications': typeof NotificationsRoute
+  '/opportunity-engine': typeof OpportunityEngineRoute
+  '/orders': typeof OrdersRoute
   '/payouts': typeof PayoutsRoute
-  '/performance': typeof PerformanceRoute
-  '/referral-links': typeof ReferralLinksRoute
-  '/reports': typeof ReportsRoute
+  '/personal-brand': typeof PersonalBrandRoute
+  '/power-score': typeof PowerScoreRoute
+  '/press-kit': typeof PressKitRoute
+  '/prestige': typeof PrestigeRoute
+  '/products': typeof ProductsRoute
+  '/profile': typeof ProfileRoute
+  '/promotions': typeof PromotionsRoute
+  '/qr': typeof QrRoute
+  '/rank': typeof RankRoute
+  '/record-book': typeof RecordBookRoute
+  '/referrals': typeof ReferralsRoute
+  '/reputation': typeof ReputationRoute
+  '/revenue': typeof RevenueRoute
   '/reviews': typeof ReviewsRoute
-  '/rewards': typeof RewardsRoute
+  '/sales': typeof SalesRoute
+  '/secret-achievements': typeof SecretAchievementsRoute
+  '/security': typeof SecurityRoute
   '/settings': typeof SettingsRoute
+  '/short-links': typeof ShortLinksRoute
   '/social-accounts': typeof SocialAccountsRoute
+  '/social-score': typeof SocialScoreRoute
+  '/sponsorship': typeof SponsorshipRoute
+  '/streaks': typeof StreaksRoute
+  '/subscriptions': typeof SubscriptionsRoute
+  '/success-playbook': typeof SuccessPlaybookRoute
   '/support': typeof SupportRoute
+  '/team': typeof TeamRoute
+  '/thumbnail-generator': typeof ThumbnailGeneratorRoute
+  '/top-content': typeof TopContentRoute
+  '/trophy-room': typeof TrophyRoomRoute
+  '/utm-builder': typeof UtmBuilderRoute
   '/verification': typeof VerificationRoute
   '/wallet': typeof WalletRoute
+  '/website-builder': typeof WebsiteBuilderRoute
+  '/white-label': typeof WhiteLabelRoute
+  '/withdrawals': typeof WithdrawalsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/academy': typeof AcademyRoute
   '/achievements': typeof AchievementsRoute
-  '/affiliate-links': typeof AffiliateLinksRoute
+  '/activity': typeof ActivityRoute
+  '/agency-mode': typeof AgencyModeRoute
+  '/ai-avatar': typeof AiAvatarRoute
+  '/ai-brand-negotiator': typeof AiBrandNegotiatorRoute
+  '/ai-chat': typeof AiChatRoute
+  '/ai-community-manager': typeof AiCommunityManagerRoute
+  '/ai-content-factory': typeof AiContentFactoryRoute
+  '/ai-newsroom': typeof AiNewsroomRoute
+  '/ai-podcast-factory': typeof AiPodcastFactoryRoute
+  '/ai-sales-agent': typeof AiSalesAgentRoute
+  '/ai-social-manager': typeof AiSocialManagerRoute
+  '/ai-studio': typeof AiStudioRoute
+  '/ai-tools': typeof AiToolsRoute
+  '/ai-video-factory': typeof AiVideoFactoryRoute
+  '/ams': typeof AmsRoute
   '/analytics': typeof AnalyticsRoute
-  '/applications': typeof ApplicationsRoute
-  '/brands': typeof BrandsRoute
+  '/api-center': typeof ApiCenterRoute
+  '/assets-vault': typeof AssetsVaultRoute
+  '/audit-log': typeof AuditLogRoute
+  '/award-ceremony': typeof AwardCeremonyRoute
+  '/banner-generator': typeof BannerGeneratorRoute
+  '/booking': typeof BookingRoute
+  '/brand-assets': typeof BrandAssetsRoute
+  '/brand-collaboration': typeof BrandCollaborationRoute
+  '/brand-matching': typeof BrandMatchingRoute
+  '/brand-safety': typeof BrandSafetyRoute
+  '/calendar': typeof CalendarRoute
+  '/campaign-scheduler': typeof CampaignSchedulerRoute
   '/campaigns': typeof CampaignsRoute
-  '/collaborations': typeof CollaborationsRoute
+  '/ceo-dashboard': typeof CeoDashboardRoute
+  '/cfo-dashboard': typeof CfoDashboardRoute
+  '/challenges': typeof ChallengesRoute
+  '/collaboration': typeof CollaborationRoute
+  '/command-center': typeof CommandCenterRoute
   '/commissions': typeof CommissionsRoute
-  '/communication': typeof CommunicationRoute
-  '/compliance': typeof ComplianceRoute
-  '/content-library': typeof ContentLibraryRoute
+  '/company-mode': typeof CompanyModeRoute
+  '/competitor-insights': typeof CompetitorInsightsRoute
+  '/content': typeof ContentRoute
+  '/content-approval': typeof ContentApprovalRoute
+  '/content-calendar': typeof ContentCalendarRoute
+  '/content-center': typeof ContentCenterRoute
+  '/content-vault': typeof ContentVaultRoute
+  '/contracts': typeof ContractsRoute
   '/coupons': typeof CouponsRoute
-  '/creator-profiles': typeof CreatorProfilesRoute
+  '/creator-app-store': typeof CreatorAppStoreRoute
+  '/creator-applications': typeof CreatorApplicationsRoute
+  '/creator-assignments': typeof CreatorAssignmentsRoute
+  '/creator-banking': typeof CreatorBankingRoute
+  '/creator-compliance': typeof CreatorComplianceRoute
+  '/creator-crm': typeof CreatorCrmRoute
+  '/creator-dna': typeof CreatorDnaRoute
+  '/creator-economy-score': typeof CreatorEconomyScoreRoute
+  '/creator-erp': typeof CreatorErpRoute
+  '/creator-intelligence': typeof CreatorIntelligenceRoute
+  '/creator-levels': typeof CreatorLevelsRoute
+  '/creator-manager': typeof CreatorManagerRoute
+  '/creator-map': typeof CreatorMapRoute
+  '/creator-marketplace': typeof CreatorMarketplaceRoute
+  '/creator-onboarding': typeof CreatorOnboardingRoute
+  '/creator-passport': typeof CreatorPassportRoute
+  '/creator-payouts': typeof CreatorPayoutsRoute
+  '/creator-performance': typeof CreatorPerformanceRoute
+  '/creator-reports': typeof CreatorReportsRoute
+  '/creator-subscriptions': typeof CreatorSubscriptionsRoute
+  '/creator-support-desk': typeof CreatorSupportDeskRoute
+  '/creator-tasks': typeof CreatorTasksRoute
+  '/creator-tiers': typeof CreatorTiersRoute
+  '/creator-tv': typeof CreatorTvRoute
+  '/creator-university': typeof CreatorUniversityRoute
+  '/creators': typeof CreatorsRoute
   '/customers': typeof CustomersRoute
-  '/documents': typeof DocumentsRoute
-  '/influencers': typeof InfluencersRoute
+  '/digital-twin': typeof DigitalTwinRoute
+  '/documentation': typeof DocumentationRoute
+  '/download-center': typeof DownloadCenterRoute
+  '/drafts': typeof DraftsRoute
+  '/employees': typeof EmployeesRoute
+  '/enterprise-chat': typeof EnterpriseChatRoute
+  '/events': typeof EventsRoute
+  '/fan-club': typeof FanClubRoute
+  '/founder-spotlight': typeof FounderSpotlightRoute
+  '/growth-dashboard': typeof GrowthDashboardRoute
+  '/hall-of-fame': typeof HallOfFameRoute
+  '/inbox': typeof InboxRoute
+  '/influence-map': typeof InfluenceMapRoute
+  '/influencer-store': typeof InfluencerStoreRoute
+  '/knowledge-base': typeof KnowledgeBaseRoute
+  '/knowledge-vault': typeof KnowledgeVaultRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/leads': typeof LeadsRoute
-  '/marketplace-promotions': typeof MarketplacePromotionsRoute
-  '/media-assets': typeof MediaAssetsRoute
+  '/licenses': typeof LicensesRoute
+  '/link-in-bio': typeof LinkInBioRoute
+  '/live-performance': typeof LivePerformanceRoute
+  '/loyalty': typeof LoyaltyRoute
+  '/market-intelligence': typeof MarketIntelligenceRoute
+  '/marketing': typeof MarketingRoute
+  '/marketplace': typeof MarketplaceRoute
+  '/media-kit': typeof MediaKitRoute
+  '/media-library': typeof MediaLibraryRoute
+  '/media-value': typeof MediaValueRoute
+  '/memory-capsule': typeof MemoryCapsuleRoute
+  '/messages': typeof MessagesRoute
+  '/multi-channel': typeof MultiChannelRoute
   '/notifications': typeof NotificationsRoute
+  '/opportunity-engine': typeof OpportunityEngineRoute
+  '/orders': typeof OrdersRoute
   '/payouts': typeof PayoutsRoute
-  '/performance': typeof PerformanceRoute
-  '/referral-links': typeof ReferralLinksRoute
-  '/reports': typeof ReportsRoute
+  '/personal-brand': typeof PersonalBrandRoute
+  '/power-score': typeof PowerScoreRoute
+  '/press-kit': typeof PressKitRoute
+  '/prestige': typeof PrestigeRoute
+  '/products': typeof ProductsRoute
+  '/profile': typeof ProfileRoute
+  '/promotions': typeof PromotionsRoute
+  '/qr': typeof QrRoute
+  '/rank': typeof RankRoute
+  '/record-book': typeof RecordBookRoute
+  '/referrals': typeof ReferralsRoute
+  '/reputation': typeof ReputationRoute
+  '/revenue': typeof RevenueRoute
   '/reviews': typeof ReviewsRoute
-  '/rewards': typeof RewardsRoute
+  '/sales': typeof SalesRoute
+  '/secret-achievements': typeof SecretAchievementsRoute
+  '/security': typeof SecurityRoute
   '/settings': typeof SettingsRoute
+  '/short-links': typeof ShortLinksRoute
   '/social-accounts': typeof SocialAccountsRoute
+  '/social-score': typeof SocialScoreRoute
+  '/sponsorship': typeof SponsorshipRoute
+  '/streaks': typeof StreaksRoute
+  '/subscriptions': typeof SubscriptionsRoute
+  '/success-playbook': typeof SuccessPlaybookRoute
   '/support': typeof SupportRoute
+  '/team': typeof TeamRoute
+  '/thumbnail-generator': typeof ThumbnailGeneratorRoute
+  '/top-content': typeof TopContentRoute
+  '/trophy-room': typeof TrophyRoomRoute
+  '/utm-builder': typeof UtmBuilderRoute
   '/verification': typeof VerificationRoute
   '/wallet': typeof WalletRoute
+  '/website-builder': typeof WebsiteBuilderRoute
+  '/white-label': typeof WhiteLabelRoute
+  '/withdrawals': typeof WithdrawalsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/academy'
     | '/achievements'
-    | '/affiliate-links'
+    | '/activity'
+    | '/agency-mode'
+    | '/ai-avatar'
+    | '/ai-brand-negotiator'
+    | '/ai-chat'
+    | '/ai-community-manager'
+    | '/ai-content-factory'
+    | '/ai-newsroom'
+    | '/ai-podcast-factory'
+    | '/ai-sales-agent'
+    | '/ai-social-manager'
+    | '/ai-studio'
+    | '/ai-tools'
+    | '/ai-video-factory'
+    | '/ams'
     | '/analytics'
-    | '/applications'
-    | '/brands'
+    | '/api-center'
+    | '/assets-vault'
+    | '/audit-log'
+    | '/award-ceremony'
+    | '/banner-generator'
+    | '/booking'
+    | '/brand-assets'
+    | '/brand-collaboration'
+    | '/brand-matching'
+    | '/brand-safety'
+    | '/calendar'
+    | '/campaign-scheduler'
     | '/campaigns'
-    | '/collaborations'
+    | '/ceo-dashboard'
+    | '/cfo-dashboard'
+    | '/challenges'
+    | '/collaboration'
+    | '/command-center'
     | '/commissions'
-    | '/communication'
-    | '/compliance'
-    | '/content-library'
+    | '/company-mode'
+    | '/competitor-insights'
+    | '/content'
+    | '/content-approval'
+    | '/content-calendar'
+    | '/content-center'
+    | '/content-vault'
+    | '/contracts'
     | '/coupons'
-    | '/creator-profiles'
+    | '/creator-app-store'
+    | '/creator-applications'
+    | '/creator-assignments'
+    | '/creator-banking'
+    | '/creator-compliance'
+    | '/creator-crm'
+    | '/creator-dna'
+    | '/creator-economy-score'
+    | '/creator-erp'
+    | '/creator-intelligence'
+    | '/creator-levels'
+    | '/creator-manager'
+    | '/creator-map'
+    | '/creator-marketplace'
+    | '/creator-onboarding'
+    | '/creator-passport'
+    | '/creator-payouts'
+    | '/creator-performance'
+    | '/creator-reports'
+    | '/creator-subscriptions'
+    | '/creator-support-desk'
+    | '/creator-tasks'
+    | '/creator-tiers'
+    | '/creator-tv'
+    | '/creator-university'
+    | '/creators'
     | '/customers'
-    | '/documents'
-    | '/influencers'
+    | '/digital-twin'
+    | '/documentation'
+    | '/download-center'
+    | '/drafts'
+    | '/employees'
+    | '/enterprise-chat'
+    | '/events'
+    | '/fan-club'
+    | '/founder-spotlight'
+    | '/growth-dashboard'
+    | '/hall-of-fame'
+    | '/inbox'
+    | '/influence-map'
+    | '/influencer-store'
+    | '/knowledge-base'
+    | '/knowledge-vault'
+    | '/leaderboard'
     | '/leads'
-    | '/marketplace-promotions'
-    | '/media-assets'
+    | '/licenses'
+    | '/link-in-bio'
+    | '/live-performance'
+    | '/loyalty'
+    | '/market-intelligence'
+    | '/marketing'
+    | '/marketplace'
+    | '/media-kit'
+    | '/media-library'
+    | '/media-value'
+    | '/memory-capsule'
+    | '/messages'
+    | '/multi-channel'
     | '/notifications'
+    | '/opportunity-engine'
+    | '/orders'
     | '/payouts'
-    | '/performance'
-    | '/referral-links'
-    | '/reports'
+    | '/personal-brand'
+    | '/power-score'
+    | '/press-kit'
+    | '/prestige'
+    | '/products'
+    | '/profile'
+    | '/promotions'
+    | '/qr'
+    | '/rank'
+    | '/record-book'
+    | '/referrals'
+    | '/reputation'
+    | '/revenue'
     | '/reviews'
-    | '/rewards'
+    | '/sales'
+    | '/secret-achievements'
+    | '/security'
     | '/settings'
+    | '/short-links'
     | '/social-accounts'
+    | '/social-score'
+    | '/sponsorship'
+    | '/streaks'
+    | '/subscriptions'
+    | '/success-playbook'
     | '/support'
+    | '/team'
+    | '/thumbnail-generator'
+    | '/top-content'
+    | '/trophy-room'
+    | '/utm-builder'
     | '/verification'
     | '/wallet'
+    | '/website-builder'
+    | '/white-label'
+    | '/withdrawals'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/academy'
     | '/achievements'
-    | '/affiliate-links'
+    | '/activity'
+    | '/agency-mode'
+    | '/ai-avatar'
+    | '/ai-brand-negotiator'
+    | '/ai-chat'
+    | '/ai-community-manager'
+    | '/ai-content-factory'
+    | '/ai-newsroom'
+    | '/ai-podcast-factory'
+    | '/ai-sales-agent'
+    | '/ai-social-manager'
+    | '/ai-studio'
+    | '/ai-tools'
+    | '/ai-video-factory'
+    | '/ams'
     | '/analytics'
-    | '/applications'
-    | '/brands'
+    | '/api-center'
+    | '/assets-vault'
+    | '/audit-log'
+    | '/award-ceremony'
+    | '/banner-generator'
+    | '/booking'
+    | '/brand-assets'
+    | '/brand-collaboration'
+    | '/brand-matching'
+    | '/brand-safety'
+    | '/calendar'
+    | '/campaign-scheduler'
     | '/campaigns'
-    | '/collaborations'
+    | '/ceo-dashboard'
+    | '/cfo-dashboard'
+    | '/challenges'
+    | '/collaboration'
+    | '/command-center'
     | '/commissions'
-    | '/communication'
-    | '/compliance'
-    | '/content-library'
+    | '/company-mode'
+    | '/competitor-insights'
+    | '/content'
+    | '/content-approval'
+    | '/content-calendar'
+    | '/content-center'
+    | '/content-vault'
+    | '/contracts'
     | '/coupons'
-    | '/creator-profiles'
+    | '/creator-app-store'
+    | '/creator-applications'
+    | '/creator-assignments'
+    | '/creator-banking'
+    | '/creator-compliance'
+    | '/creator-crm'
+    | '/creator-dna'
+    | '/creator-economy-score'
+    | '/creator-erp'
+    | '/creator-intelligence'
+    | '/creator-levels'
+    | '/creator-manager'
+    | '/creator-map'
+    | '/creator-marketplace'
+    | '/creator-onboarding'
+    | '/creator-passport'
+    | '/creator-payouts'
+    | '/creator-performance'
+    | '/creator-reports'
+    | '/creator-subscriptions'
+    | '/creator-support-desk'
+    | '/creator-tasks'
+    | '/creator-tiers'
+    | '/creator-tv'
+    | '/creator-university'
+    | '/creators'
     | '/customers'
-    | '/documents'
-    | '/influencers'
+    | '/digital-twin'
+    | '/documentation'
+    | '/download-center'
+    | '/drafts'
+    | '/employees'
+    | '/enterprise-chat'
+    | '/events'
+    | '/fan-club'
+    | '/founder-spotlight'
+    | '/growth-dashboard'
+    | '/hall-of-fame'
+    | '/inbox'
+    | '/influence-map'
+    | '/influencer-store'
+    | '/knowledge-base'
+    | '/knowledge-vault'
+    | '/leaderboard'
     | '/leads'
-    | '/marketplace-promotions'
-    | '/media-assets'
+    | '/licenses'
+    | '/link-in-bio'
+    | '/live-performance'
+    | '/loyalty'
+    | '/market-intelligence'
+    | '/marketing'
+    | '/marketplace'
+    | '/media-kit'
+    | '/media-library'
+    | '/media-value'
+    | '/memory-capsule'
+    | '/messages'
+    | '/multi-channel'
     | '/notifications'
+    | '/opportunity-engine'
+    | '/orders'
     | '/payouts'
-    | '/performance'
-    | '/referral-links'
-    | '/reports'
+    | '/personal-brand'
+    | '/power-score'
+    | '/press-kit'
+    | '/prestige'
+    | '/products'
+    | '/profile'
+    | '/promotions'
+    | '/qr'
+    | '/rank'
+    | '/record-book'
+    | '/referrals'
+    | '/reputation'
+    | '/revenue'
     | '/reviews'
-    | '/rewards'
+    | '/sales'
+    | '/secret-achievements'
+    | '/security'
     | '/settings'
+    | '/short-links'
     | '/social-accounts'
+    | '/social-score'
+    | '/sponsorship'
+    | '/streaks'
+    | '/subscriptions'
+    | '/success-playbook'
     | '/support'
+    | '/team'
+    | '/thumbnail-generator'
+    | '/top-content'
+    | '/trophy-room'
+    | '/utm-builder'
     | '/verification'
     | '/wallet'
+    | '/website-builder'
+    | '/white-label'
+    | '/withdrawals'
   id:
     | '__root__'
     | '/'
+    | '/academy'
     | '/achievements'
-    | '/affiliate-links'
+    | '/activity'
+    | '/agency-mode'
+    | '/ai-avatar'
+    | '/ai-brand-negotiator'
+    | '/ai-chat'
+    | '/ai-community-manager'
+    | '/ai-content-factory'
+    | '/ai-newsroom'
+    | '/ai-podcast-factory'
+    | '/ai-sales-agent'
+    | '/ai-social-manager'
+    | '/ai-studio'
+    | '/ai-tools'
+    | '/ai-video-factory'
+    | '/ams'
     | '/analytics'
-    | '/applications'
-    | '/brands'
+    | '/api-center'
+    | '/assets-vault'
+    | '/audit-log'
+    | '/award-ceremony'
+    | '/banner-generator'
+    | '/booking'
+    | '/brand-assets'
+    | '/brand-collaboration'
+    | '/brand-matching'
+    | '/brand-safety'
+    | '/calendar'
+    | '/campaign-scheduler'
     | '/campaigns'
-    | '/collaborations'
+    | '/ceo-dashboard'
+    | '/cfo-dashboard'
+    | '/challenges'
+    | '/collaboration'
+    | '/command-center'
     | '/commissions'
-    | '/communication'
-    | '/compliance'
-    | '/content-library'
+    | '/company-mode'
+    | '/competitor-insights'
+    | '/content'
+    | '/content-approval'
+    | '/content-calendar'
+    | '/content-center'
+    | '/content-vault'
+    | '/contracts'
     | '/coupons'
-    | '/creator-profiles'
+    | '/creator-app-store'
+    | '/creator-applications'
+    | '/creator-assignments'
+    | '/creator-banking'
+    | '/creator-compliance'
+    | '/creator-crm'
+    | '/creator-dna'
+    | '/creator-economy-score'
+    | '/creator-erp'
+    | '/creator-intelligence'
+    | '/creator-levels'
+    | '/creator-manager'
+    | '/creator-map'
+    | '/creator-marketplace'
+    | '/creator-onboarding'
+    | '/creator-passport'
+    | '/creator-payouts'
+    | '/creator-performance'
+    | '/creator-reports'
+    | '/creator-subscriptions'
+    | '/creator-support-desk'
+    | '/creator-tasks'
+    | '/creator-tiers'
+    | '/creator-tv'
+    | '/creator-university'
+    | '/creators'
     | '/customers'
-    | '/documents'
-    | '/influencers'
+    | '/digital-twin'
+    | '/documentation'
+    | '/download-center'
+    | '/drafts'
+    | '/employees'
+    | '/enterprise-chat'
+    | '/events'
+    | '/fan-club'
+    | '/founder-spotlight'
+    | '/growth-dashboard'
+    | '/hall-of-fame'
+    | '/inbox'
+    | '/influence-map'
+    | '/influencer-store'
+    | '/knowledge-base'
+    | '/knowledge-vault'
+    | '/leaderboard'
     | '/leads'
-    | '/marketplace-promotions'
-    | '/media-assets'
+    | '/licenses'
+    | '/link-in-bio'
+    | '/live-performance'
+    | '/loyalty'
+    | '/market-intelligence'
+    | '/marketing'
+    | '/marketplace'
+    | '/media-kit'
+    | '/media-library'
+    | '/media-value'
+    | '/memory-capsule'
+    | '/messages'
+    | '/multi-channel'
     | '/notifications'
+    | '/opportunity-engine'
+    | '/orders'
     | '/payouts'
-    | '/performance'
-    | '/referral-links'
-    | '/reports'
+    | '/personal-brand'
+    | '/power-score'
+    | '/press-kit'
+    | '/prestige'
+    | '/products'
+    | '/profile'
+    | '/promotions'
+    | '/qr'
+    | '/rank'
+    | '/record-book'
+    | '/referrals'
+    | '/reputation'
+    | '/revenue'
     | '/reviews'
-    | '/rewards'
+    | '/sales'
+    | '/secret-achievements'
+    | '/security'
     | '/settings'
+    | '/short-links'
     | '/social-accounts'
+    | '/social-score'
+    | '/sponsorship'
+    | '/streaks'
+    | '/subscriptions'
+    | '/success-playbook'
     | '/support'
+    | '/team'
+    | '/thumbnail-generator'
+    | '/top-content'
+    | '/trophy-room'
+    | '/utm-builder'
     | '/verification'
     | '/wallet'
+    | '/website-builder'
+    | '/white-label'
+    | '/withdrawals'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AcademyRoute: typeof AcademyRoute
   AchievementsRoute: typeof AchievementsRoute
-  AffiliateLinksRoute: typeof AffiliateLinksRoute
+  ActivityRoute: typeof ActivityRoute
+  AgencyModeRoute: typeof AgencyModeRoute
+  AiAvatarRoute: typeof AiAvatarRoute
+  AiBrandNegotiatorRoute: typeof AiBrandNegotiatorRoute
+  AiChatRoute: typeof AiChatRoute
+  AiCommunityManagerRoute: typeof AiCommunityManagerRoute
+  AiContentFactoryRoute: typeof AiContentFactoryRoute
+  AiNewsroomRoute: typeof AiNewsroomRoute
+  AiPodcastFactoryRoute: typeof AiPodcastFactoryRoute
+  AiSalesAgentRoute: typeof AiSalesAgentRoute
+  AiSocialManagerRoute: typeof AiSocialManagerRoute
+  AiStudioRoute: typeof AiStudioRoute
+  AiToolsRoute: typeof AiToolsRoute
+  AiVideoFactoryRoute: typeof AiVideoFactoryRoute
+  AmsRoute: typeof AmsRoute
   AnalyticsRoute: typeof AnalyticsRoute
-  ApplicationsRoute: typeof ApplicationsRoute
-  BrandsRoute: typeof BrandsRoute
+  ApiCenterRoute: typeof ApiCenterRoute
+  AssetsVaultRoute: typeof AssetsVaultRoute
+  AuditLogRoute: typeof AuditLogRoute
+  AwardCeremonyRoute: typeof AwardCeremonyRoute
+  BannerGeneratorRoute: typeof BannerGeneratorRoute
+  BookingRoute: typeof BookingRoute
+  BrandAssetsRoute: typeof BrandAssetsRoute
+  BrandCollaborationRoute: typeof BrandCollaborationRoute
+  BrandMatchingRoute: typeof BrandMatchingRoute
+  BrandSafetyRoute: typeof BrandSafetyRoute
+  CalendarRoute: typeof CalendarRoute
+  CampaignSchedulerRoute: typeof CampaignSchedulerRoute
   CampaignsRoute: typeof CampaignsRoute
-  CollaborationsRoute: typeof CollaborationsRoute
+  CeoDashboardRoute: typeof CeoDashboardRoute
+  CfoDashboardRoute: typeof CfoDashboardRoute
+  ChallengesRoute: typeof ChallengesRoute
+  CollaborationRoute: typeof CollaborationRoute
+  CommandCenterRoute: typeof CommandCenterRoute
   CommissionsRoute: typeof CommissionsRoute
-  CommunicationRoute: typeof CommunicationRoute
-  ComplianceRoute: typeof ComplianceRoute
-  ContentLibraryRoute: typeof ContentLibraryRoute
+  CompanyModeRoute: typeof CompanyModeRoute
+  CompetitorInsightsRoute: typeof CompetitorInsightsRoute
+  ContentRoute: typeof ContentRoute
+  ContentApprovalRoute: typeof ContentApprovalRoute
+  ContentCalendarRoute: typeof ContentCalendarRoute
+  ContentCenterRoute: typeof ContentCenterRoute
+  ContentVaultRoute: typeof ContentVaultRoute
+  ContractsRoute: typeof ContractsRoute
   CouponsRoute: typeof CouponsRoute
-  CreatorProfilesRoute: typeof CreatorProfilesRoute
+  CreatorAppStoreRoute: typeof CreatorAppStoreRoute
+  CreatorApplicationsRoute: typeof CreatorApplicationsRoute
+  CreatorAssignmentsRoute: typeof CreatorAssignmentsRoute
+  CreatorBankingRoute: typeof CreatorBankingRoute
+  CreatorComplianceRoute: typeof CreatorComplianceRoute
+  CreatorCrmRoute: typeof CreatorCrmRoute
+  CreatorDnaRoute: typeof CreatorDnaRoute
+  CreatorEconomyScoreRoute: typeof CreatorEconomyScoreRoute
+  CreatorErpRoute: typeof CreatorErpRoute
+  CreatorIntelligenceRoute: typeof CreatorIntelligenceRoute
+  CreatorLevelsRoute: typeof CreatorLevelsRoute
+  CreatorManagerRoute: typeof CreatorManagerRoute
+  CreatorMapRoute: typeof CreatorMapRoute
+  CreatorMarketplaceRoute: typeof CreatorMarketplaceRoute
+  CreatorOnboardingRoute: typeof CreatorOnboardingRoute
+  CreatorPassportRoute: typeof CreatorPassportRoute
+  CreatorPayoutsRoute: typeof CreatorPayoutsRoute
+  CreatorPerformanceRoute: typeof CreatorPerformanceRoute
+  CreatorReportsRoute: typeof CreatorReportsRoute
+  CreatorSubscriptionsRoute: typeof CreatorSubscriptionsRoute
+  CreatorSupportDeskRoute: typeof CreatorSupportDeskRoute
+  CreatorTasksRoute: typeof CreatorTasksRoute
+  CreatorTiersRoute: typeof CreatorTiersRoute
+  CreatorTvRoute: typeof CreatorTvRoute
+  CreatorUniversityRoute: typeof CreatorUniversityRoute
+  CreatorsRoute: typeof CreatorsRoute
   CustomersRoute: typeof CustomersRoute
-  DocumentsRoute: typeof DocumentsRoute
-  InfluencersRoute: typeof InfluencersRoute
+  DigitalTwinRoute: typeof DigitalTwinRoute
+  DocumentationRoute: typeof DocumentationRoute
+  DownloadCenterRoute: typeof DownloadCenterRoute
+  DraftsRoute: typeof DraftsRoute
+  EmployeesRoute: typeof EmployeesRoute
+  EnterpriseChatRoute: typeof EnterpriseChatRoute
+  EventsRoute: typeof EventsRoute
+  FanClubRoute: typeof FanClubRoute
+  FounderSpotlightRoute: typeof FounderSpotlightRoute
+  GrowthDashboardRoute: typeof GrowthDashboardRoute
+  HallOfFameRoute: typeof HallOfFameRoute
+  InboxRoute: typeof InboxRoute
+  InfluenceMapRoute: typeof InfluenceMapRoute
+  InfluencerStoreRoute: typeof InfluencerStoreRoute
+  KnowledgeBaseRoute: typeof KnowledgeBaseRoute
+  KnowledgeVaultRoute: typeof KnowledgeVaultRoute
+  LeaderboardRoute: typeof LeaderboardRoute
   LeadsRoute: typeof LeadsRoute
-  MarketplacePromotionsRoute: typeof MarketplacePromotionsRoute
-  MediaAssetsRoute: typeof MediaAssetsRoute
+  LicensesRoute: typeof LicensesRoute
+  LinkInBioRoute: typeof LinkInBioRoute
+  LivePerformanceRoute: typeof LivePerformanceRoute
+  LoyaltyRoute: typeof LoyaltyRoute
+  MarketIntelligenceRoute: typeof MarketIntelligenceRoute
+  MarketingRoute: typeof MarketingRoute
+  MarketplaceRoute: typeof MarketplaceRoute
+  MediaKitRoute: typeof MediaKitRoute
+  MediaLibraryRoute: typeof MediaLibraryRoute
+  MediaValueRoute: typeof MediaValueRoute
+  MemoryCapsuleRoute: typeof MemoryCapsuleRoute
+  MessagesRoute: typeof MessagesRoute
+  MultiChannelRoute: typeof MultiChannelRoute
   NotificationsRoute: typeof NotificationsRoute
+  OpportunityEngineRoute: typeof OpportunityEngineRoute
+  OrdersRoute: typeof OrdersRoute
   PayoutsRoute: typeof PayoutsRoute
-  PerformanceRoute: typeof PerformanceRoute
-  ReferralLinksRoute: typeof ReferralLinksRoute
-  ReportsRoute: typeof ReportsRoute
+  PersonalBrandRoute: typeof PersonalBrandRoute
+  PowerScoreRoute: typeof PowerScoreRoute
+  PressKitRoute: typeof PressKitRoute
+  PrestigeRoute: typeof PrestigeRoute
+  ProductsRoute: typeof ProductsRoute
+  ProfileRoute: typeof ProfileRoute
+  PromotionsRoute: typeof PromotionsRoute
+  QrRoute: typeof QrRoute
+  RankRoute: typeof RankRoute
+  RecordBookRoute: typeof RecordBookRoute
+  ReferralsRoute: typeof ReferralsRoute
+  ReputationRoute: typeof ReputationRoute
+  RevenueRoute: typeof RevenueRoute
   ReviewsRoute: typeof ReviewsRoute
-  RewardsRoute: typeof RewardsRoute
+  SalesRoute: typeof SalesRoute
+  SecretAchievementsRoute: typeof SecretAchievementsRoute
+  SecurityRoute: typeof SecurityRoute
   SettingsRoute: typeof SettingsRoute
+  ShortLinksRoute: typeof ShortLinksRoute
   SocialAccountsRoute: typeof SocialAccountsRoute
+  SocialScoreRoute: typeof SocialScoreRoute
+  SponsorshipRoute: typeof SponsorshipRoute
+  StreaksRoute: typeof StreaksRoute
+  SubscriptionsRoute: typeof SubscriptionsRoute
+  SuccessPlaybookRoute: typeof SuccessPlaybookRoute
   SupportRoute: typeof SupportRoute
+  TeamRoute: typeof TeamRoute
+  ThumbnailGeneratorRoute: typeof ThumbnailGeneratorRoute
+  TopContentRoute: typeof TopContentRoute
+  TrophyRoomRoute: typeof TrophyRoomRoute
+  UtmBuilderRoute: typeof UtmBuilderRoute
   VerificationRoute: typeof VerificationRoute
   WalletRoute: typeof WalletRoute
+  WebsiteBuilderRoute: typeof WebsiteBuilderRoute
+  WhiteLabelRoute: typeof WhiteLabelRoute
+  WithdrawalsRoute: typeof WithdrawalsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/withdrawals': {
+      id: '/withdrawals'
+      path: '/withdrawals'
+      fullPath: '/withdrawals'
+      preLoaderRoute: typeof WithdrawalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/white-label': {
+      id: '/white-label'
+      path: '/white-label'
+      fullPath: '/white-label'
+      preLoaderRoute: typeof WhiteLabelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/website-builder': {
+      id: '/website-builder'
+      path: '/website-builder'
+      fullPath: '/website-builder'
+      preLoaderRoute: typeof WebsiteBuilderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/wallet': {
       id: '/wallet'
       path: '/wallet'
@@ -462,11 +1952,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VerificationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/utm-builder': {
+      id: '/utm-builder'
+      path: '/utm-builder'
+      fullPath: '/utm-builder'
+      preLoaderRoute: typeof UtmBuilderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trophy-room': {
+      id: '/trophy-room'
+      path: '/trophy-room'
+      fullPath: '/trophy-room'
+      preLoaderRoute: typeof TrophyRoomRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/top-content': {
+      id: '/top-content'
+      path: '/top-content'
+      fullPath: '/top-content'
+      preLoaderRoute: typeof TopContentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/thumbnail-generator': {
+      id: '/thumbnail-generator'
+      path: '/thumbnail-generator'
+      fullPath: '/thumbnail-generator'
+      preLoaderRoute: typeof ThumbnailGeneratorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/team': {
+      id: '/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof TeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/support': {
       id: '/support'
       path: '/support'
       fullPath: '/support'
       preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/success-playbook': {
+      id: '/success-playbook'
+      path: '/success-playbook'
+      fullPath: '/success-playbook'
+      preLoaderRoute: typeof SuccessPlaybookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subscriptions': {
+      id: '/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/subscriptions'
+      preLoaderRoute: typeof SubscriptionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/streaks': {
+      id: '/streaks'
+      path: '/streaks'
+      fullPath: '/streaks'
+      preLoaderRoute: typeof StreaksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sponsorship': {
+      id: '/sponsorship'
+      path: '/sponsorship'
+      fullPath: '/sponsorship'
+      preLoaderRoute: typeof SponsorshipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/social-score': {
+      id: '/social-score'
+      path: '/social-score'
+      fullPath: '/social-score'
+      preLoaderRoute: typeof SocialScoreRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/social-accounts': {
@@ -476,6 +2036,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SocialAccountsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/short-links': {
+      id: '/short-links'
+      path: '/short-links'
+      fullPath: '/short-links'
+      preLoaderRoute: typeof ShortLinksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -483,11 +2050,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/rewards': {
-      id: '/rewards'
-      path: '/rewards'
-      fullPath: '/rewards'
-      preLoaderRoute: typeof RewardsRouteImport
+    '/security': {
+      id: '/security'
+      path: '/security'
+      fullPath: '/security'
+      preLoaderRoute: typeof SecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/secret-achievements': {
+      id: '/secret-achievements'
+      path: '/secret-achievements'
+      fullPath: '/secret-achievements'
+      preLoaderRoute: typeof SecretAchievementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sales': {
+      id: '/sales'
+      path: '/sales'
+      fullPath: '/sales'
+      preLoaderRoute: typeof SalesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reviews': {
@@ -497,25 +2078,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/reports': {
-      id: '/reports'
-      path: '/reports'
-      fullPath: '/reports'
-      preLoaderRoute: typeof ReportsRouteImport
+    '/revenue': {
+      id: '/revenue'
+      path: '/revenue'
+      fullPath: '/revenue'
+      preLoaderRoute: typeof RevenueRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/referral-links': {
-      id: '/referral-links'
-      path: '/referral-links'
-      fullPath: '/referral-links'
-      preLoaderRoute: typeof ReferralLinksRouteImport
+    '/reputation': {
+      id: '/reputation'
+      path: '/reputation'
+      fullPath: '/reputation'
+      preLoaderRoute: typeof ReputationRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/performance': {
-      id: '/performance'
-      path: '/performance'
-      fullPath: '/performance'
-      preLoaderRoute: typeof PerformanceRouteImport
+    '/referrals': {
+      id: '/referrals'
+      path: '/referrals'
+      fullPath: '/referrals'
+      preLoaderRoute: typeof ReferralsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/record-book': {
+      id: '/record-book'
+      path: '/record-book'
+      fullPath: '/record-book'
+      preLoaderRoute: typeof RecordBookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rank': {
+      id: '/rank'
+      path: '/rank'
+      fullPath: '/rank'
+      preLoaderRoute: typeof RankRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/qr': {
+      id: '/qr'
+      path: '/qr'
+      fullPath: '/qr'
+      preLoaderRoute: typeof QrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/promotions': {
+      id: '/promotions'
+      path: '/promotions'
+      fullPath: '/promotions'
+      preLoaderRoute: typeof PromotionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/products': {
+      id: '/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prestige': {
+      id: '/prestige'
+      path: '/prestige'
+      fullPath: '/prestige'
+      preLoaderRoute: typeof PrestigeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/press-kit': {
+      id: '/press-kit'
+      path: '/press-kit'
+      fullPath: '/press-kit'
+      preLoaderRoute: typeof PressKitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/power-score': {
+      id: '/power-score'
+      path: '/power-score'
+      fullPath: '/power-score'
+      preLoaderRoute: typeof PowerScoreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/personal-brand': {
+      id: '/personal-brand'
+      path: '/personal-brand'
+      fullPath: '/personal-brand'
+      preLoaderRoute: typeof PersonalBrandRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/payouts': {
@@ -525,6 +2176,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PayoutsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/opportunity-engine': {
+      id: '/opportunity-engine'
+      path: '/opportunity-engine'
+      fullPath: '/opportunity-engine'
+      preLoaderRoute: typeof OpportunityEngineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/notifications': {
       id: '/notifications'
       path: '/notifications'
@@ -532,18 +2197,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/media-assets': {
-      id: '/media-assets'
-      path: '/media-assets'
-      fullPath: '/media-assets'
-      preLoaderRoute: typeof MediaAssetsRouteImport
+    '/multi-channel': {
+      id: '/multi-channel'
+      path: '/multi-channel'
+      fullPath: '/multi-channel'
+      preLoaderRoute: typeof MultiChannelRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/marketplace-promotions': {
-      id: '/marketplace-promotions'
-      path: '/marketplace-promotions'
-      fullPath: '/marketplace-promotions'
-      preLoaderRoute: typeof MarketplacePromotionsRouteImport
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/memory-capsule': {
+      id: '/memory-capsule'
+      path: '/memory-capsule'
+      fullPath: '/memory-capsule'
+      preLoaderRoute: typeof MemoryCapsuleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/media-value': {
+      id: '/media-value'
+      path: '/media-value'
+      fullPath: '/media-value'
+      preLoaderRoute: typeof MediaValueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/media-library': {
+      id: '/media-library'
+      path: '/media-library'
+      fullPath: '/media-library'
+      preLoaderRoute: typeof MediaLibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/media-kit': {
+      id: '/media-kit'
+      path: '/media-kit'
+      fullPath: '/media-kit'
+      preLoaderRoute: typeof MediaKitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketplace': {
+      id: '/marketplace'
+      path: '/marketplace'
+      fullPath: '/marketplace'
+      preLoaderRoute: typeof MarketplaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketing': {
+      id: '/marketing'
+      path: '/marketing'
+      fullPath: '/marketing'
+      preLoaderRoute: typeof MarketingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/market-intelligence': {
+      id: '/market-intelligence'
+      path: '/market-intelligence'
+      fullPath: '/market-intelligence'
+      preLoaderRoute: typeof MarketIntelligenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/loyalty': {
+      id: '/loyalty'
+      path: '/loyalty'
+      fullPath: '/loyalty'
+      preLoaderRoute: typeof LoyaltyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/live-performance': {
+      id: '/live-performance'
+      path: '/live-performance'
+      fullPath: '/live-performance'
+      preLoaderRoute: typeof LivePerformanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/link-in-bio': {
+      id: '/link-in-bio'
+      path: '/link-in-bio'
+      fullPath: '/link-in-bio'
+      preLoaderRoute: typeof LinkInBioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/licenses': {
+      id: '/licenses'
+      path: '/licenses'
+      fullPath: '/licenses'
+      preLoaderRoute: typeof LicensesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/leads': {
@@ -553,18 +2295,123 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeadsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/influencers': {
-      id: '/influencers'
-      path: '/influencers'
-      fullPath: '/influencers'
-      preLoaderRoute: typeof InfluencersRouteImport
+    '/leaderboard': {
+      id: '/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof LeaderboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/documents': {
-      id: '/documents'
-      path: '/documents'
-      fullPath: '/documents'
-      preLoaderRoute: typeof DocumentsRouteImport
+    '/knowledge-vault': {
+      id: '/knowledge-vault'
+      path: '/knowledge-vault'
+      fullPath: '/knowledge-vault'
+      preLoaderRoute: typeof KnowledgeVaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/knowledge-base': {
+      id: '/knowledge-base'
+      path: '/knowledge-base'
+      fullPath: '/knowledge-base'
+      preLoaderRoute: typeof KnowledgeBaseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/influencer-store': {
+      id: '/influencer-store'
+      path: '/influencer-store'
+      fullPath: '/influencer-store'
+      preLoaderRoute: typeof InfluencerStoreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/influence-map': {
+      id: '/influence-map'
+      path: '/influence-map'
+      fullPath: '/influence-map'
+      preLoaderRoute: typeof InfluenceMapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inbox': {
+      id: '/inbox'
+      path: '/inbox'
+      fullPath: '/inbox'
+      preLoaderRoute: typeof InboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hall-of-fame': {
+      id: '/hall-of-fame'
+      path: '/hall-of-fame'
+      fullPath: '/hall-of-fame'
+      preLoaderRoute: typeof HallOfFameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/growth-dashboard': {
+      id: '/growth-dashboard'
+      path: '/growth-dashboard'
+      fullPath: '/growth-dashboard'
+      preLoaderRoute: typeof GrowthDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/founder-spotlight': {
+      id: '/founder-spotlight'
+      path: '/founder-spotlight'
+      fullPath: '/founder-spotlight'
+      preLoaderRoute: typeof FounderSpotlightRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fan-club': {
+      id: '/fan-club'
+      path: '/fan-club'
+      fullPath: '/fan-club'
+      preLoaderRoute: typeof FanClubRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/enterprise-chat': {
+      id: '/enterprise-chat'
+      path: '/enterprise-chat'
+      fullPath: '/enterprise-chat'
+      preLoaderRoute: typeof EnterpriseChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/employees': {
+      id: '/employees'
+      path: '/employees'
+      fullPath: '/employees'
+      preLoaderRoute: typeof EmployeesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/drafts': {
+      id: '/drafts'
+      path: '/drafts'
+      fullPath: '/drafts'
+      preLoaderRoute: typeof DraftsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/download-center': {
+      id: '/download-center'
+      path: '/download-center'
+      fullPath: '/download-center'
+      preLoaderRoute: typeof DownloadCenterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/documentation': {
+      id: '/documentation'
+      path: '/documentation'
+      fullPath: '/documentation'
+      preLoaderRoute: typeof DocumentationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/digital-twin': {
+      id: '/digital-twin'
+      path: '/digital-twin'
+      fullPath: '/digital-twin'
+      preLoaderRoute: typeof DigitalTwinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/customers': {
@@ -574,11 +2421,186 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/creator-profiles': {
-      id: '/creator-profiles'
-      path: '/creator-profiles'
-      fullPath: '/creator-profiles'
-      preLoaderRoute: typeof CreatorProfilesRouteImport
+    '/creators': {
+      id: '/creators'
+      path: '/creators'
+      fullPath: '/creators'
+      preLoaderRoute: typeof CreatorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-university': {
+      id: '/creator-university'
+      path: '/creator-university'
+      fullPath: '/creator-university'
+      preLoaderRoute: typeof CreatorUniversityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-tv': {
+      id: '/creator-tv'
+      path: '/creator-tv'
+      fullPath: '/creator-tv'
+      preLoaderRoute: typeof CreatorTvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-tiers': {
+      id: '/creator-tiers'
+      path: '/creator-tiers'
+      fullPath: '/creator-tiers'
+      preLoaderRoute: typeof CreatorTiersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-tasks': {
+      id: '/creator-tasks'
+      path: '/creator-tasks'
+      fullPath: '/creator-tasks'
+      preLoaderRoute: typeof CreatorTasksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-support-desk': {
+      id: '/creator-support-desk'
+      path: '/creator-support-desk'
+      fullPath: '/creator-support-desk'
+      preLoaderRoute: typeof CreatorSupportDeskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-subscriptions': {
+      id: '/creator-subscriptions'
+      path: '/creator-subscriptions'
+      fullPath: '/creator-subscriptions'
+      preLoaderRoute: typeof CreatorSubscriptionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-reports': {
+      id: '/creator-reports'
+      path: '/creator-reports'
+      fullPath: '/creator-reports'
+      preLoaderRoute: typeof CreatorReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-performance': {
+      id: '/creator-performance'
+      path: '/creator-performance'
+      fullPath: '/creator-performance'
+      preLoaderRoute: typeof CreatorPerformanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-payouts': {
+      id: '/creator-payouts'
+      path: '/creator-payouts'
+      fullPath: '/creator-payouts'
+      preLoaderRoute: typeof CreatorPayoutsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-passport': {
+      id: '/creator-passport'
+      path: '/creator-passport'
+      fullPath: '/creator-passport'
+      preLoaderRoute: typeof CreatorPassportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-onboarding': {
+      id: '/creator-onboarding'
+      path: '/creator-onboarding'
+      fullPath: '/creator-onboarding'
+      preLoaderRoute: typeof CreatorOnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-marketplace': {
+      id: '/creator-marketplace'
+      path: '/creator-marketplace'
+      fullPath: '/creator-marketplace'
+      preLoaderRoute: typeof CreatorMarketplaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-map': {
+      id: '/creator-map'
+      path: '/creator-map'
+      fullPath: '/creator-map'
+      preLoaderRoute: typeof CreatorMapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-manager': {
+      id: '/creator-manager'
+      path: '/creator-manager'
+      fullPath: '/creator-manager'
+      preLoaderRoute: typeof CreatorManagerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-levels': {
+      id: '/creator-levels'
+      path: '/creator-levels'
+      fullPath: '/creator-levels'
+      preLoaderRoute: typeof CreatorLevelsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-intelligence': {
+      id: '/creator-intelligence'
+      path: '/creator-intelligence'
+      fullPath: '/creator-intelligence'
+      preLoaderRoute: typeof CreatorIntelligenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-erp': {
+      id: '/creator-erp'
+      path: '/creator-erp'
+      fullPath: '/creator-erp'
+      preLoaderRoute: typeof CreatorErpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-economy-score': {
+      id: '/creator-economy-score'
+      path: '/creator-economy-score'
+      fullPath: '/creator-economy-score'
+      preLoaderRoute: typeof CreatorEconomyScoreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-dna': {
+      id: '/creator-dna'
+      path: '/creator-dna'
+      fullPath: '/creator-dna'
+      preLoaderRoute: typeof CreatorDnaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-crm': {
+      id: '/creator-crm'
+      path: '/creator-crm'
+      fullPath: '/creator-crm'
+      preLoaderRoute: typeof CreatorCrmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-compliance': {
+      id: '/creator-compliance'
+      path: '/creator-compliance'
+      fullPath: '/creator-compliance'
+      preLoaderRoute: typeof CreatorComplianceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-banking': {
+      id: '/creator-banking'
+      path: '/creator-banking'
+      fullPath: '/creator-banking'
+      preLoaderRoute: typeof CreatorBankingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-assignments': {
+      id: '/creator-assignments'
+      path: '/creator-assignments'
+      fullPath: '/creator-assignments'
+      preLoaderRoute: typeof CreatorAssignmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-applications': {
+      id: '/creator-applications'
+      path: '/creator-applications'
+      fullPath: '/creator-applications'
+      preLoaderRoute: typeof CreatorApplicationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-app-store': {
+      id: '/creator-app-store'
+      path: '/creator-app-store'
+      fullPath: '/creator-app-store'
+      preLoaderRoute: typeof CreatorAppStoreRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/coupons': {
@@ -588,25 +2610,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CouponsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/content-library': {
-      id: '/content-library'
-      path: '/content-library'
-      fullPath: '/content-library'
-      preLoaderRoute: typeof ContentLibraryRouteImport
+    '/contracts': {
+      id: '/contracts'
+      path: '/contracts'
+      fullPath: '/contracts'
+      preLoaderRoute: typeof ContractsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/compliance': {
-      id: '/compliance'
-      path: '/compliance'
-      fullPath: '/compliance'
-      preLoaderRoute: typeof ComplianceRouteImport
+    '/content-vault': {
+      id: '/content-vault'
+      path: '/content-vault'
+      fullPath: '/content-vault'
+      preLoaderRoute: typeof ContentVaultRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/communication': {
-      id: '/communication'
-      path: '/communication'
-      fullPath: '/communication'
-      preLoaderRoute: typeof CommunicationRouteImport
+    '/content-center': {
+      id: '/content-center'
+      path: '/content-center'
+      fullPath: '/content-center'
+      preLoaderRoute: typeof ContentCenterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/content-calendar': {
+      id: '/content-calendar'
+      path: '/content-calendar'
+      fullPath: '/content-calendar'
+      preLoaderRoute: typeof ContentCalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/content-approval': {
+      id: '/content-approval'
+      path: '/content-approval'
+      fullPath: '/content-approval'
+      preLoaderRoute: typeof ContentApprovalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/content': {
+      id: '/content'
+      path: '/content'
+      fullPath: '/content'
+      preLoaderRoute: typeof ContentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/competitor-insights': {
+      id: '/competitor-insights'
+      path: '/competitor-insights'
+      fullPath: '/competitor-insights'
+      preLoaderRoute: typeof CompetitorInsightsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/company-mode': {
+      id: '/company-mode'
+      path: '/company-mode'
+      fullPath: '/company-mode'
+      preLoaderRoute: typeof CompanyModeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/commissions': {
@@ -616,11 +2673,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommissionsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/collaborations': {
-      id: '/collaborations'
-      path: '/collaborations'
-      fullPath: '/collaborations'
-      preLoaderRoute: typeof CollaborationsRouteImport
+    '/command-center': {
+      id: '/command-center'
+      path: '/command-center'
+      fullPath: '/command-center'
+      preLoaderRoute: typeof CommandCenterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/collaboration': {
+      id: '/collaboration'
+      path: '/collaboration'
+      fullPath: '/collaboration'
+      preLoaderRoute: typeof CollaborationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/challenges': {
+      id: '/challenges'
+      path: '/challenges'
+      fullPath: '/challenges'
+      preLoaderRoute: typeof ChallengesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cfo-dashboard': {
+      id: '/cfo-dashboard'
+      path: '/cfo-dashboard'
+      fullPath: '/cfo-dashboard'
+      preLoaderRoute: typeof CfoDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ceo-dashboard': {
+      id: '/ceo-dashboard'
+      path: '/ceo-dashboard'
+      fullPath: '/ceo-dashboard'
+      preLoaderRoute: typeof CeoDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/campaigns': {
@@ -630,18 +2715,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CampaignsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/brands': {
-      id: '/brands'
-      path: '/brands'
-      fullPath: '/brands'
-      preLoaderRoute: typeof BrandsRouteImport
+    '/campaign-scheduler': {
+      id: '/campaign-scheduler'
+      path: '/campaign-scheduler'
+      fullPath: '/campaign-scheduler'
+      preLoaderRoute: typeof CampaignSchedulerRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/applications': {
-      id: '/applications'
-      path: '/applications'
-      fullPath: '/applications'
-      preLoaderRoute: typeof ApplicationsRouteImport
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand-safety': {
+      id: '/brand-safety'
+      path: '/brand-safety'
+      fullPath: '/brand-safety'
+      preLoaderRoute: typeof BrandSafetyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand-matching': {
+      id: '/brand-matching'
+      path: '/brand-matching'
+      fullPath: '/brand-matching'
+      preLoaderRoute: typeof BrandMatchingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand-collaboration': {
+      id: '/brand-collaboration'
+      path: '/brand-collaboration'
+      fullPath: '/brand-collaboration'
+      preLoaderRoute: typeof BrandCollaborationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand-assets': {
+      id: '/brand-assets'
+      path: '/brand-assets'
+      fullPath: '/brand-assets'
+      preLoaderRoute: typeof BrandAssetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/booking': {
+      id: '/booking'
+      path: '/booking'
+      fullPath: '/booking'
+      preLoaderRoute: typeof BookingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/banner-generator': {
+      id: '/banner-generator'
+      path: '/banner-generator'
+      fullPath: '/banner-generator'
+      preLoaderRoute: typeof BannerGeneratorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/award-ceremony': {
+      id: '/award-ceremony'
+      path: '/award-ceremony'
+      fullPath: '/award-ceremony'
+      preLoaderRoute: typeof AwardCeremonyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit-log': {
+      id: '/audit-log'
+      path: '/audit-log'
+      fullPath: '/audit-log'
+      preLoaderRoute: typeof AuditLogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assets-vault': {
+      id: '/assets-vault'
+      path: '/assets-vault'
+      fullPath: '/assets-vault'
+      preLoaderRoute: typeof AssetsVaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api-center': {
+      id: '/api-center'
+      path: '/api-center'
+      fullPath: '/api-center'
+      preLoaderRoute: typeof ApiCenterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/analytics': {
@@ -651,11 +2806,109 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/affiliate-links': {
-      id: '/affiliate-links'
-      path: '/affiliate-links'
-      fullPath: '/affiliate-links'
-      preLoaderRoute: typeof AffiliateLinksRouteImport
+    '/ams': {
+      id: '/ams'
+      path: '/ams'
+      fullPath: '/ams'
+      preLoaderRoute: typeof AmsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-video-factory': {
+      id: '/ai-video-factory'
+      path: '/ai-video-factory'
+      fullPath: '/ai-video-factory'
+      preLoaderRoute: typeof AiVideoFactoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-tools': {
+      id: '/ai-tools'
+      path: '/ai-tools'
+      fullPath: '/ai-tools'
+      preLoaderRoute: typeof AiToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-studio': {
+      id: '/ai-studio'
+      path: '/ai-studio'
+      fullPath: '/ai-studio'
+      preLoaderRoute: typeof AiStudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-social-manager': {
+      id: '/ai-social-manager'
+      path: '/ai-social-manager'
+      fullPath: '/ai-social-manager'
+      preLoaderRoute: typeof AiSocialManagerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-sales-agent': {
+      id: '/ai-sales-agent'
+      path: '/ai-sales-agent'
+      fullPath: '/ai-sales-agent'
+      preLoaderRoute: typeof AiSalesAgentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-podcast-factory': {
+      id: '/ai-podcast-factory'
+      path: '/ai-podcast-factory'
+      fullPath: '/ai-podcast-factory'
+      preLoaderRoute: typeof AiPodcastFactoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-newsroom': {
+      id: '/ai-newsroom'
+      path: '/ai-newsroom'
+      fullPath: '/ai-newsroom'
+      preLoaderRoute: typeof AiNewsroomRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-content-factory': {
+      id: '/ai-content-factory'
+      path: '/ai-content-factory'
+      fullPath: '/ai-content-factory'
+      preLoaderRoute: typeof AiContentFactoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-community-manager': {
+      id: '/ai-community-manager'
+      path: '/ai-community-manager'
+      fullPath: '/ai-community-manager'
+      preLoaderRoute: typeof AiCommunityManagerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-chat': {
+      id: '/ai-chat'
+      path: '/ai-chat'
+      fullPath: '/ai-chat'
+      preLoaderRoute: typeof AiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-brand-negotiator': {
+      id: '/ai-brand-negotiator'
+      path: '/ai-brand-negotiator'
+      fullPath: '/ai-brand-negotiator'
+      preLoaderRoute: typeof AiBrandNegotiatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-avatar': {
+      id: '/ai-avatar'
+      path: '/ai-avatar'
+      fullPath: '/ai-avatar'
+      preLoaderRoute: typeof AiAvatarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agency-mode': {
+      id: '/agency-mode'
+      path: '/agency-mode'
+      fullPath: '/agency-mode'
+      preLoaderRoute: typeof AgencyModeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/activity': {
+      id: '/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof ActivityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/achievements': {
@@ -663,6 +2916,13 @@ declare module '@tanstack/react-router' {
       path: '/achievements'
       fullPath: '/achievements'
       preLoaderRoute: typeof AchievementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/academy': {
+      id: '/academy'
+      path: '/academy'
+      fullPath: '/academy'
+      preLoaderRoute: typeof AcademyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -677,48 +2937,151 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AcademyRoute: AcademyRoute,
   AchievementsRoute: AchievementsRoute,
-  AffiliateLinksRoute: AffiliateLinksRoute,
+  ActivityRoute: ActivityRoute,
+  AgencyModeRoute: AgencyModeRoute,
+  AiAvatarRoute: AiAvatarRoute,
+  AiBrandNegotiatorRoute: AiBrandNegotiatorRoute,
+  AiChatRoute: AiChatRoute,
+  AiCommunityManagerRoute: AiCommunityManagerRoute,
+  AiContentFactoryRoute: AiContentFactoryRoute,
+  AiNewsroomRoute: AiNewsroomRoute,
+  AiPodcastFactoryRoute: AiPodcastFactoryRoute,
+  AiSalesAgentRoute: AiSalesAgentRoute,
+  AiSocialManagerRoute: AiSocialManagerRoute,
+  AiStudioRoute: AiStudioRoute,
+  AiToolsRoute: AiToolsRoute,
+  AiVideoFactoryRoute: AiVideoFactoryRoute,
+  AmsRoute: AmsRoute,
   AnalyticsRoute: AnalyticsRoute,
-  ApplicationsRoute: ApplicationsRoute,
-  BrandsRoute: BrandsRoute,
+  ApiCenterRoute: ApiCenterRoute,
+  AssetsVaultRoute: AssetsVaultRoute,
+  AuditLogRoute: AuditLogRoute,
+  AwardCeremonyRoute: AwardCeremonyRoute,
+  BannerGeneratorRoute: BannerGeneratorRoute,
+  BookingRoute: BookingRoute,
+  BrandAssetsRoute: BrandAssetsRoute,
+  BrandCollaborationRoute: BrandCollaborationRoute,
+  BrandMatchingRoute: BrandMatchingRoute,
+  BrandSafetyRoute: BrandSafetyRoute,
+  CalendarRoute: CalendarRoute,
+  CampaignSchedulerRoute: CampaignSchedulerRoute,
   CampaignsRoute: CampaignsRoute,
-  CollaborationsRoute: CollaborationsRoute,
+  CeoDashboardRoute: CeoDashboardRoute,
+  CfoDashboardRoute: CfoDashboardRoute,
+  ChallengesRoute: ChallengesRoute,
+  CollaborationRoute: CollaborationRoute,
+  CommandCenterRoute: CommandCenterRoute,
   CommissionsRoute: CommissionsRoute,
-  CommunicationRoute: CommunicationRoute,
-  ComplianceRoute: ComplianceRoute,
-  ContentLibraryRoute: ContentLibraryRoute,
+  CompanyModeRoute: CompanyModeRoute,
+  CompetitorInsightsRoute: CompetitorInsightsRoute,
+  ContentRoute: ContentRoute,
+  ContentApprovalRoute: ContentApprovalRoute,
+  ContentCalendarRoute: ContentCalendarRoute,
+  ContentCenterRoute: ContentCenterRoute,
+  ContentVaultRoute: ContentVaultRoute,
+  ContractsRoute: ContractsRoute,
   CouponsRoute: CouponsRoute,
-  CreatorProfilesRoute: CreatorProfilesRoute,
+  CreatorAppStoreRoute: CreatorAppStoreRoute,
+  CreatorApplicationsRoute: CreatorApplicationsRoute,
+  CreatorAssignmentsRoute: CreatorAssignmentsRoute,
+  CreatorBankingRoute: CreatorBankingRoute,
+  CreatorComplianceRoute: CreatorComplianceRoute,
+  CreatorCrmRoute: CreatorCrmRoute,
+  CreatorDnaRoute: CreatorDnaRoute,
+  CreatorEconomyScoreRoute: CreatorEconomyScoreRoute,
+  CreatorErpRoute: CreatorErpRoute,
+  CreatorIntelligenceRoute: CreatorIntelligenceRoute,
+  CreatorLevelsRoute: CreatorLevelsRoute,
+  CreatorManagerRoute: CreatorManagerRoute,
+  CreatorMapRoute: CreatorMapRoute,
+  CreatorMarketplaceRoute: CreatorMarketplaceRoute,
+  CreatorOnboardingRoute: CreatorOnboardingRoute,
+  CreatorPassportRoute: CreatorPassportRoute,
+  CreatorPayoutsRoute: CreatorPayoutsRoute,
+  CreatorPerformanceRoute: CreatorPerformanceRoute,
+  CreatorReportsRoute: CreatorReportsRoute,
+  CreatorSubscriptionsRoute: CreatorSubscriptionsRoute,
+  CreatorSupportDeskRoute: CreatorSupportDeskRoute,
+  CreatorTasksRoute: CreatorTasksRoute,
+  CreatorTiersRoute: CreatorTiersRoute,
+  CreatorTvRoute: CreatorTvRoute,
+  CreatorUniversityRoute: CreatorUniversityRoute,
+  CreatorsRoute: CreatorsRoute,
   CustomersRoute: CustomersRoute,
-  DocumentsRoute: DocumentsRoute,
-  InfluencersRoute: InfluencersRoute,
+  DigitalTwinRoute: DigitalTwinRoute,
+  DocumentationRoute: DocumentationRoute,
+  DownloadCenterRoute: DownloadCenterRoute,
+  DraftsRoute: DraftsRoute,
+  EmployeesRoute: EmployeesRoute,
+  EnterpriseChatRoute: EnterpriseChatRoute,
+  EventsRoute: EventsRoute,
+  FanClubRoute: FanClubRoute,
+  FounderSpotlightRoute: FounderSpotlightRoute,
+  GrowthDashboardRoute: GrowthDashboardRoute,
+  HallOfFameRoute: HallOfFameRoute,
+  InboxRoute: InboxRoute,
+  InfluenceMapRoute: InfluenceMapRoute,
+  InfluencerStoreRoute: InfluencerStoreRoute,
+  KnowledgeBaseRoute: KnowledgeBaseRoute,
+  KnowledgeVaultRoute: KnowledgeVaultRoute,
+  LeaderboardRoute: LeaderboardRoute,
   LeadsRoute: LeadsRoute,
-  MarketplacePromotionsRoute: MarketplacePromotionsRoute,
-  MediaAssetsRoute: MediaAssetsRoute,
+  LicensesRoute: LicensesRoute,
+  LinkInBioRoute: LinkInBioRoute,
+  LivePerformanceRoute: LivePerformanceRoute,
+  LoyaltyRoute: LoyaltyRoute,
+  MarketIntelligenceRoute: MarketIntelligenceRoute,
+  MarketingRoute: MarketingRoute,
+  MarketplaceRoute: MarketplaceRoute,
+  MediaKitRoute: MediaKitRoute,
+  MediaLibraryRoute: MediaLibraryRoute,
+  MediaValueRoute: MediaValueRoute,
+  MemoryCapsuleRoute: MemoryCapsuleRoute,
+  MessagesRoute: MessagesRoute,
+  MultiChannelRoute: MultiChannelRoute,
   NotificationsRoute: NotificationsRoute,
+  OpportunityEngineRoute: OpportunityEngineRoute,
+  OrdersRoute: OrdersRoute,
   PayoutsRoute: PayoutsRoute,
-  PerformanceRoute: PerformanceRoute,
-  ReferralLinksRoute: ReferralLinksRoute,
-  ReportsRoute: ReportsRoute,
+  PersonalBrandRoute: PersonalBrandRoute,
+  PowerScoreRoute: PowerScoreRoute,
+  PressKitRoute: PressKitRoute,
+  PrestigeRoute: PrestigeRoute,
+  ProductsRoute: ProductsRoute,
+  ProfileRoute: ProfileRoute,
+  PromotionsRoute: PromotionsRoute,
+  QrRoute: QrRoute,
+  RankRoute: RankRoute,
+  RecordBookRoute: RecordBookRoute,
+  ReferralsRoute: ReferralsRoute,
+  ReputationRoute: ReputationRoute,
+  RevenueRoute: RevenueRoute,
   ReviewsRoute: ReviewsRoute,
-  RewardsRoute: RewardsRoute,
+  SalesRoute: SalesRoute,
+  SecretAchievementsRoute: SecretAchievementsRoute,
+  SecurityRoute: SecurityRoute,
   SettingsRoute: SettingsRoute,
+  ShortLinksRoute: ShortLinksRoute,
   SocialAccountsRoute: SocialAccountsRoute,
+  SocialScoreRoute: SocialScoreRoute,
+  SponsorshipRoute: SponsorshipRoute,
+  StreaksRoute: StreaksRoute,
+  SubscriptionsRoute: SubscriptionsRoute,
+  SuccessPlaybookRoute: SuccessPlaybookRoute,
   SupportRoute: SupportRoute,
+  TeamRoute: TeamRoute,
+  ThumbnailGeneratorRoute: ThumbnailGeneratorRoute,
+  TopContentRoute: TopContentRoute,
+  TrophyRoomRoute: TrophyRoomRoute,
+  UtmBuilderRoute: UtmBuilderRoute,
   VerificationRoute: VerificationRoute,
   WalletRoute: WalletRoute,
+  WebsiteBuilderRoute: WebsiteBuilderRoute,
+  WhiteLabelRoute: WhiteLabelRoute,
+  WithdrawalsRoute: WithdrawalsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -1,17 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { WallPage } from "@/components/influencer/wall-page";
-import { WALL_BY_SLUG } from "@/lib/influencer-walls";
+import { Ticket } from "lucide-react";
+import { StubPage } from "@/components/layout/StubPage";
 
 export const Route = createFileRoute("/coupons")({
-  head: () => ({
-    meta: [
-      { title: "Coupons — Influencer Manager" },
-      { name: "description", content: WALL_BY_SLUG["coupons"].description },
-    ],
-  }),
-  component: CouponsPage,
+  head: () => ({ meta: [
+    { title: "Coupons — Creator Dashboard" },
+    { name: "description", content: "Create, edit, schedule, analyze and track coupon usage." },
+  ]}),
+  component: () => <StubPage title="Coupons" subtitle="Create, schedule, analyze and track coupon usage across products." icon={Ticket}
+    sections={["Create","Edit","Schedule","Analytics","Usage"]} />,
 });
-
-function CouponsPage() {
-  return <WallPage wall={WALL_BY_SLUG["coupons"]} />;
-}
