@@ -14,6 +14,7 @@ import {
   LifeBuoy,
   LogOut,
   Megaphone,
+  Menu as MenuIcon,
   Plus,
   Search,
   Settings2,
@@ -83,7 +84,7 @@ export function TopBar({ onOpenMenu }: { onOpenMenu?: () => void }) {
           aria-label="Open menu"
           className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-border text-muted-foreground transition-colors hover:text-foreground lg:hidden"
         >
-          <Menu className="h-4 w-4" />
+          <MenuIcon className="h-4 w-4" />
         </button>
 
         <Link to="/" className="mr-1 flex items-center gap-2 border-r border-border pr-3 lg:hidden">
