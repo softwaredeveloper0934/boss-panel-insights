@@ -35,7 +35,7 @@ type Notification = {
 
 const SEED_NOTIFICATIONS: Notification[] = [];
 
-export function TopBar() {
+export function TopBar({ onOpenMenu }: { onOpenMenu?: () => void }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
 
