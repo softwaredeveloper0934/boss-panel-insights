@@ -12,7 +12,9 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { TopBar } from "../components/influencer/top-bar";
+import { AppSidebar, useSidebarState } from "../components/influencer/app-sidebar";
 import { Toaster } from "sonner";
+
 
 function NotFoundComponent() {
   return (
