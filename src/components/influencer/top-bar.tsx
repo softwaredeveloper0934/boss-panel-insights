@@ -14,6 +14,7 @@ import {
   LifeBuoy,
   LogOut,
   Megaphone,
+  Menu as MenuIcon,
   Plus,
   Search,
   Settings2,
@@ -35,7 +36,7 @@ type Notification = {
 
 const SEED_NOTIFICATIONS: Notification[] = [];
 
-export function TopBar() {
+export function TopBar({ onOpenMenu }: { onOpenMenu?: () => void }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
 
@@ -74,18 +75,28 @@ export function TopBar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-topbar-border bg-topbar text-topbar-foreground">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/80 text-foreground backdrop-blur-xl">
       {/* Row 1 — brand, search, global actions */}
-      <div className="flex h-12 items-center gap-3 px-4">
-        <Link to="/" className="flex items-center gap-2 pr-3 mr-1 border-r border-topbar-border">
-          <div className="grid h-7 w-7 place-items-center rounded-md bg-primary text-primary-foreground text-[11px] font-semibold tracking-tight">
+      <div className="flex h-16 items-center gap-3 px-4 lg:px-6">
+        <button
+          type="button"
+          onClick={onOpenMenu}
+          aria-label="Open menu"
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-border text-muted-foreground transition-colors hover:text-foreground lg:hidden"
+        >
+          <MenuIcon className="h-4 w-4" />
+        </button>
+
+        <Link to="/" className="mr-1 flex items-center gap-2 border-r border-border pr-3 lg:hidden">
+          <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-primary to-primary-glow text-[11px] font-bold tracking-tight text-primary-foreground">
             SV
           </div>
           <div className="leading-tight">
             <div className="text-[13px] font-semibold">Influencer Manager</div>
-            <div className="text-[10px] text-topbar-muted">Software Vala — Boss Panel</div>
+            <div className="text-[10px] text-muted-foreground">Software Vala — Boss Panel</div>
           </div>
         </Link>
+
 
         {/* All workspaces */}
         <Menu

@@ -12,7 +12,9 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { TopBar } from "../components/influencer/top-bar";
+import { AppSidebar, useSidebarState } from "../components/influencer/app-sidebar";
 import { Toaster } from "sonner";
+
 
 function NotFoundComponent() {
   return (
@@ -124,14 +126,26 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { collapsed, toggleCollapsed, mobileOpen, setMobileOpen } = useSidebarState();
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen bg-background text-foreground">
-        <TopBar />
-        <Outlet />
+      <div className="flex min-h-screen w-full bg-background text-foreground">
+        <AppSidebar
+          collapsed={collapsed}
+          onToggleCollapsed={toggleCollapsed}
+          mobileOpen={mobileOpen}
+          onCloseMobile={() => setMobileOpen(false)}
+        />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <TopBar onOpenMenu={() => setMobileOpen(true)} />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+        </div>
         <Toaster position="bottom-right" richColors closeButton />
       </div>
     </QueryClientProvider>
   );
 }
+
