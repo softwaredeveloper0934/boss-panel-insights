@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Activity,
   Award,
@@ -366,12 +366,14 @@ function MobileDrawer({
   useEffect(() => {
     if (!open) return;
     const panel = panelRef.current;
-    const focusables = () =>
-      Array.from(
-        panel?.querySelectorAll<HTMLElement>(
+    const focusables = (): HTMLElement[] => {
+      if (!panel) return [];
+      return Array.from(
+        panel.querySelectorAll<HTMLElement>(
           'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        ) ?? [],
+        ),
       ).filter((el) => el.offsetParent !== null);
+    };
 
     focusables()[0]?.focus();
 
