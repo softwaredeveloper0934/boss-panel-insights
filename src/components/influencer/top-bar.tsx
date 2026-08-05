@@ -201,8 +201,8 @@ export function TopBar({ onOpenMenu }: { onOpenMenu?: () => void }) {
       </div>
 
       {/* Row 2 — wall tabs */}
-      <nav className="border-t border-topbar-border relative">
-        <div className="flex items-center overflow-x-auto no-scrollbar scroll-smooth">
+      <nav className="relative border-t border-border">
+        <div className="flex items-center gap-0.5 overflow-x-auto no-scrollbar scroll-smooth px-2 lg:px-4">
           {WALLS.map((w) => {
             const active = w.to === "/" ? pathname === "/" : pathname.startsWith(w.to);
             return (
@@ -210,10 +210,10 @@ export function TopBar({ onOpenMenu }: { onOpenMenu?: () => void }) {
                 key={w.slug}
                 to={w.to}
                 className={[
-                  "shrink-0 px-3.5 h-10 inline-flex items-center text-[12.5px] font-medium border-b-2 transition-colors whitespace-nowrap",
+                  "inline-flex h-11 shrink-0 items-center whitespace-nowrap rounded-t-lg border-b-2 px-3 text-[13px] font-medium leading-5 transition-colors",
                   active
-                    ? "border-primary-foreground text-topbar-foreground"
-                    : "border-transparent text-topbar-muted hover:text-topbar-foreground hover:bg-topbar-active/50",
+                    ? "border-primary text-foreground"
+                    : "border-transparent text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                 ].join(" ")}
               >
                 {w.shortTitle ?? w.title}
@@ -221,8 +221,9 @@ export function TopBar({ onOpenMenu }: { onOpenMenu?: () => void }) {
             );
           })}
         </div>
-        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-topbar to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-background to-transparent" />
       </nav>
+
 
 
       {searchOpen ? <SearchPalette onClose={() => setSearchOpen(false)} onPick={go} /> : null}
