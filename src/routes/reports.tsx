@@ -20,10 +20,10 @@ function ReportsPage() {
   return (
     <div className="flex flex-col">
       <PageHeader wall={wall} />
-      <div className="px-6 pb-2">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 pb-3">
         <KpiStrip wall={wall} />
       </div>
-      <div className="px-6 pb-10 pt-4 grid gap-4 lg:grid-cols-[1fr_320px]">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 grid gap-6 pb-12 pt-6 lg:grid-cols-[1fr_320px]">
         <main className="min-w-0">
           <ReportsBuilder />
         </main>

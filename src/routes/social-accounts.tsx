@@ -67,11 +67,11 @@ function SocialAccountsPage() {
     <div className="flex flex-col">
       <PageHeader wall={wall} />
 
-      <div className="px-6 pb-2">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 pb-3">
         <KpiStrip wall={wall} />
       </div>
 
-      <div className="px-6 border-b border-border">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 border-b border-border">
         <div className="flex items-center gap-0 overflow-x-auto no-scrollbar">
           {PLATFORMS.map((p, i) => {
             const isActive = i === active;
@@ -97,8 +97,8 @@ function SocialAccountsPage() {
         </div>
       </div>
 
-      <div className="px-6 pb-10 pt-4 grid gap-4 lg:grid-cols-[1fr_320px]">
-        <main className="space-y-4">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 grid gap-6 pb-12 pt-6 lg:grid-cols-[1fr_320px]">
+        <main className="min-w-0 space-y-6">
           <PlatformOverview platform={platform} />
           <PerformanceStrip platform={platform} />
           <AccountsTable platform={platform} />
