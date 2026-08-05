@@ -95,7 +95,7 @@ export function WallPage({ wall }: { wall: WallConfig }) {
       </div>
 
       <div className="mx-auto grid w-full max-w-[1600px] gap-6 px-4 pb-12 pt-6 sm:px-6 lg:grid-cols-[1fr_320px] lg:px-8">
-        <main className="space-y-6">
+        <main className="min-w-0 space-y-6">
           <FilterBar scope={wall.shortTitle ?? wall.title} />
           <ContentSurface wall={wall} />
         </main>
