@@ -82,11 +82,11 @@ export function WallPage({ wall }: { wall: WallConfig }) {
     <div className="flex flex-col">
       <PageHeader wall={wall} />
 
-      <div className="px-6 pb-2">
+      <div className="mx-auto w-full max-w-[1600px] px-4 pb-3 sm:px-6 lg:px-8">
         <KpiStrip wall={wall} />
       </div>
 
-      <div className="px-6">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
         <SectionTabs
           sections={wall.sections}
           active={active}
@@ -94,8 +94,8 @@ export function WallPage({ wall }: { wall: WallConfig }) {
         />
       </div>
 
-      <div className="px-6 pb-10 pt-4 grid gap-4 lg:grid-cols-[1fr_320px]">
-        <main className="space-y-4">
+      <div className="mx-auto grid w-full max-w-[1600px] gap-6 px-4 pb-12 pt-6 sm:px-6 lg:grid-cols-[1fr_320px] lg:px-8">
+        <main className="space-y-6">
           <FilterBar scope={wall.shortTitle ?? wall.title} />
           <ContentSurface wall={wall} />
         </main>
@@ -110,8 +110,9 @@ export function WallPage({ wall }: { wall: WallConfig }) {
 export function PageHeader({ wall }: { wall: WallConfig }) {
   const notify = useConnectToast(wall.shortTitle ?? wall.title);
   return (
-    <div className="px-6 pt-5 pb-4 bg-surface border-b border-border">
-      <div className="flex items-center gap-1.5 text-[12px] text-muted-foreground mb-2">
+    <div className="border-b border-border bg-surface/60">
+      <div className="mx-auto w-full max-w-[1600px] px-4 pb-5 pt-6 sm:px-6 sm:pt-7 lg:px-8">
+      <div className="flex items-center gap-1.5 text-[12px] leading-5 text-muted-foreground mb-2.5">
         <span>Boss Panel</span>
         <ChevronRight className="h-3 w-3" />
         <span>Influencer Manager</span>
@@ -123,10 +124,10 @@ export function PageHeader({ wall }: { wall: WallConfig }) {
 
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="min-w-0">
-          <h1 className="text-[22px] font-semibold tracking-tight text-foreground">
+          <h1 className="truncate text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-3xl lg:text-[34px]">
             {wall.title}
           </h1>
-          <p className="text-[13px] text-muted-foreground mt-1 max-w-3xl">
+          <p className="mt-1.5 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-[15px]">
             {wall.description}
           </p>
         </div>
