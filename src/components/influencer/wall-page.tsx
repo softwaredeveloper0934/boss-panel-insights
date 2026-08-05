@@ -138,7 +138,7 @@ export function PageHeader({ wall }: { wall: WallConfig }) {
               key={a}
               type="button"
               onClick={() => notify(a)}
-              className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface hover:bg-muted active:bg-muted/80 text-[12.5px] font-medium text-foreground transition-colors cursor-pointer"
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-surface px-3.5 text-[13px] font-medium leading-5 text-foreground transition-colors hover:bg-muted active:bg-muted/80 cursor-pointer"
             >
               {a}
             </button>
@@ -147,13 +147,14 @@ export function PageHeader({ wall }: { wall: WallConfig }) {
             <button
               type="button"
               onClick={() => notify(wall.primaryAction!)}
-              className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md bg-primary hover:bg-primary/90 active:bg-primary text-primary-foreground text-[12.5px] font-medium shadow-sm cursor-pointer transition-colors"
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3.5 text-[13px] font-medium leading-5 text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 active:bg-primary cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
               {wall.primaryAction}
             </button>
           ) : null}
         </div>
+      </div>
       </div>
     </div>
   );
@@ -163,7 +164,7 @@ export function PageHeader({ wall }: { wall: WallConfig }) {
 
 export function KpiStrip({ wall }: { wall: WallConfig }) {
   return (
-    <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+    <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
       {wall.kpis.map((k) => (
         <div
           key={k.label}
