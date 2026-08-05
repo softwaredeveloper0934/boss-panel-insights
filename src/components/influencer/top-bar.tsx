@@ -75,7 +75,7 @@ export function TopBar({ onOpenMenu }: { onOpenMenu?: () => void }) {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/80 text-foreground backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/70 text-foreground backdrop-blur-xl surface-sheen shadow-[0_1px_0_0_oklch(1_0_0/0.05)_inset,0_18px_44px_-32px_color-mix(in_oklab,var(--color-primary)_85%,transparent)]">
       {/* Row 1 — brand, search, global actions */}
       <div className="flex h-16 items-center gap-3 px-4 lg:px-6">
         <button
@@ -87,16 +87,11 @@ export function TopBar({ onOpenMenu }: { onOpenMenu?: () => void }) {
           <MenuIcon className="h-4 w-4" />
         </button>
 
-        <Link to="/" className="mr-1 flex items-center gap-2 border-r border-border pr-3 lg:hidden">
-          <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-primary to-primary-glow text-[11px] font-bold tracking-tight text-primary-foreground">
+        <Link to="/" className="flex shrink-0 items-center gap-2 lg:hidden">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-primary-glow text-sm font-bold text-primary-foreground">
             SV
-          </div>
-          <div className="leading-tight">
-            <div className="text-[13px] font-semibold">Influencer Manager</div>
-            <div className="text-[10px] text-muted-foreground">Software Vala — Boss Panel</div>
-          </div>
+          </span>
         </Link>
-
 
         {/* All workspaces */}
         <Menu
@@ -105,10 +100,11 @@ export function TopBar({ onOpenMenu }: { onOpenMenu?: () => void }) {
           trigger={
             <button
               type="button"
-              className="hidden md:flex items-center gap-1.5 px-2 h-8 rounded-md text-[12px] text-topbar-muted hover:bg-topbar-active hover:text-topbar-foreground transition-colors"
+              className="hidden md:flex h-9 items-center gap-1.5 rounded-full border border-border px-3 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               <LayoutGrid className="h-3.5 w-3.5" />
               All workspaces
+              <ChevronDown className="h-3.5 w-3.5 opacity-70" />
             </button>
           }
         >
@@ -116,19 +112,18 @@ export function TopBar({ onOpenMenu }: { onOpenMenu?: () => void }) {
         </Menu>
 
         {/* Search trigger */}
-        <div className="flex-1 max-w-2xl mx-2">
-          <button
-            type="button"
-            onClick={() => setSearchOpen(true)}
-            className="group w-full flex items-center gap-2 h-8 px-3 rounded-md bg-topbar-active/60 hover:bg-topbar-active border border-topbar-border text-[12px] text-topbar-muted"
-          >
-            <Search className="h-3.5 w-3.5" />
-            <span className="flex-1 text-left">Search influencers, campaigns, payouts, documents…</span>
-            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded border border-topbar-border text-[10px] font-mono">
-              <Command className="h-2.5 w-2.5" /> K
-            </kbd>
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => setSearchOpen(true)}
+          className="hidden md:flex w-56 lg:w-72 2xl:w-96 items-center gap-2 rounded-full border border-border bg-surface/80 px-3 py-1.5 text-sm text-muted-foreground focus-glow shimmer-sweep transition-colors hover:border-primary/40"
+        >
+          <Search className="h-4 w-4 shrink-0" />
+          <span className="min-w-0 flex-1 truncate text-left">Search…</span>
+          <kbd className="hidden 2xl:inline rounded border border-border px-1.5 text-[10px] leading-5">⌘K</kbd>
+        </button>
+
+        <div className="flex-1" />
+
 
         <div className="flex items-center gap-1">
           <Menu
