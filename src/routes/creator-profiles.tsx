@@ -109,14 +109,14 @@ function CreatorProfilesPage() {
   return (
     <div className="flex flex-col">
       <PageHeader wall={wall} />
-      <div className="px-6 pb-2">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 pb-3">
         <KpiStrip wall={wall} />
       </div>
-      <div className="px-6">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
         <SectionTabs sections={wall.sections.map((s) => ({ label: s.label }))} active={active} onChange={setActive} />
       </div>
 
-      <div className="px-6">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
         <div className="mt-3 flex items-center gap-1 border-b border-border">
           {SECTIONS.map((s, i) => (
             <button
@@ -136,8 +136,8 @@ function CreatorProfilesPage() {
         </div>
       </div>
 
-      <div className="px-6 pb-10 pt-4 grid gap-4 lg:grid-cols-[1fr_320px]">
-        <main className="space-y-4">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 grid gap-6 pb-12 pt-6 lg:grid-cols-[1fr_320px]">
+        <main className="min-w-0 space-y-6">
           <ProfilesFilterBar />
 
           {active === 1 ? (

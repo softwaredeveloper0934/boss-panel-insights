@@ -82,11 +82,11 @@ export function WallPage({ wall }: { wall: WallConfig }) {
     <div className="flex flex-col">
       <PageHeader wall={wall} />
 
-      <div className="px-6 pb-2">
+      <div className="mx-auto w-full max-w-[1600px] px-4 pb-3 sm:px-6 lg:px-8">
         <KpiStrip wall={wall} />
       </div>
 
-      <div className="px-6">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
         <SectionTabs
           sections={wall.sections}
           active={active}
@@ -94,8 +94,8 @@ export function WallPage({ wall }: { wall: WallConfig }) {
         />
       </div>
 
-      <div className="px-6 pb-10 pt-4 grid gap-4 lg:grid-cols-[1fr_320px]">
-        <main className="space-y-4">
+      <div className="mx-auto grid w-full max-w-[1600px] gap-6 px-4 pb-12 pt-6 sm:px-6 lg:grid-cols-[1fr_320px] lg:px-8">
+        <main className="min-w-0 space-y-6">
           <FilterBar scope={wall.shortTitle ?? wall.title} />
           <ContentSurface wall={wall} />
         </main>
@@ -110,8 +110,9 @@ export function WallPage({ wall }: { wall: WallConfig }) {
 export function PageHeader({ wall }: { wall: WallConfig }) {
   const notify = useConnectToast(wall.shortTitle ?? wall.title);
   return (
-    <div className="px-6 pt-5 pb-4 bg-surface border-b border-border">
-      <div className="flex items-center gap-1.5 text-[12px] text-muted-foreground mb-2">
+    <div className="border-b border-border bg-surface/60">
+      <div className="mx-auto w-full max-w-[1600px] px-4 pb-5 pt-6 sm:px-6 sm:pt-7 lg:px-8">
+      <div className="flex items-center gap-1.5 text-[12px] leading-5 text-muted-foreground mb-2.5">
         <span>Boss Panel</span>
         <ChevronRight className="h-3 w-3" />
         <span>Influencer Manager</span>
@@ -123,10 +124,10 @@ export function PageHeader({ wall }: { wall: WallConfig }) {
 
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="min-w-0">
-          <h1 className="text-[22px] font-semibold tracking-tight text-foreground">
+          <h1 className="truncate text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-3xl lg:text-[34px]">
             {wall.title}
           </h1>
-          <p className="text-[13px] text-muted-foreground mt-1 max-w-3xl">
+          <p className="mt-1.5 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-[15px]">
             {wall.description}
           </p>
         </div>
@@ -137,7 +138,7 @@ export function PageHeader({ wall }: { wall: WallConfig }) {
               key={a}
               type="button"
               onClick={() => notify(a)}
-              className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface hover:bg-muted active:bg-muted/80 text-[12.5px] font-medium text-foreground transition-colors cursor-pointer"
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-surface px-3.5 text-[13px] font-medium leading-5 text-foreground transition-colors hover:bg-muted active:bg-muted/80 cursor-pointer"
             >
               {a}
             </button>
@@ -146,13 +147,14 @@ export function PageHeader({ wall }: { wall: WallConfig }) {
             <button
               type="button"
               onClick={() => notify(wall.primaryAction!)}
-              className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md bg-primary hover:bg-primary/90 active:bg-primary text-primary-foreground text-[12.5px] font-medium shadow-sm cursor-pointer transition-colors"
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3.5 text-[13px] font-medium leading-5 text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 active:bg-primary cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
               {wall.primaryAction}
             </button>
           ) : null}
         </div>
+      </div>
       </div>
     </div>
   );
@@ -162,7 +164,7 @@ export function PageHeader({ wall }: { wall: WallConfig }) {
 
 export function KpiStrip({ wall }: { wall: WallConfig }) {
   return (
-    <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+    <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
       {wall.kpis.map((k) => (
         <div
           key={k.label}

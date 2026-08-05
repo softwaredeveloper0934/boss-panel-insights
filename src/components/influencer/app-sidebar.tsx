@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Activity,
   Award,
@@ -309,18 +309,122 @@ export function AppSidebar({
         {content}
       </aside>
 
-      {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-50">
-          <button
-            className="absolute inset-0 bg-background/70 backdrop-blur-sm"
-            onClick={onCloseMobile}
-            aria-label="Close menu overlay"
-          />
-          <div className="absolute inset-y-0 left-0 w-[280px] max-w-[85vw] border-r border-border bg-background shadow-2xl">
-            {content}
-          </div>
-        </div>
-      )}
+      <MobileDrawer open={mobileOpen} onClose={onCloseMobile}>
+        {content}
+      </MobileDrawer>
     </>
   );
 }
+
+/**
+ * Mobile off-canvas drawer — matches the reference interaction model:
+ * slide-in/out animation, blurred scrim, Escape to close, body scroll lock,
+ * focus trap while open and focus restored to the trigger on close.
+ */
+function MobileDrawer({
+  open,
+  onClose,
+  children,
+}: {
+  open: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
+  const [mounted, setMounted] = useState(open);
+  const [closing, setClosing] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const restoreRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (open) {
+      restoreRef.current = document.activeElement as HTMLElement | null;
+      setMounted(true);
+      setClosing(false);
+      return;
+    }
+    if (!mounted) return;
+    setClosing(true);
+    const t = window.setTimeout(() => {
+      setMounted(false);
+      setClosing(false);
+      restoreRef.current?.focus?.();
+    }, 220);
+    return () => window.clearTimeout(t);
+  }, [open]);
+
+  // Body scroll lock
+  useEffect(() => {
+    if (!mounted) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mounted]);
+
+  // Escape + focus trap
+  useEffect(() => {
+    if (!open) return;
+    const panel = panelRef.current;
+    const focusables = (): HTMLElement[] => {
+      if (!panel) return [];
+      return Array.from(
+        panel.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => el.offsetParent !== null);
+    };
+
+    focusables()[0]?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && (active === first || !panel?.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown, true);
+    return () => document.removeEventListener("keydown", onKeyDown, true);
+  }, [open, onClose]);
+
+  if (!mounted) return null;
+
+  return (
+    <div className="lg:hidden fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Module navigation">
+      <button
+        className={cn(
+          "absolute inset-0 bg-background/70 backdrop-blur-sm",
+          closing ? "sv-scrim-out" : "sv-scrim-in",
+        )}
+        onClick={onClose}
+        aria-label="Close menu overlay"
+        tabIndex={-1}
+      />
+      <div
+        ref={panelRef}
+        className={cn(
+          "absolute inset-y-0 left-0 w-[280px] max-w-[85vw] border-r border-border bg-background shadow-2xl will-change-transform",
+          closing ? "sv-drawer-out" : "sv-drawer-in",
+        )}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+

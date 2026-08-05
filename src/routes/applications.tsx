@@ -84,11 +84,11 @@ function ApplicationsPage() {
     <div className="flex flex-col">
       <PageHeader wall={wall} />
 
-      <div className="px-6 pb-2">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 pb-3">
         <KpiStrip wall={wall} />
       </div>
 
-      <div className="px-6">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
         <SectionTabs
           sections={SECTIONS.map((label) => ({ label }))}
           active={active}
@@ -96,8 +96,8 @@ function ApplicationsPage() {
         />
       </div>
 
-      <div className="px-6 pb-10 pt-4 grid gap-4 lg:grid-cols-[1fr_320px]">
-        <main className="space-y-4">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 grid gap-6 pb-12 pt-6 lg:grid-cols-[1fr_320px]">
+        <main className="min-w-0 space-y-6">
           <FilterBar extraChips={["Stage", "Country", "Risk", "Reviewer", "Source"]} />
 
           {active === 0 && <QueueView onOpen={() => setDrawer(true)} onPreviewBulk={() => setSelected((n) => (n === 0 ? 8 : 0))} /> }

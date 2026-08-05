@@ -81,16 +81,16 @@ function CampaignsPage() {
     <div className="flex flex-col">
       <PageHeader wall={wallWithActions(wall, () => setCreateOpen(true), () => setAssignOpen(true))} />
 
-      <div className="px-6 pb-2">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 pb-3">
         <KpiStrip wall={wall} />
       </div>
 
-      <div className="px-6">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
         <SectionTabs sections={SUB_TABS.map((label) => ({ label }))} active={tab} onChange={setTab} />
       </div>
 
-      <div className="px-6 pb-10 pt-4 grid gap-4 lg:grid-cols-[1fr_320px]">
-        <main className="space-y-4">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 grid gap-6 pb-12 pt-6 lg:grid-cols-[1fr_320px]">
+        <main className="min-w-0 space-y-6">
           {tab === 7 ? (
             <CampaignKanban />
           ) : tab === 8 ? (
