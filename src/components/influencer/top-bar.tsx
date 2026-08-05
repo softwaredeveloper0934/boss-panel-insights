@@ -5,6 +5,7 @@ import {
   BookOpen,
   Building2,
   Check,
+  ChevronDown,
   Command,
   CornerDownLeft,
   FileText,
