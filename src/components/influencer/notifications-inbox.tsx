@@ -26,6 +26,8 @@ import { toast } from "sonner";
 import { EmptySurface } from "@/components/influencer/wall-page";
 import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
 import { useBulkDialogs } from "@/components/influencer/bulk-dialogs";
+import { runOptimistic } from "@/lib/optimistic";
+
 
 
 const SMART_FILTERS = [
