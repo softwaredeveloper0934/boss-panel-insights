@@ -139,11 +139,19 @@ function ApplicationsPage() {
                 withNote: true,
                 noteLabel: "Reviewer note (optional)",
                 onConfirm: (note) => {
-                  toast.success(`Approved ${selected} application${selected === 1 ? "" : "s"}`, {
-                    description: note || "Applicants will be notified.",
+                  const n = selected;
+                  void runOptimistic({
+                    label: "Approve applications",
+                    entity: "applications",
+                    count: n,
+                    detail: note || "Applicants will be notified.",
+                    from: "In review",
+                    to: "Approved",
+                    apply: () => setSelected(0),
+                    rollback: () => setSelected(n),
                   });
-                  setSelected(0);
                 },
+
               }),
           },
           {
