@@ -170,7 +170,19 @@ export function DataTable<T>({
     [],
   );
 
+  /** Visible width of the scroller, so pinned states stay centred on screen. */
+  const [viewportWidth, setViewportWidth] = useState<number | null>(null);
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => setViewportWidth(el.clientWidth));
+    ro.observe(el);
+    setViewportWidth(el.clientWidth);
+    return () => ro.disconnect();
+  }, []);
+
   const viewportRows = Math.ceil(height / rowHeight);
+
   const start = Math.max(0, Math.floor(scrollTop / rowHeight) - OVERSCAN);
   const end = Math.min(rows.length, start + viewportRows + OVERSCAN * 2);
   const windowRows = rows.slice(start, end);
