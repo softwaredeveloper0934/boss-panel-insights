@@ -145,9 +145,19 @@ export function NotificationsInbox() {
                 withNote: true,
                 noteLabel: "Approval note (optional)",
                 onConfirm: (note) => {
-                  toast.success(`Approved ${selected}`, { description: note || "Requests approved." });
-                  setSelected(0);
+                  const n = selected;
+                  void runOptimistic({
+                    label: "Approve requests",
+                    entity: "notifications",
+                    count: n,
+                    detail: note || "Requests approved.",
+                    from: "Awaiting approval",
+                    to: "Approved",
+                    apply: () => setSelected(0),
+                    rollback: () => setSelected(n),
+                  });
                 },
+
               }),
           },
           {
