@@ -170,7 +170,19 @@ export function DataTable<T>({
     [],
   );
 
+  /** Visible width of the scroller, so pinned states stay centred on screen. */
+  const [viewportWidth, setViewportWidth] = useState<number | null>(null);
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => setViewportWidth(el.clientWidth));
+    ro.observe(el);
+    setViewportWidth(el.clientWidth);
+    return () => ro.disconnect();
+  }, []);
+
   const viewportRows = Math.ceil(height / rowHeight);
+
   const start = Math.max(0, Math.floor(scrollTop / rowHeight) - OVERSCAN);
   const end = Math.min(rows.length, start + viewportRows + OVERSCAN * 2);
   const windowRows = rows.slice(start, end);
@@ -337,12 +349,26 @@ export function DataTable<T>({
             </div>
           </div>
 
-          {error ? (
-            <ErrorState message={error} onRetry={onRetry} />
-          ) : loading ? (
-            <SkeletonRows rows={Math.max(6, viewportRows)} cols={cols.length} height={rowHeight} />
-          ) : rows.length === 0 ? (
-            <EmptyState title={emptyTitle} description={emptyDescription} action={emptyAction} />
+          {/* Non-row states stay pinned to the viewport, never scrolled out
+              sideways by wide column sets. */}
+          {error || loading || rows.length === 0 ? (
+            <div className="sticky left-0 max-w-full" style={{ width: viewportWidth ?? "100%" }}>
+              {error ? (
+                <ErrorState message={error} onRetry={onRetry} />
+              ) : loading ? (
+                <SkeletonRows
+                  rows={Math.max(6, viewportRows)}
+                  cols={cols.length}
+                  height={rowHeight}
+                />
+              ) : (
+                <EmptyState
+                  title={emptyTitle}
+                  description={emptyDescription}
+                  action={emptyAction}
+                />
+              )}
+            </div>
           ) : (
             <div style={{ height: rows.length * rowHeight }} className="relative">
               <div

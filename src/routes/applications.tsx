@@ -31,7 +31,8 @@ import {
 import { ApplicationDetailDrawer } from "@/components/influencer/application-detail-drawer";
 import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
 import { useBulkDialogs } from "@/components/influencer/bulk-dialogs";
-
+import { DndBoard, type BoardColumn } from "@/components/enterprise/dnd-board";
+import { runOptimistic } from "@/lib/optimistic";
 
 const wall = WALL_BY_SLUG["applications"];
 
@@ -79,7 +80,6 @@ function ApplicationsPage() {
   const [selected, setSelected] = useState(0);
   const { requestConfirm, requestExport, dialogs } = useBulkDialogs();
 
-
   return (
     <div className="flex flex-col">
       <PageHeader wall={wall} />
@@ -100,7 +100,12 @@ function ApplicationsPage() {
         <main className="min-w-0 space-y-6">
           <FilterBar extraChips={["Stage", "Country", "Risk", "Reviewer", "Source"]} />
 
-          {active === 0 && <QueueView onOpen={() => setDrawer(true)} onPreviewBulk={() => setSelected((n) => (n === 0 ? 8 : 0))} /> }
+          {active === 0 && (
+            <QueueView
+              onOpen={() => setDrawer(true)}
+              onPreviewBulk={() => setSelected((n) => (n === 0 ? 8 : 0))}
+            />
+          )}
           {active === 1 && <PipelineView onOpen={() => setDrawer(true)} />}
           {active === 2 && <VerificationView kind="Identity" />}
           {active === 3 && <VerificationView kind="KYC" />}
@@ -137,10 +142,17 @@ function ApplicationsPage() {
                 withNote: true,
                 noteLabel: "Reviewer note (optional)",
                 onConfirm: (note) => {
-                  toast.success(`Approved ${selected} application${selected === 1 ? "" : "s"}`, {
-                    description: note || "Applicants will be notified.",
+                  const n = selected;
+                  void runOptimistic({
+                    label: "Approve applications",
+                    entity: "applications",
+                    count: n,
+                    detail: note || "Applicants will be notified.",
+                    from: "In review",
+                    to: "Approved",
+                    apply: () => setSelected(0),
+                    rollback: () => setSelected(n),
                   });
-                  setSelected(0);
                 },
               }),
           },
@@ -158,15 +170,32 @@ function ApplicationsPage() {
                 withNote: true,
                 noteLabel: "Rejection reason",
                 onConfirm: (note) => {
-                  toast.message(`Rejected ${selected} application${selected === 1 ? "" : "s"}`, {
-                    description: note || "No reason provided.",
+                  const n = selected;
+                  void runOptimistic({
+                    label: "Reject applications",
+                    entity: "applications",
+                    count: n,
+                    detail: note || "No reason provided.",
+                    from: "In review",
+                    to: "Rejected",
+                    apply: () => setSelected(0),
+                    rollback: () => setSelected(n),
                   });
-                  setSelected(0);
                 },
               }),
           },
-          { key: "assign", label: "Assign reviewer", icon: <UserPlus className="h-3.5 w-3.5" />, onClick: () => toast.message("Assignee picker opened") },
-          { key: "stage", label: "Advance stage", icon: <CheckCircle2 className="h-3.5 w-3.5" />, onClick: () => toast.message("Moved to next stage") },
+          {
+            key: "assign",
+            label: "Assign reviewer",
+            icon: <UserPlus className="h-3.5 w-3.5" />,
+            onClick: () => toast.message("Assignee picker opened"),
+          },
+          {
+            key: "stage",
+            label: "Advance stage",
+            icon: <CheckCircle2 className="h-3.5 w-3.5" />,
+            onClick: () => toast.message("Moved to next stage"),
+          },
           {
             key: "export",
             label: "Export",
@@ -182,7 +211,6 @@ function ApplicationsPage() {
       />
 
       {dialogs}
-
     </div>
   );
 }
@@ -221,49 +249,57 @@ function QueueView({ onOpen, onPreviewBulk }: { onOpen: () => void; onPreviewBul
   );
 }
 
+type ApplicationCard = { id: string; name: string; handle: string; stage: string };
+
 function PipelineView({ onOpen }: { onOpen: () => void }) {
+  const [cards, setCards] = useState<ApplicationCard[]>([]);
+
+  const columns: BoardColumn[] = PIPELINE.map((c) => ({
+    id: c.id,
+    label: c.label,
+    tone:
+      c.tone === "ok" ? "good" : c.tone === "bad" ? "bad" : c.tone === "info" ? "info" : "neutral",
+  }));
+
   return (
-    <div className="rounded-md border border-border bg-surface overflow-hidden">
-      <div className="flex items-center justify-between px-4 h-10 border-b border-border bg-surface-muted">
-        <div className="text-[12.5px] font-semibold text-foreground">Pipeline</div>
-        <span className="text-[11.5px] text-muted-foreground">Drag-and-drop ready · 0 cards</span>
-      </div>
-      <div className="overflow-x-auto p-3">
-        <div className="flex gap-3 min-w-max">
-          {PIPELINE.map((col) => (
-            <div
-              key={col.id}
-              className="w-[240px] shrink-0 rounded-md border border-border bg-background"
-            >
-              <header className="h-9 px-3 flex items-center justify-between border-b border-border">
-                <div className="inline-flex items-center gap-2">
-                  <span
-                    className={[
-                      "h-2 w-2 rounded-full",
-                      col.tone === "ok"
-                        ? "bg-primary"
-                        : col.tone === "bad"
-                          ? "bg-destructive"
-                          : "bg-muted-foreground/60",
-                    ].join(" ")}
-                  />
-                  <span className="text-[12px] font-semibold text-foreground">{col.label}</span>
-                </div>
-                <span className="text-[11px] text-muted-foreground">0</span>
-              </header>
-              <div className="p-3 min-h-[140px] text-center">
-                <button
-                  onClick={onOpen}
-                  className="w-full rounded border border-dashed border-border bg-surface hover:bg-muted text-[12px] text-muted-foreground py-6"
-                >
-                  No applications
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    <DndBoard<ApplicationCard>
+      boardKey="applications.pipeline"
+      entity="applications"
+      columns={columns}
+      cards={cards}
+      getId={(c) => c.id}
+      getColumnId={(c) => c.stage}
+      onMove={(moves) => {
+        setCards((prev) =>
+          prev.map((c) => {
+            const m = moves.find((x) => x.id === c.id);
+            return m ? { ...c, stage: m.to } : c;
+          }),
+        );
+      }}
+      renderCard={(card, meta) => (
+        <button
+          type="button"
+          onClick={onOpen}
+          className={[
+            "w-full rounded-md border border-border bg-surface px-2.5 py-2 text-left transition-colors hover:bg-muted",
+            meta.selected ? "ring-1 ring-primary" : "",
+          ].join(" ")}
+        >
+          <div className="truncate text-[12.5px] font-medium text-foreground">{card.name}</div>
+          <div className="truncate text-[11.5px] text-muted-foreground">{card.handle}</div>
+        </button>
+      )}
+      emptyColumn={() => (
+        <button
+          type="button"
+          onClick={onOpen}
+          className="w-full rounded border border-dashed border-border bg-surface py-6 text-[12px] text-muted-foreground hover:bg-muted cursor-pointer"
+        >
+          No applications
+        </button>
+      )}
+    />
   );
 }
 
@@ -357,7 +393,8 @@ function WorkflowView() {
     <div className="rounded-md border border-border bg-surface p-4">
       <h3 className="text-[12.5px] font-semibold text-foreground">Approval Workflow</h3>
       <p className="text-[12px] text-muted-foreground mt-1">
-        Configure the stages an application must clear before onboarding. Each stage can have approvers, SLAs and automation.
+        Configure the stages an application must clear before onboarding. Each stage can have
+        approvers, SLAs and automation.
       </p>
       <ol className="mt-4 relative border-l border-border ml-2">
         {stages.map((s, i) => (
@@ -438,28 +475,88 @@ const VERIFICATION: Record<
   { label: string; description: string; icon: React.ComponentType<{ className?: string }> }[]
 > = {
   Identity: [
-    { label: "Government ID", description: "Passport, national ID or driver's license OCR + tamper check.", icon: IdCard },
-    { label: "Selfie + Liveness", description: "Match selfie to ID photo with liveness detection.", icon: ShieldCheck },
-    { label: "Address Proof", description: "Utility bill or bank statement within 90 days.", icon: ClipboardList },
-    { label: "Sanctions Screening", description: "PEP, sanctions and adverse media screening.", icon: ShieldAlert },
+    {
+      label: "Government ID",
+      description: "Passport, national ID or driver's license OCR + tamper check.",
+      icon: IdCard,
+    },
+    {
+      label: "Selfie + Liveness",
+      description: "Match selfie to ID photo with liveness detection.",
+      icon: ShieldCheck,
+    },
+    {
+      label: "Address Proof",
+      description: "Utility bill or bank statement within 90 days.",
+      icon: ClipboardList,
+    },
+    {
+      label: "Sanctions Screening",
+      description: "PEP, sanctions and adverse media screening.",
+      icon: ShieldAlert,
+    },
   ],
   KYC: [
-    { label: "Tax Identification", description: "PAN / SSN / Tax ID validation against authority.", icon: IdCard },
-    { label: "GST / VAT", description: "GSTIN / VAT number verification for invoicing.", icon: FileSignature },
-    { label: "Bank Account", description: "Penny-drop and beneficiary name match.", icon: ShieldCheck },
-    { label: "Tax Forms", description: "W-8BEN / W-9 / 10F collection and storage.", icon: ClipboardList },
+    {
+      label: "Tax Identification",
+      description: "PAN / SSN / Tax ID validation against authority.",
+      icon: IdCard,
+    },
+    {
+      label: "GST / VAT",
+      description: "GSTIN / VAT number verification for invoicing.",
+      icon: FileSignature,
+    },
+    {
+      label: "Bank Account",
+      description: "Penny-drop and beneficiary name match.",
+      icon: ShieldCheck,
+    },
+    {
+      label: "Tax Forms",
+      description: "W-8BEN / W-9 / 10F collection and storage.",
+      icon: ClipboardList,
+    },
   ],
   Social: [
-    { label: "YouTube", description: "Channel ownership via OAuth and analytics handshake.", icon: Globe2 },
+    {
+      label: "YouTube",
+      description: "Channel ownership via OAuth and analytics handshake.",
+      icon: Globe2,
+    },
     { label: "Instagram", description: "Business account link via Meta Graph API.", icon: Globe2 },
-    { label: "TikTok", description: "Creator account verification via TikTok Login Kit.", icon: Globe2 },
-    { label: "X / LinkedIn / Others", description: "Handle ownership via DNS, post or OAuth proof.", icon: Globe2 },
+    {
+      label: "TikTok",
+      description: "Creator account verification via TikTok Login Kit.",
+      icon: Globe2,
+    },
+    {
+      label: "X / LinkedIn / Others",
+      description: "Handle ownership via DNS, post or OAuth proof.",
+      icon: Globe2,
+    },
   ],
   Audience: [
-    { label: "Audience Geography", description: "Top countries and cities of the creator's audience.", icon: Users2 },
-    { label: "Audience Demographics", description: "Age, gender, language and interest breakdown.", icon: Users2 },
-    { label: "Audience Authenticity", description: "Bot / inactive / suspicious follower share.", icon: ShieldAlert },
-    { label: "Brand Affinity", description: "Overlap with Software Vala product categories.", icon: CheckCircle2 },
+    {
+      label: "Audience Geography",
+      description: "Top countries and cities of the creator's audience.",
+      icon: Users2,
+    },
+    {
+      label: "Audience Demographics",
+      description: "Age, gender, language and interest breakdown.",
+      icon: Users2,
+    },
+    {
+      label: "Audience Authenticity",
+      description: "Bot / inactive / suspicious follower share.",
+      icon: ShieldAlert,
+    },
+    {
+      label: "Brand Affinity",
+      description: "Overlap with Software Vala product categories.",
+      icon: CheckCircle2,
+    },
   ],
 };
 
