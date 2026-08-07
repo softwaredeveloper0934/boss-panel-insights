@@ -13,7 +13,9 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { TopBar } from "../components/influencer/top-bar";
 import { AppSidebar, useSidebarState } from "../components/influencer/app-sidebar";
+import { LiveAnnouncer } from "../components/influencer/live-announcer";
 import { Toaster } from "sonner";
+
 
 
 function NotFoundComponent() {
@@ -143,7 +145,9 @@ function RootComponent() {
             <Outlet />
           </main>
         </div>
+        <LiveAnnouncer />
         <Toaster position="bottom-right" richColors closeButton />
+
       </div>
     </QueryClientProvider>
   );

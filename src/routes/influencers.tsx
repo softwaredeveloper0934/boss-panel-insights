@@ -31,6 +31,8 @@ import {
 } from "@/components/influencer/wall-page";
 import { InfluencerDetailDrawer } from "@/components/influencer/influencer-detail-drawer";
 import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
+import { runOptimistic } from "@/lib/optimistic";
+
 import { useBulkDialogs } from "@/components/influencer/bulk-dialogs";
 
 
@@ -294,11 +296,19 @@ function InfluencersPage() {
                 withNote: true,
                 noteLabel: "Approval note (optional)",
                 onConfirm: (note) => {
-                  toast.success(`Approved ${selected} influencer${selected === 1 ? "" : "s"}`, {
-                    description: note || "Status set to Active.",
+                  const n = selected;
+                  void runOptimistic({
+                    label: "Approve influencers",
+                    entity: "influencers",
+                    count: n,
+                    detail: note || "Status set to Active.",
+                    from: "Pending",
+                    to: "Active",
+                    apply: () => setSelected(0),
+                    rollback: () => setSelected(n),
                   });
-                  setSelected(0);
                 },
+
               }),
           },
           {
@@ -315,11 +325,19 @@ function InfluencersPage() {
                 withNote: true,
                 noteLabel: "Rejection reason",
                 onConfirm: (note) => {
-                  toast.message(`Rejected ${selected} influencer${selected === 1 ? "" : "s"}`, {
-                    description: note || "No reason provided.",
+                  const n = selected;
+                  void runOptimistic({
+                    label: "Reject influencers",
+                    entity: "influencers",
+                    count: n,
+                    detail: note || "No reason provided.",
+                    from: "Pending",
+                    to: "Rejected",
+                    apply: () => setSelected(0),
+                    rollback: () => setSelected(n),
                   });
-                  setSelected(0);
                 },
+
               }),
           },
           { key: "message", label: "Message", icon: <Mail className="h-3.5 w-3.5" />, onClick: () => toast.message("Bulk message composer") },
@@ -338,9 +356,19 @@ function InfluencersPage() {
                 withNote: true,
                 noteLabel: "Suspension reason",
                 onConfirm: (note) => {
-                  toast.message(`Suspended ${selected}`, { description: note || "No reason provided." });
-                  setSelected(0);
+                  const n = selected;
+                  void runOptimistic({
+                    label: "Suspend influencers",
+                    entity: "influencers",
+                    count: n,
+                    detail: note || "No reason provided.",
+                    from: "Active",
+                    to: "Suspended",
+                    apply: () => setSelected(0),
+                    rollback: () => setSelected(n),
+                  });
                 },
+
               }),
           },
           {

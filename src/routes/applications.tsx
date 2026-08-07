@@ -31,6 +31,8 @@ import {
 import { ApplicationDetailDrawer } from "@/components/influencer/application-detail-drawer";
 import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
 import { useBulkDialogs } from "@/components/influencer/bulk-dialogs";
+import { DndBoard, type BoardColumn } from "@/components/enterprise/dnd-board";
+
 
 
 const wall = WALL_BY_SLUG["applications"];
@@ -221,51 +223,59 @@ function QueueView({ onOpen, onPreviewBulk }: { onOpen: () => void; onPreviewBul
   );
 }
 
+type ApplicationCard = { id: string; name: string; handle: string; stage: string };
+
 function PipelineView({ onOpen }: { onOpen: () => void }) {
+  const [cards, setCards] = useState<ApplicationCard[]>([]);
+
+  const columns: BoardColumn[] = PIPELINE.map((c) => ({
+    id: c.id,
+    label: c.label,
+    tone: c.tone === "ok" ? "good" : c.tone === "bad" ? "bad" : c.tone === "info" ? "info" : "neutral",
+  }));
+
   return (
-    <div className="rounded-md border border-border bg-surface overflow-hidden">
-      <div className="flex items-center justify-between px-4 h-10 border-b border-border bg-surface-muted">
-        <div className="text-[12.5px] font-semibold text-foreground">Pipeline</div>
-        <span className="text-[11.5px] text-muted-foreground">Drag-and-drop ready · 0 cards</span>
-      </div>
-      <div className="overflow-x-auto p-3">
-        <div className="flex gap-3 min-w-max">
-          {PIPELINE.map((col) => (
-            <div
-              key={col.id}
-              className="w-[240px] shrink-0 rounded-md border border-border bg-background"
-            >
-              <header className="h-9 px-3 flex items-center justify-between border-b border-border">
-                <div className="inline-flex items-center gap-2">
-                  <span
-                    className={[
-                      "h-2 w-2 rounded-full",
-                      col.tone === "ok"
-                        ? "bg-primary"
-                        : col.tone === "bad"
-                          ? "bg-destructive"
-                          : "bg-muted-foreground/60",
-                    ].join(" ")}
-                  />
-                  <span className="text-[12px] font-semibold text-foreground">{col.label}</span>
-                </div>
-                <span className="text-[11px] text-muted-foreground">0</span>
-              </header>
-              <div className="p-3 min-h-[140px] text-center">
-                <button
-                  onClick={onOpen}
-                  className="w-full rounded border border-dashed border-border bg-surface hover:bg-muted text-[12px] text-muted-foreground py-6"
-                >
-                  No applications
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    <DndBoard<ApplicationCard>
+      boardKey="applications.pipeline"
+      entity="applications"
+      columns={columns}
+      cards={cards}
+      getId={(c) => c.id}
+      getColumnId={(c) => c.stage}
+      onMove={(moves) => {
+        setCards((prev) =>
+          prev.map((c) => {
+            const m = moves.find((x) => x.id === c.id);
+            return m ? { ...c, stage: m.to } : c;
+          }),
+        );
+      }}
+      renderCard={(card, meta) => (
+        <button
+          type="button"
+          onClick={onOpen}
+          className={[
+            "w-full rounded-md border border-border bg-surface px-2.5 py-2 text-left transition-colors hover:bg-muted",
+            meta.selected ? "ring-1 ring-primary" : "",
+          ].join(" ")}
+        >
+          <div className="truncate text-[12.5px] font-medium text-foreground">{card.name}</div>
+          <div className="truncate text-[11.5px] text-muted-foreground">{card.handle}</div>
+        </button>
+      )}
+      emptyColumn={() => (
+        <button
+          type="button"
+          onClick={onOpen}
+          className="w-full rounded border border-dashed border-border bg-surface py-6 text-[12px] text-muted-foreground hover:bg-muted cursor-pointer"
+        >
+          No applications
+        </button>
+      )}
+    />
   );
 }
+
 
 function VerificationView({ kind }: { kind: string }) {
   const blocks = VERIFICATION[kind] ?? [];

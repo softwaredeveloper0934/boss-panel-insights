@@ -8,7 +8,7 @@ import {
   Inbox,
   LayoutGrid,
   ListFilter,
-  MoreHorizontal,
+  
   Plus,
   RefreshCw,
   Rows3,
@@ -21,6 +21,51 @@ import {
 import { toast } from "sonner";
 import type { WallConfig } from "@/lib/influencer-walls";
 import { SavedViews } from "@/components/influencer/saved-views";
+import { DataTable, type SortState } from "@/components/enterprise/data-table";
+import { ColumnManager, useColumnManager } from "@/components/enterprise/column-manager";
+import {
+  DENSITY_LABEL,
+  useTableLayout,
+  type ColumnDef,
+  type TableDensity,
+} from "@/components/enterprise/table-layout";
+
+type WallRow = Record<string, unknown>;
+
+const DENSITY_CYCLE: TableDensity[] = ["comfortable", "compact", "ultra"];
+
+function columnKey(label: string) {
+  return label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+/**
+ * Shared table engine for every workspace wall: real virtualized DataTable,
+ * persisted column layout and a reachable column manager.
+ */
+export function useWallTable(tableKey: string, columns: string[]) {
+  const defs = useMemo<ColumnDef<WallRow>[]>(
+    () =>
+      columns.map((label, i) => ({
+        key: columnKey(label) || `col-${i}`,
+        header: label,
+        width: i === 0 ? 220 : 150,
+        required: i === 0,
+        align: /revenue|commission|followers|amount|value|payout|rate|engagement|count|total/i.test(
+          label,
+        )
+          ? "right"
+          : "left",
+        render: (row) => (row[columnKey(label)] as React.ReactNode) ?? "—",
+      })),
+    [columns],
+  );
+  const layout = useTableLayout<WallRow>(tableKey, defs);
+  const manager = useColumnManager();
+  return { defs, layout, manager };
+}
+
+export type WallTableApi = ReturnType<typeof useWallTable>;
+
 
 /* ----------------------------- shared helpers ----------------------------- */
 
@@ -77,6 +122,10 @@ function EdgeScroller({ children }: { children: React.ReactNode }) {
 
 export function WallPage({ wall }: { wall: WallConfig }) {
   const [active, setActive] = useState(0);
+  const table = useWallTable(
+    `wall.${wall.shortTitle ?? wall.title}`,
+    wall.tableColumns ?? [],
+  );
 
   return (
     <div className="flex flex-col">
@@ -96,11 +145,15 @@ export function WallPage({ wall }: { wall: WallConfig }) {
 
       <div className="mx-auto grid w-full max-w-[1600px] gap-6 px-4 pb-12 pt-6 sm:px-6 lg:grid-cols-[1fr_320px] lg:px-8">
         <main className="min-w-0 space-y-6">
-          <FilterBar scope={wall.shortTitle ?? wall.title} />
-          <ContentSurface wall={wall} />
+          <FilterBar
+            scope={wall.shortTitle ?? wall.title}
+            table={wall.tableColumns ? table : undefined}
+          />
+          <ContentSurface wall={wall} table={table} />
         </main>
         <RightPanel wall={wall} />
       </div>
+
     </div>
   );
 }
@@ -228,10 +281,17 @@ export function SectionTabs({
 export function FilterBar({
   extraChips,
   scope = "workspace",
-}: { extraChips?: string[]; scope?: string } = {}) {
+  table,
+}: { extraChips?: string[]; scope?: string; table?: WallTableApi } = {}) {
   const [query, setQuery] = useState("");
-  const [density, setDensity] = useState<"comfortable" | "compact">("comfortable");
+  const [localDensity, setLocalDensity] = useState<TableDensity>("comfortable");
+  const density = table ? table.layout.layout.density : localDensity;
+  const setDensity = (d: TableDensity) => {
+    if (table) table.layout.setDensity(d);
+    else setLocalDensity(d);
+  };
   const notify = useConnectToast(scope);
+
 
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-md border border-border bg-surface p-2">
@@ -286,11 +346,12 @@ export function FilterBar({
           <LayoutGrid className="h-3.5 w-3.5" />
         </IconAction>
         <IconAction
-          title={`Density: ${density}`}
+          title={`Row density: ${DENSITY_LABEL[density]}`}
           onClick={() => {
-            const next = density === "comfortable" ? "compact" : "comfortable";
+            const next =
+              DENSITY_CYCLE[(DENSITY_CYCLE.indexOf(density) + 1) % DENSITY_CYCLE.length]!;
             setDensity(next);
-            toast.success(`Row density set to ${next}`);
+            toast.success(`Row density set to ${DENSITY_LABEL[next]}`);
           }}
         >
           {density === "comfortable" ? (
@@ -305,9 +366,24 @@ export function FilterBar({
         <IconAction title="Export" onClick={() => notify("Export")}>
           <Download className="h-3.5 w-3.5" />
         </IconAction>
-        <IconAction title="Column settings" onClick={() => notify("Column settings")}>
+        <IconAction
+          title="Column settings"
+          onClick={() => {
+            if (table) table.manager.setOpen(true);
+            else notify("Column settings");
+          }}
+        >
           <Sliders className="h-3.5 w-3.5" />
         </IconAction>
+        {table ? (
+          <ColumnManager
+            open={table.manager.open}
+            onOpenChange={table.manager.setOpen}
+            defs={table.defs}
+            api={table.layout}
+          />
+        ) : null}
+
       </div>
     </div>
   );
@@ -387,7 +463,7 @@ export function IconAction({
 
 /* ------------------------------ Content surface --------------------------- */
 
-function ContentSurface({ wall }: { wall: WallConfig }) {
+function ContentSurface({ wall, table }: { wall: WallConfig; table?: WallTableApi }) {
   return (
     <div className="rounded-md border border-border bg-surface overflow-hidden">
       {wall.tableColumns ? (
@@ -404,6 +480,7 @@ function ContentSurface({ wall }: { wall: WallConfig }) {
           }
           primaryAction={wall.primaryAction}
           scope={wall.shortTitle ?? wall.title}
+          table={table}
         />
       ) : (
         <EmptySurface
@@ -420,6 +497,11 @@ function ContentSurface({ wall }: { wall: WallConfig }) {
   );
 }
 
+/**
+ * Live workspace table surface. Mounts the virtualized enterprise DataTable
+ * (sticky header + pinned columns + density + column manager + selection +
+ * sorting + pagination) instead of a static placeholder.
+ */
 export function TableSkeleton({
   title,
   columns,
@@ -427,6 +509,7 @@ export function TableSkeleton({
   emptyDescription,
   primaryAction,
   scope = "workspace",
+  table,
 }: {
   title: string;
   columns: string[];
@@ -434,116 +517,117 @@ export function TableSkeleton({
   emptyDescription: string;
   primaryAction?: string;
   scope?: string;
+  table?: WallTableApi;
 }) {
   const notify = useConnectToast(scope);
+  const own = useWallTable(`wall.${scope}.${title}`, columns);
+  const api = table ?? own;
   const [pageSize, setPageSize] = useState(25);
+  const [page, setPage] = useState(1);
+  const [sort, setSort] = useState<SortState>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const rows: WallRow[] = [];
+  const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+
   return (
     <>
-      <div className="flex items-center justify-between px-4 h-10 border-b border-border bg-surface-muted">
-        <div className="text-[12.5px] font-semibold text-foreground truncate">
-          {title}
-        </div>
-        <div className="flex items-center gap-1.5 text-[11.5px] text-muted-foreground">
-          <span>0 records</span>
-          <span aria-hidden>·</span>
-          <span>Page 1 of 1</span>
-          <button
-            type="button"
-            onClick={() => notify("Table options")}
-            aria-label="Table options"
-            className="ml-2 h-7 w-7 grid place-items-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer"
-          >
-            <MoreHorizontal className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </div>
-
-      <div className="overflow-x-auto">
-        <table className="w-full text-[12.5px]">
-          <thead>
-            <tr className="border-b border-border bg-surface-muted/50 text-left text-muted-foreground">
-              <th className="w-8 py-2 pl-4">
-                <input
-                  type="checkbox"
-                  aria-label="Select all"
-                  className="h-3.5 w-3.5 rounded border-border accent-[color:var(--color-primary)] cursor-pointer"
-                />
-              </th>
-              {columns.map((c) => (
-                <th
-                  key={c}
-                  className="py-2 px-3 font-medium text-[11.5px] uppercase tracking-wide whitespace-nowrap"
-                >
-                  {c}
-                </th>
-              ))}
-              <th className="w-12" />
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colSpan={columns.length + 2} className="py-0">
-                <EmptySurface
-                  title={emptyTitle}
-                  description={emptyDescription}
-                  primaryAction={primaryAction}
-                  scope={scope}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-1.5 border-t border-border bg-surface-muted text-[11.5px] text-muted-foreground">
-        <div className="flex items-center gap-3">
-          <span>0 selected</span>
-          <span aria-hidden>·</span>
-          <button
-            type="button"
-            disabled
-            className="opacity-50 cursor-not-allowed"
-            title="Select rows to enable bulk actions"
-          >
-            Bulk actions
-          </button>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <label className="flex items-center gap-1.5">
-            <span>Rows per page</span>
-            <select
-              value={pageSize}
-              onChange={(e) => setPageSize(Number(e.target.value))}
-              className="h-7 px-1.5 rounded border border-border bg-surface text-foreground cursor-pointer focus:outline-none focus:ring-1 focus:ring-ring"
+      <DataTable<WallRow>
+        tableKey={`wall.${scope}.${title}`}
+        title={title}
+        defs={api.defs}
+        layout={api.layout}
+        rows={rows}
+        rowKey={(r) => String(r["id"] ?? "")}
+        totalCount={rows.length}
+        sort={sort}
+        onSortChange={setSort}
+        selectedIds={selectedIds}
+        onSelectionChange={setSelectedIds}
+        emptyTitle={emptyTitle}
+        emptyDescription={emptyDescription}
+        emptyAction={
+          primaryAction ? (
+            <button
+              type="button"
+              onClick={() => notify(primaryAction)}
+              className="mt-4 h-8 px-3 inline-flex items-center gap-1.5 rounded-md bg-primary hover:bg-primary/90 text-primary-foreground text-[12.5px] font-medium cursor-pointer transition-colors"
             >
-              {[25, 50, 100, 250].map((n) => (
-                <option key={n} value={n}>
-                  {n}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button
-            type="button"
-            disabled
-            aria-label="Previous page"
-            className="h-7 w-7 grid place-items-center rounded border border-border bg-surface text-muted-foreground opacity-50 cursor-not-allowed"
-          >
-            <ChevronLeft className="h-3.5 w-3.5" />
-          </button>
-          <button
-            type="button"
-            disabled
-            aria-label="Next page"
-            className="h-7 w-7 grid place-items-center rounded border border-border bg-surface text-muted-foreground opacity-50 cursor-not-allowed"
-          >
-            <ChevronRight className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </div>
+              <Plus className="h-3.5 w-3.5" />
+              {primaryAction}
+            </button>
+          ) : undefined
+        }
+        height={420}
+        footer={
+          <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-1.5 border-t border-border bg-surface-muted text-[11.5px] text-muted-foreground">
+            <div className="flex items-center gap-3">
+              <span className="tabular-nums">{selectedIds.size} selected</span>
+              <span aria-hidden>·</span>
+              <button
+                type="button"
+                onClick={() => api.manager.setOpen(true)}
+                className="hover:text-foreground cursor-pointer"
+              >
+                Columns &amp; layout
+              </button>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <label className="flex items-center gap-1.5">
+                <span className="hidden sm:inline">Rows per page</span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setPage(1);
+                  }}
+                  aria-label="Rows per page"
+                  className="h-7 px-1.5 rounded border border-border bg-surface text-foreground cursor-pointer focus:outline-none focus:ring-1 focus:ring-ring"
+                >
+                  {[25, 50, 100, 250].map((n) => (
+                    <option key={n} value={n}>
+                      {n}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <span className="tabular-nums">
+                Page {page} of {totalPages}
+              </span>
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page <= 1}
+                aria-label="Previous page"
+                className="h-7 w-7 grid place-items-center rounded border border-border bg-surface text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page >= totalPages}
+                aria-label="Next page"
+                className="h-7 w-7 grid place-items-center rounded border border-border bg-surface text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                <ChevronRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </div>
+        }
+      />
+      {table ? null : (
+        <ColumnManager
+          open={own.manager.open}
+          onOpenChange={own.manager.setOpen}
+          defs={own.defs}
+          api={own.layout}
+        />
+      )}
     </>
   );
 }
+
+
 
 export function EmptySurface({
   title,
@@ -558,26 +642,49 @@ export function EmptySurface({
 }) {
   const notify = useConnectToast(scope);
   return (
-    <div className="py-16 px-6 grid place-items-center text-center">
-      <div className="h-12 w-12 rounded-full bg-muted grid place-items-center text-muted-foreground mb-3">
-        <Inbox className="h-5 w-5" />
+    <div className="grid place-items-center px-6 py-14 text-center sm:py-16">
+      {/* Illustrative empty-state artwork (pure CSS/SVG, no external asset). */}
+      <div className="relative mb-4 h-24 w-40" aria-hidden>
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/12 via-primary/5 to-transparent" />
+        <div className="absolute left-4 top-4 h-3 w-24 rounded-full bg-muted" />
+        <div className="absolute left-4 top-10 h-3 w-32 rounded-full bg-muted/70" />
+        <div className="absolute left-4 top-16 h-3 w-16 rounded-full bg-muted/50" />
+        <div className="absolute -right-1 bottom-2 grid h-12 w-12 place-items-center rounded-full border border-border bg-surface text-muted-foreground shadow-(--shadow-card)">
+          <Inbox className="h-5 w-5" />
+        </div>
       </div>
       <div className="text-[14px] font-semibold text-foreground">{title}</div>
-      <p className="mt-1 text-[12.5px] text-muted-foreground max-w-md">
+      <p className="mt-1 max-w-md text-[12.5px] leading-5 text-muted-foreground">
         {description}
       </p>
-      {primaryAction ? (
+      <ul className="mt-3 grid gap-1 text-[11.5px] text-muted-foreground">
+        <li>1 · Connect the {scope.toLowerCase()} data source from the Boss Panel</li>
+        <li>2 · Configure columns, density and saved views for your team</li>
+        <li>3 · Invite reviewers so approvals land in this workspace</li>
+      </ul>
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+        {primaryAction ? (
+          <button
+            type="button"
+            onClick={() => notify(primaryAction)}
+            className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md bg-primary hover:bg-primary/90 text-primary-foreground text-[12.5px] font-medium cursor-pointer transition-colors"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            {primaryAction}
+          </button>
+        ) : null}
         <button
           type="button"
-          onClick={() => notify(primaryAction)}
-          className="mt-4 h-8 px-3 inline-flex items-center gap-1.5 rounded-md bg-primary hover:bg-primary/90 text-primary-foreground text-[12.5px] font-medium cursor-pointer transition-colors"
+          onClick={() => notify("Import records")}
+          className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface hover:bg-muted text-[12.5px] font-medium text-foreground cursor-pointer transition-colors"
         >
-          <Plus className="h-3.5 w-3.5" />
-          {primaryAction}
+          <Upload className="h-3.5 w-3.5" />
+          Import records
         </button>
-      ) : null}
+      </div>
     </div>
   );
+
 }
 
 /* ------------------------------- Right panel ------------------------------ */
