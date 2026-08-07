@@ -337,13 +337,28 @@ export function DataTable<T>({
             </div>
           </div>
 
-          {error ? (
-            <ErrorState message={error} onRetry={onRetry} />
-          ) : loading ? (
-            <SkeletonRows rows={Math.max(6, viewportRows)} cols={cols.length} height={rowHeight} />
-          ) : rows.length === 0 ? (
-            <EmptyState title={emptyTitle} description={emptyDescription} action={emptyAction} />
+          {/* Non-row states stay pinned to the viewport, never scrolled out
+              sideways by wide column sets. */}
+          {error || loading || rows.length === 0 ? (
+            <div className="sticky left-0 w-[var(--dt-viewport,100%)] max-w-full">
+              {error ? (
+                <ErrorState message={error} onRetry={onRetry} />
+              ) : loading ? (
+                <SkeletonRows
+                  rows={Math.max(6, viewportRows)}
+                  cols={cols.length}
+                  height={rowHeight}
+                />
+              ) : (
+                <EmptyState
+                  title={emptyTitle}
+                  description={emptyDescription}
+                  action={emptyAction}
+                />
+              )}
+            </div>
           ) : (
+
             <div style={{ height: rows.length * rowHeight }} className="relative">
               <div
                 style={{ transform: `translateY(${start * rowHeight}px)` }}
