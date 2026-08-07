@@ -23,18 +23,12 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { WALL_BY_SLUG } from "@/lib/influencer-walls";
-import {
-  KpiStrip,
-  PageHeader,
-  RightPanel,
-  SectionTabs,
-} from "@/components/influencer/wall-page";
+import { KpiStrip, PageHeader, RightPanel, SectionTabs } from "@/components/influencer/wall-page";
 import { InfluencerDetailDrawer } from "@/components/influencer/influencer-detail-drawer";
 import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
 import { runOptimistic } from "@/lib/optimistic";
 
 import { useBulkDialogs } from "@/components/influencer/bulk-dialogs";
-
 
 export const Route = createFileRoute("/influencers")({
   head: () => ({
@@ -83,7 +77,6 @@ function InfluencersPage() {
   const [sortKey, setSortKey] = useState("profile");
   const [selected, setSelected] = useState(0);
   const { requestConfirm, requestExport, dialogs } = useBulkDialogs();
-
 
   // Reserved for future bulk-actions wiring.
   const _ignored = useMemo(() => ({ query, sortKey }), [query, sortKey]);
@@ -134,11 +127,21 @@ function InfluencersPage() {
               </button>
             </div>
             <div className="ml-auto flex items-center gap-1">
-              <IconAction title="Refresh"><RefreshCw className="h-3.5 w-3.5" /></IconAction>
-              <IconAction title="View"><LayoutGrid className="h-3.5 w-3.5" /></IconAction>
-              <IconAction title="Density"><Sliders className="h-3.5 w-3.5" /></IconAction>
-              <IconAction title="Import"><Upload className="h-3.5 w-3.5" /></IconAction>
-              <IconAction title="Export"><Download className="h-3.5 w-3.5" /></IconAction>
+              <IconAction title="Refresh">
+                <RefreshCw className="h-3.5 w-3.5" />
+              </IconAction>
+              <IconAction title="View">
+                <LayoutGrid className="h-3.5 w-3.5" />
+              </IconAction>
+              <IconAction title="Density">
+                <Sliders className="h-3.5 w-3.5" />
+              </IconAction>
+              <IconAction title="Import">
+                <Upload className="h-3.5 w-3.5" />
+              </IconAction>
+              <IconAction title="Export">
+                <Download className="h-3.5 w-3.5" />
+              </IconAction>
             </div>
           </div>
 
@@ -202,9 +205,9 @@ function InfluencersPage() {
                           No influencers yet
                         </div>
                         <p className="mt-1 text-[12.5px] text-muted-foreground max-w-md">
-                          Records will appear here once data is connected from
-                          the Boss Panel. You can preview the influencer detail
-                          drawer to see the layout that will be used.
+                          Records will appear here once data is connected from the Boss Panel. You
+                          can preview the influencer detail drawer to see the layout that will be
+                          used.
                         </p>
                         <div className="mt-4 flex items-center gap-2">
                           <button
@@ -259,10 +262,16 @@ function InfluencersPage() {
                     <option key={n}>{n}</option>
                   ))}
                 </select>
-                <button type="button" className="h-7 px-2 rounded border border-border bg-surface hover:bg-muted">
+                <button
+                  type="button"
+                  className="h-7 px-2 rounded border border-border bg-surface hover:bg-muted"
+                >
                   Previous
                 </button>
-                <button type="button" className="h-7 px-2 rounded border border-border bg-surface hover:bg-muted">
+                <button
+                  type="button"
+                  className="h-7 px-2 rounded border border-border bg-surface hover:bg-muted"
+                >
                   Next
                 </button>
               </div>
@@ -308,7 +317,6 @@ function InfluencersPage() {
                     rollback: () => setSelected(n),
                   });
                 },
-
               }),
           },
           {
@@ -337,11 +345,20 @@ function InfluencersPage() {
                     rollback: () => setSelected(n),
                   });
                 },
-
               }),
           },
-          { key: "message", label: "Message", icon: <Mail className="h-3.5 w-3.5" />, onClick: () => toast.message("Bulk message composer") },
-          { key: "tag", label: "Add tag", icon: <Tag className="h-3.5 w-3.5" />, onClick: () => toast.message("Tag picker opened") },
+          {
+            key: "message",
+            label: "Message",
+            icon: <Mail className="h-3.5 w-3.5" />,
+            onClick: () => toast.message("Bulk message composer"),
+          },
+          {
+            key: "tag",
+            label: "Add tag",
+            icon: <Tag className="h-3.5 w-3.5" />,
+            onClick: () => toast.message("Tag picker opened"),
+          },
           {
             key: "suspend",
             label: "Suspend",
@@ -368,7 +385,6 @@ function InfluencersPage() {
                     rollback: () => setSelected(n),
                   });
                 },
-
               }),
           },
           {
@@ -386,18 +402,11 @@ function InfluencersPage() {
       />
 
       {dialogs}
-
     </div>
   );
 }
 
-function IconAction({
-  children,
-  title,
-}: {
-  children: React.ReactNode;
-  title: string;
-}) {
+function IconAction({ children, title }: { children: React.ReactNode; title: string }) {
   return (
     <button
       type="button"
@@ -417,9 +426,8 @@ function SegmentTipCard({ onPreview }: { onPreview: () => void }) {
           Built for one million plus records
         </div>
         <p className="text-[12px] text-muted-foreground mt-0.5">
-          Virtualised table, saved views, multi-column sort, server-side filters
-          and bulk operations will activate when the Boss Panel data source is
-          connected.
+          Virtualised table, saved views, multi-column sort, server-side filters and bulk operations
+          will activate when the Boss Panel data source is connected.
         </p>
       </div>
       <button

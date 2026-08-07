@@ -44,9 +44,7 @@ export function LiveAnnouncer() {
         aria-atomic="true"
         className="sr-only pointer-events-none absolute h-px w-px overflow-hidden"
       >
-        {latest && (latest.status === "failed" || latest.status === "rolled-back")
-          ? message
-          : ""}
+        {latest && (latest.status === "failed" || latest.status === "rolled-back") ? message : ""}
       </div>
     </>
   );

@@ -34,9 +34,6 @@ import { useBulkDialogs } from "@/components/influencer/bulk-dialogs";
 import { DndBoard, type BoardColumn } from "@/components/enterprise/dnd-board";
 import { runOptimistic } from "@/lib/optimistic";
 
-
-
-
 const wall = WALL_BY_SLUG["applications"];
 
 export const Route = createFileRoute("/applications")({
@@ -83,7 +80,6 @@ function ApplicationsPage() {
   const [selected, setSelected] = useState(0);
   const { requestConfirm, requestExport, dialogs } = useBulkDialogs();
 
-
   return (
     <div className="flex flex-col">
       <PageHeader wall={wall} />
@@ -104,7 +100,12 @@ function ApplicationsPage() {
         <main className="min-w-0 space-y-6">
           <FilterBar extraChips={["Stage", "Country", "Risk", "Reviewer", "Source"]} />
 
-          {active === 0 && <QueueView onOpen={() => setDrawer(true)} onPreviewBulk={() => setSelected((n) => (n === 0 ? 8 : 0))} /> }
+          {active === 0 && (
+            <QueueView
+              onOpen={() => setDrawer(true)}
+              onPreviewBulk={() => setSelected((n) => (n === 0 ? 8 : 0))}
+            />
+          )}
           {active === 1 && <PipelineView onOpen={() => setDrawer(true)} />}
           {active === 2 && <VerificationView kind="Identity" />}
           {active === 3 && <VerificationView kind="KYC" />}
@@ -153,7 +154,6 @@ function ApplicationsPage() {
                     rollback: () => setSelected(n),
                   });
                 },
-
               }),
           },
           {
@@ -182,11 +182,20 @@ function ApplicationsPage() {
                     rollback: () => setSelected(n),
                   });
                 },
-
               }),
           },
-          { key: "assign", label: "Assign reviewer", icon: <UserPlus className="h-3.5 w-3.5" />, onClick: () => toast.message("Assignee picker opened") },
-          { key: "stage", label: "Advance stage", icon: <CheckCircle2 className="h-3.5 w-3.5" />, onClick: () => toast.message("Moved to next stage") },
+          {
+            key: "assign",
+            label: "Assign reviewer",
+            icon: <UserPlus className="h-3.5 w-3.5" />,
+            onClick: () => toast.message("Assignee picker opened"),
+          },
+          {
+            key: "stage",
+            label: "Advance stage",
+            icon: <CheckCircle2 className="h-3.5 w-3.5" />,
+            onClick: () => toast.message("Moved to next stage"),
+          },
           {
             key: "export",
             label: "Export",
@@ -202,7 +211,6 @@ function ApplicationsPage() {
       />
 
       {dialogs}
-
     </div>
   );
 }
@@ -249,7 +257,8 @@ function PipelineView({ onOpen }: { onOpen: () => void }) {
   const columns: BoardColumn[] = PIPELINE.map((c) => ({
     id: c.id,
     label: c.label,
-    tone: c.tone === "ok" ? "good" : c.tone === "bad" ? "bad" : c.tone === "info" ? "info" : "neutral",
+    tone:
+      c.tone === "ok" ? "good" : c.tone === "bad" ? "bad" : c.tone === "info" ? "info" : "neutral",
   }));
 
   return (
@@ -293,7 +302,6 @@ function PipelineView({ onOpen }: { onOpen: () => void }) {
     />
   );
 }
-
 
 function VerificationView({ kind }: { kind: string }) {
   const blocks = VERIFICATION[kind] ?? [];
@@ -385,7 +393,8 @@ function WorkflowView() {
     <div className="rounded-md border border-border bg-surface p-4">
       <h3 className="text-[12.5px] font-semibold text-foreground">Approval Workflow</h3>
       <p className="text-[12px] text-muted-foreground mt-1">
-        Configure the stages an application must clear before onboarding. Each stage can have approvers, SLAs and automation.
+        Configure the stages an application must clear before onboarding. Each stage can have
+        approvers, SLAs and automation.
       </p>
       <ol className="mt-4 relative border-l border-border ml-2">
         {stages.map((s, i) => (
@@ -466,28 +475,88 @@ const VERIFICATION: Record<
   { label: string; description: string; icon: React.ComponentType<{ className?: string }> }[]
 > = {
   Identity: [
-    { label: "Government ID", description: "Passport, national ID or driver's license OCR + tamper check.", icon: IdCard },
-    { label: "Selfie + Liveness", description: "Match selfie to ID photo with liveness detection.", icon: ShieldCheck },
-    { label: "Address Proof", description: "Utility bill or bank statement within 90 days.", icon: ClipboardList },
-    { label: "Sanctions Screening", description: "PEP, sanctions and adverse media screening.", icon: ShieldAlert },
+    {
+      label: "Government ID",
+      description: "Passport, national ID or driver's license OCR + tamper check.",
+      icon: IdCard,
+    },
+    {
+      label: "Selfie + Liveness",
+      description: "Match selfie to ID photo with liveness detection.",
+      icon: ShieldCheck,
+    },
+    {
+      label: "Address Proof",
+      description: "Utility bill or bank statement within 90 days.",
+      icon: ClipboardList,
+    },
+    {
+      label: "Sanctions Screening",
+      description: "PEP, sanctions and adverse media screening.",
+      icon: ShieldAlert,
+    },
   ],
   KYC: [
-    { label: "Tax Identification", description: "PAN / SSN / Tax ID validation against authority.", icon: IdCard },
-    { label: "GST / VAT", description: "GSTIN / VAT number verification for invoicing.", icon: FileSignature },
-    { label: "Bank Account", description: "Penny-drop and beneficiary name match.", icon: ShieldCheck },
-    { label: "Tax Forms", description: "W-8BEN / W-9 / 10F collection and storage.", icon: ClipboardList },
+    {
+      label: "Tax Identification",
+      description: "PAN / SSN / Tax ID validation against authority.",
+      icon: IdCard,
+    },
+    {
+      label: "GST / VAT",
+      description: "GSTIN / VAT number verification for invoicing.",
+      icon: FileSignature,
+    },
+    {
+      label: "Bank Account",
+      description: "Penny-drop and beneficiary name match.",
+      icon: ShieldCheck,
+    },
+    {
+      label: "Tax Forms",
+      description: "W-8BEN / W-9 / 10F collection and storage.",
+      icon: ClipboardList,
+    },
   ],
   Social: [
-    { label: "YouTube", description: "Channel ownership via OAuth and analytics handshake.", icon: Globe2 },
+    {
+      label: "YouTube",
+      description: "Channel ownership via OAuth and analytics handshake.",
+      icon: Globe2,
+    },
     { label: "Instagram", description: "Business account link via Meta Graph API.", icon: Globe2 },
-    { label: "TikTok", description: "Creator account verification via TikTok Login Kit.", icon: Globe2 },
-    { label: "X / LinkedIn / Others", description: "Handle ownership via DNS, post or OAuth proof.", icon: Globe2 },
+    {
+      label: "TikTok",
+      description: "Creator account verification via TikTok Login Kit.",
+      icon: Globe2,
+    },
+    {
+      label: "X / LinkedIn / Others",
+      description: "Handle ownership via DNS, post or OAuth proof.",
+      icon: Globe2,
+    },
   ],
   Audience: [
-    { label: "Audience Geography", description: "Top countries and cities of the creator's audience.", icon: Users2 },
-    { label: "Audience Demographics", description: "Age, gender, language and interest breakdown.", icon: Users2 },
-    { label: "Audience Authenticity", description: "Bot / inactive / suspicious follower share.", icon: ShieldAlert },
-    { label: "Brand Affinity", description: "Overlap with Software Vala product categories.", icon: CheckCircle2 },
+    {
+      label: "Audience Geography",
+      description: "Top countries and cities of the creator's audience.",
+      icon: Users2,
+    },
+    {
+      label: "Audience Demographics",
+      description: "Age, gender, language and interest breakdown.",
+      icon: Users2,
+    },
+    {
+      label: "Audience Authenticity",
+      description: "Bot / inactive / suspicious follower share.",
+      icon: ShieldAlert,
+    },
+    {
+      label: "Brand Affinity",
+      description: "Overlap with Software Vala product categories.",
+      icon: CheckCircle2,
+    },
   ],
 };
 

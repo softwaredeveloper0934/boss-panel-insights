@@ -8,7 +8,6 @@ import {
   Inbox,
   LayoutGrid,
   ListFilter,
-  
   Plus,
   RefreshCw,
   Rows3,
@@ -35,7 +34,10 @@ type WallRow = Record<string, unknown>;
 const DENSITY_CYCLE: TableDensity[] = ["comfortable", "compact", "ultra"];
 
 function columnKey(label: string) {
-  return label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  return label
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
 }
 
 /**
@@ -65,7 +67,6 @@ export function useWallTable(tableKey: string, columns: string[]) {
 }
 
 export type WallTableApi = ReturnType<typeof useWallTable>;
-
 
 /* ----------------------------- shared helpers ----------------------------- */
 
@@ -102,10 +103,7 @@ function EdgeScroller({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="relative">
-      <div
-        ref={ref}
-        className="flex items-center overflow-x-auto no-scrollbar scroll-smooth"
-      >
+      <div ref={ref} className="flex items-center overflow-x-auto no-scrollbar scroll-smooth">
         {children}
       </div>
       {edges.left ? (
@@ -122,10 +120,7 @@ function EdgeScroller({ children }: { children: React.ReactNode }) {
 
 export function WallPage({ wall }: { wall: WallConfig }) {
   const [active, setActive] = useState(0);
-  const table = useWallTable(
-    `wall.${wall.shortTitle ?? wall.title}`,
-    wall.tableColumns ?? [],
-  );
+  const table = useWallTable(`wall.${wall.shortTitle ?? wall.title}`, wall.tableColumns ?? []);
 
   return (
     <div className="flex flex-col">
@@ -136,11 +131,7 @@ export function WallPage({ wall }: { wall: WallConfig }) {
       </div>
 
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
-        <SectionTabs
-          sections={wall.sections}
-          active={active}
-          onChange={setActive}
-        />
+        <SectionTabs sections={wall.sections} active={active} onChange={setActive} />
       </div>
 
       <div className="mx-auto grid w-full max-w-[1600px] gap-6 px-4 pb-12 pt-6 sm:px-6 lg:grid-cols-[1fr_320px] lg:px-8">
@@ -153,7 +144,6 @@ export function WallPage({ wall }: { wall: WallConfig }) {
         </main>
         <RightPanel wall={wall} />
       </div>
-
     </div>
   );
 }
@@ -165,49 +155,47 @@ export function PageHeader({ wall }: { wall: WallConfig }) {
   return (
     <div className="border-b border-border bg-surface/60">
       <div className="mx-auto w-full max-w-[1600px] px-4 pb-5 pt-6 sm:px-6 sm:pt-7 lg:px-8">
-      <div className="flex items-center gap-1.5 text-[12px] leading-5 text-muted-foreground mb-2.5">
-        <span>Boss Panel</span>
-        <ChevronRight className="h-3 w-3" />
-        <span>Influencer Manager</span>
-        <ChevronRight className="h-3 w-3" />
-        <span className="text-foreground font-medium">
-          {wall.shortTitle ?? wall.title}
-        </span>
-      </div>
-
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="min-w-0">
-          <h1 className="truncate text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-3xl lg:text-[34px]">
-            {wall.title}
-          </h1>
-          <p className="mt-1.5 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-[15px]">
-            {wall.description}
-          </p>
+        <div className="flex items-center gap-1.5 text-[12px] leading-5 text-muted-foreground mb-2.5">
+          <span>Boss Panel</span>
+          <ChevronRight className="h-3 w-3" />
+          <span>Influencer Manager</span>
+          <ChevronRight className="h-3 w-3" />
+          <span className="text-foreground font-medium">{wall.shortTitle ?? wall.title}</span>
         </div>
 
-        <div className="flex items-center gap-2">
-          {wall.secondaryActions?.map((a) => (
-            <button
-              key={a}
-              type="button"
-              onClick={() => notify(a)}
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-surface px-3.5 text-[13px] font-medium leading-5 text-foreground transition-colors hover:bg-muted active:bg-muted/80 cursor-pointer"
-            >
-              {a}
-            </button>
-          ))}
-          {wall.primaryAction ? (
-            <button
-              type="button"
-              onClick={() => notify(wall.primaryAction!)}
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3.5 text-[13px] font-medium leading-5 text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 active:bg-primary cursor-pointer"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              {wall.primaryAction}
-            </button>
-          ) : null}
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="min-w-0">
+            <h1 className="truncate text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-3xl lg:text-[34px]">
+              {wall.title}
+            </h1>
+            <p className="mt-1.5 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-[15px]">
+              {wall.description}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {wall.secondaryActions?.map((a) => (
+              <button
+                key={a}
+                type="button"
+                onClick={() => notify(a)}
+                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-surface px-3.5 text-[13px] font-medium leading-5 text-foreground transition-colors hover:bg-muted active:bg-muted/80 cursor-pointer"
+              >
+                {a}
+              </button>
+            ))}
+            {wall.primaryAction ? (
+              <button
+                type="button"
+                onClick={() => notify(wall.primaryAction!)}
+                className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3.5 text-[13px] font-medium leading-5 text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 active:bg-primary cursor-pointer"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                {wall.primaryAction}
+              </button>
+            ) : null}
+          </div>
         </div>
-      </div>
       </div>
     </div>
   );
@@ -229,9 +217,7 @@ export function KpiStrip({ wall }: { wall: WallConfig }) {
           <div className="mt-1.5 text-[20px] font-semibold text-foreground tabular-nums leading-none">
             —
           </div>
-          <div className="mt-1.5 text-[11px] text-muted-foreground">
-            No data yet
-          </div>
+          <div className="mt-1.5 text-[11px] text-muted-foreground">No data yet</div>
         </div>
       ))}
     </div>
@@ -291,7 +277,6 @@ export function FilterBar({
     else setLocalDensity(d);
   };
   const notify = useConnectToast(scope);
-
 
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-md border border-border bg-surface p-2">
@@ -383,19 +368,12 @@ export function FilterBar({
             api={table.layout}
           />
         ) : null}
-
       </div>
     </div>
   );
 }
 
-export function FilterChip({
-  label,
-  scope = "workspace",
-}: {
-  label: string;
-  scope?: string;
-}) {
+export function FilterChip({ label, scope = "workspace" }: { label: string; scope?: string }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -429,9 +407,7 @@ export function FilterChip({
           </div>
           <div className="px-3 py-4 text-center text-[12px] text-muted-foreground">
             No {label.toLowerCase()} options yet.
-            <div className="mt-0.5 text-[11px]">
-              Connect {scope} data to populate.
-            </div>
+            <div className="mt-0.5 text-[11px]">Connect {scope} data to populate.</div>
           </div>
         </div>
       ) : null}
@@ -470,10 +446,7 @@ function ContentSurface({ wall, table }: { wall: WallConfig; table?: WallTableAp
         <TableSkeleton
           title={wall.tableTitle ?? wall.title}
           columns={wall.tableColumns}
-          emptyTitle={
-            wall.emptyTitle ??
-            `No ${(wall.shortTitle ?? wall.title).toLowerCase()} yet`
-          }
+          emptyTitle={wall.emptyTitle ?? `No ${(wall.shortTitle ?? wall.title).toLowerCase()} yet`}
           emptyDescription={
             wall.emptyDescription ??
             "Records will appear here once data is connected from the Boss Panel."
@@ -627,8 +600,6 @@ export function TableSkeleton({
   );
 }
 
-
-
 export function EmptySurface({
   title,
   description,
@@ -654,9 +625,7 @@ export function EmptySurface({
         </div>
       </div>
       <div className="text-[14px] font-semibold text-foreground">{title}</div>
-      <p className="mt-1 max-w-md text-[12.5px] leading-5 text-muted-foreground">
-        {description}
-      </p>
+      <p className="mt-1 max-w-md text-[12.5px] leading-5 text-muted-foreground">{description}</p>
       <ul className="mt-3 grid gap-1 text-[11.5px] text-muted-foreground">
         <li>1 · Connect the {scope.toLowerCase()} data source from the Boss Panel</li>
         <li>2 · Configure columns, density and saved views for your team</li>
@@ -684,7 +653,6 @@ export function EmptySurface({
       </div>
     </div>
   );
-
 }
 
 /* ------------------------------- Right panel ------------------------------ */
@@ -693,9 +661,7 @@ export function RightPanel({ wall }: { wall: WallConfig }) {
   const notify = useConnectToast(wall.shortTitle ?? wall.title);
   const actions = useMemo(
     () =>
-      [...(wall.secondaryActions ?? []), wall.primaryAction].filter(
-        (a): a is string => Boolean(a),
-      ),
+      [...(wall.secondaryActions ?? []), wall.primaryAction].filter((a): a is string => Boolean(a)),
     [wall.secondaryActions, wall.primaryAction],
   );
 
@@ -725,9 +691,7 @@ export function RightPanel({ wall }: { wall: WallConfig }) {
       </PanelCard>
 
       <PanelCard title="Activity timeline">
-        <div className="py-6 text-center text-[12.5px] text-muted-foreground">
-          No activity yet.
-        </div>
+        <div className="py-6 text-center text-[12.5px] text-muted-foreground">No activity yet.</div>
       </PanelCard>
 
       <PanelCard title="Notifications">
@@ -745,13 +709,7 @@ export function RightPanel({ wall }: { wall: WallConfig }) {
   );
 }
 
-export function PanelCard({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+export function PanelCard({ title, children }: { title: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(true);
   return (
     <section className="rounded-md border border-border bg-surface">
@@ -765,9 +723,7 @@ export function PanelCard({
           aria-label={open ? `Collapse ${title}` : `Expand ${title}`}
           className="h-6 w-6 grid place-items-center rounded text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer transition-colors"
         >
-          <ChevronDown
-            className={`h-3.5 w-3.5 transition-transform ${open ? "" : "-rotate-90"}`}
-          />
+          <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "" : "-rotate-90"}`} />
         </button>
       </header>
       {open ? <div className="px-3">{children}</div> : null}

@@ -28,8 +28,6 @@ import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
 import { useBulkDialogs } from "@/components/influencer/bulk-dialogs";
 import { runOptimistic } from "@/lib/optimistic";
 
-
-
 const SMART_FILTERS = [
   { key: "all", label: "All", icon: Inbox },
   { key: "unread", label: "Unread", icon: CircleDot },
@@ -46,7 +44,6 @@ export function NotificationsInbox() {
   const [filter, setFilter] = useState<Filter>("all");
   const [selected, setSelected] = useState<number>(0);
   const { requestConfirm, requestExport, dialogs } = useBulkDialogs();
-
 
   return (
     <div className="grid gap-4 lg:grid-cols-[220px_1fr]">
@@ -65,7 +62,9 @@ export function NotificationsInbox() {
                 onClick={() => setFilter(f.key)}
                 className={[
                   "w-full h-8 px-2 rounded-md flex items-center gap-2 text-[12.5px]",
-                  active ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                  active
+                    ? "bg-muted text-foreground"
+                    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
                 ].join(" ")}
               >
                 <Icon className="h-3.5 w-3.5" />
@@ -96,13 +95,14 @@ export function NotificationsInbox() {
             />
           </div>
           {["Priority", "Source", "Date", "Actor"].map((c) => (
-            <button key={c} className="h-8 px-2.5 inline-flex items-center gap-1.5 rounded-md border border-dashed border-border bg-background hover:bg-muted text-[12px]">
+            <button
+              key={c}
+              className="h-8 px-2.5 inline-flex items-center gap-1.5 rounded-md border border-dashed border-border bg-background hover:bg-muted text-[12px]"
+            >
               <Filter className="h-3.5 w-3.5" /> {c}
             </button>
           ))}
         </div>
-
-        
 
         <div className="rounded-md border border-border bg-surface overflow-hidden">
           <div className="flex items-center justify-between px-4 h-10 border-b border-border bg-surface-muted">
@@ -111,14 +111,23 @@ export function NotificationsInbox() {
               <span className="text-[11px] text-muted-foreground font-normal">0 notifications</span>
             </div>
             <div className="flex items-center gap-1">
-              <IconBtn onClick={() => toast.message("Mark all as read")}><CheckCheck className="h-3.5 w-3.5" /></IconBtn>
-              <IconBtn onClick={() => toast.message("Archive all")}><Archive className="h-3.5 w-3.5" /></IconBtn>
-              <IconBtn onClick={() => toast.message("Preferences")}><MoreHorizontal className="h-3.5 w-3.5" /></IconBtn>
+              <IconBtn onClick={() => toast.message("Mark all as read")}>
+                <CheckCheck className="h-3.5 w-3.5" />
+              </IconBtn>
+              <IconBtn onClick={() => toast.message("Archive all")}>
+                <Archive className="h-3.5 w-3.5" />
+              </IconBtn>
+              <IconBtn onClick={() => toast.message("Preferences")}>
+                <MoreHorizontal className="h-3.5 w-3.5" />
+              </IconBtn>
             </div>
           </div>
 
           <div className="border-b border-border">
-            <SampleRow onToggleSelect={() => setSelected((n) => (n === 0 ? 1 : 0))} selected={selected > 0} />
+            <SampleRow
+              onToggleSelect={() => setSelected((n) => (n === 0 ? 1 : 0))}
+              selected={selected > 0}
+            />
           </div>
 
           <EmptySurface
@@ -159,7 +168,6 @@ export function NotificationsInbox() {
                     rollback: () => setSelected(n),
                   });
                 },
-
               }),
           },
           {
@@ -188,13 +196,32 @@ export function NotificationsInbox() {
                     rollback: () => setSelected(n),
                   });
                 },
-
               }),
           },
-          { key: "read", label: "Mark read", icon: <MailOpen className="h-3.5 w-3.5" />, onClick: () => toast.message("Marked as read") },
-          { key: "unread", label: "Mark unread", icon: <Mail className="h-3.5 w-3.5" />, onClick: () => toast.message("Marked as unread") },
-          { key: "archive", label: "Archive", icon: <Archive className="h-3.5 w-3.5" />, onClick: () => toast.message("Archived") },
-          { key: "mute", label: "Mute source", icon: <BellOff className="h-3.5 w-3.5" />, onClick: () => toast.message("Source muted") },
+          {
+            key: "read",
+            label: "Mark read",
+            icon: <MailOpen className="h-3.5 w-3.5" />,
+            onClick: () => toast.message("Marked as read"),
+          },
+          {
+            key: "unread",
+            label: "Mark unread",
+            icon: <Mail className="h-3.5 w-3.5" />,
+            onClick: () => toast.message("Marked as unread"),
+          },
+          {
+            key: "archive",
+            label: "Archive",
+            icon: <Archive className="h-3.5 w-3.5" />,
+            onClick: () => toast.message("Archived"),
+          },
+          {
+            key: "mute",
+            label: "Mute source",
+            icon: <BellOff className="h-3.5 w-3.5" />,
+            onClick: () => toast.message("Source muted"),
+          },
           {
             key: "export",
             label: "Export",
@@ -234,13 +261,11 @@ export function NotificationsInbox() {
       />
 
       {dialogs}
-
     </div>
   );
 }
 
 /* ------------------------------- Icon button ------------------------------- */
-
 
 function IconBtn({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
   return (
@@ -257,7 +282,13 @@ function IconBtn({ children, onClick }: { children: React.ReactNode; onClick?: (
    A single illustrative row so the approval quick-actions surface is
    visible. No mock data below — the list stays empty until wired. */
 
-function SampleRow({ onToggleSelect, selected }: { onToggleSelect: () => void; selected: boolean }) {
+function SampleRow({
+  onToggleSelect,
+  selected,
+}: {
+  onToggleSelect: () => void;
+  selected: boolean;
+}) {
   return (
     <div className="flex items-start gap-3 px-4 py-3 hover:bg-muted/40">
       <input
@@ -277,16 +308,26 @@ function SampleRow({ onToggleSelect, selected }: { onToggleSelect: () => void; s
           </span>
         </div>
         <p className="text-[12px] text-muted-foreground mt-0.5">
-          Illustrative preview of the inline approval quick-actions available on every actionable notification. No live requests yet.
+          Illustrative preview of the inline approval quick-actions available on every actionable
+          notification. No live requests yet.
         </p>
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
-          <button onClick={() => toast.message("Approved")} className="h-7 px-2.5 rounded-md bg-primary text-primary-foreground text-[11.5px] inline-flex items-center gap-1.5">
+          <button
+            onClick={() => toast.message("Approved")}
+            className="h-7 px-2.5 rounded-md bg-primary text-primary-foreground text-[11.5px] inline-flex items-center gap-1.5"
+          >
             <Check className="h-3 w-3" /> Approve
           </button>
-          <button onClick={() => toast.message("Rejected")} className="h-7 px-2.5 rounded-md border border-border bg-surface hover:bg-muted text-[11.5px] inline-flex items-center gap-1.5">
+          <button
+            onClick={() => toast.message("Rejected")}
+            className="h-7 px-2.5 rounded-md border border-border bg-surface hover:bg-muted text-[11.5px] inline-flex items-center gap-1.5"
+          >
             <X className="h-3 w-3" /> Reject
           </button>
-          <button onClick={() => toast.message("Snoozed")} className="h-7 px-2.5 rounded-md border border-border bg-surface hover:bg-muted text-[11.5px]">
+          <button
+            onClick={() => toast.message("Snoozed")}
+            className="h-7 px-2.5 rounded-md border border-border bg-surface hover:bg-muted text-[11.5px]"
+          >
             Snooze
           </button>
           <button className="h-7 px-2 rounded-md text-[11.5px] text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
