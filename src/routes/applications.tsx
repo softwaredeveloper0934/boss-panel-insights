@@ -32,6 +32,8 @@ import { ApplicationDetailDrawer } from "@/components/influencer/application-det
 import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
 import { useBulkDialogs } from "@/components/influencer/bulk-dialogs";
 import { DndBoard, type BoardColumn } from "@/components/enterprise/dnd-board";
+import { runOptimistic } from "@/lib/optimistic";
+
 
 
 
