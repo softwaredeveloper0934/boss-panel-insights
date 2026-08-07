@@ -228,8 +228,6 @@ export function NotificationsInbox() {
                     rollback: () => setSelected(n),
                   });
                 },
-
-                },
               }),
           },
         ]}
