@@ -352,11 +352,7 @@ export function DataTable<T>({
           {/* Non-row states stay pinned to the viewport, never scrolled out
               sideways by wide column sets. */}
           {error || loading || rows.length === 0 ? (
-            <div
-              className="sticky left-0 max-w-full"
-              style={{ width: viewportWidth ?? "100%" }}
-            >
-
+            <div className="sticky left-0 max-w-full" style={{ width: viewportWidth ?? "100%" }}>
               {error ? (
                 <ErrorState message={error} onRetry={onRetry} />
               ) : loading ? (
@@ -374,7 +370,6 @@ export function DataTable<T>({
               )}
             </div>
           ) : (
-
             <div style={{ height: rows.length * rowHeight }} className="relative">
               <div
                 style={{ transform: `translateY(${start * rowHeight}px)` }}
