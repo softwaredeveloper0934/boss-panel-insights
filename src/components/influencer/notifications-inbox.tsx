@@ -176,9 +176,19 @@ export function NotificationsInbox() {
                 withNote: true,
                 noteLabel: "Rejection reason",
                 onConfirm: (note) => {
-                  toast.message(`Rejected ${selected}`, { description: note || "No reason provided." });
-                  setSelected(0);
+                  const n = selected;
+                  void runOptimistic({
+                    label: "Reject requests",
+                    entity: "notifications",
+                    count: n,
+                    detail: note || "No reason provided.",
+                    from: "Awaiting approval",
+                    to: "Rejected",
+                    apply: () => setSelected(0),
+                    rollback: () => setSelected(n),
+                  });
                 },
+
               }),
           },
           { key: "read", label: "Mark read", icon: <MailOpen className="h-3.5 w-3.5" />, onClick: () => toast.message("Marked as read") },
