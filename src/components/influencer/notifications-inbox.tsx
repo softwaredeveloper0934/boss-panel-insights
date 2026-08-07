@@ -218,8 +218,17 @@ export function NotificationsInbox() {
                 confirmLabel: "Delete",
                 tone: "danger",
                 onConfirm: () => {
-                  toast.message(`Deleted ${selected}`);
-                  setSelected(0);
+                  const n = selected;
+                  void runOptimistic({
+                    label: "Delete notifications",
+                    entity: "notifications",
+                    count: n,
+                    undoMs: 0,
+                    apply: () => setSelected(0),
+                    rollback: () => setSelected(n),
+                  });
+                },
+
                 },
               }),
           },
