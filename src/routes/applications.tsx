@@ -170,11 +170,19 @@ function ApplicationsPage() {
                 withNote: true,
                 noteLabel: "Rejection reason",
                 onConfirm: (note) => {
-                  toast.message(`Rejected ${selected} application${selected === 1 ? "" : "s"}`, {
-                    description: note || "No reason provided.",
+                  const n = selected;
+                  void runOptimistic({
+                    label: "Reject applications",
+                    entity: "applications",
+                    count: n,
+                    detail: note || "No reason provided.",
+                    from: "In review",
+                    to: "Rejected",
+                    apply: () => setSelected(0),
+                    rollback: () => setSelected(n),
                   });
-                  setSelected(0);
                 },
+
               }),
           },
           { key: "assign", label: "Assign reviewer", icon: <UserPlus className="h-3.5 w-3.5" />, onClick: () => toast.message("Assignee picker opened") },
