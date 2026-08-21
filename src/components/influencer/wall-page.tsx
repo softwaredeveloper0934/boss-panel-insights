@@ -792,9 +792,7 @@ function PanelBody({ loading, empty }: { loading: boolean; empty: string }) {
   return <div className="py-6 text-center text-[12.5px] text-muted-foreground">{empty}</div>;
 }
 
-    </aside>
-  );
-}
+
 
 export function PanelCard({ title, children }: { title: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(true);
