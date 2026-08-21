@@ -550,6 +550,7 @@ export function TableSkeleton({
   primaryAction,
   scope = "workspace",
   table,
+  loading = false,
 }: {
   title: string;
   columns: string[];
@@ -558,7 +559,9 @@ export function TableSkeleton({
   primaryAction?: string;
   scope?: string;
   table?: WallTableApi;
+  loading?: boolean;
 }) {
+
   const notify = useConnectToast(scope);
   const own = useWallTable(`wall.${scope}.${title}`, columns);
   const api = table ?? own;
