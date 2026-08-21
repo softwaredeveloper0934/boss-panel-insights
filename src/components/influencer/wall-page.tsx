@@ -169,9 +169,7 @@ export function WallPage({ wall }: { wall: WallConfig }) {
   );
 }
 
-    </div>
-  );
-}
+
 
 /* --------------------------------- Header --------------------------------- */
 
