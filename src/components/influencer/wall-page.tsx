@@ -727,7 +727,7 @@ export function EmptySurface({
 
 /* ------------------------------- Right panel ------------------------------ */
 
-export function RightPanel({ wall }: { wall: WallConfig }) {
+export function RightPanel({ wall, loading = false }: { wall: WallConfig; loading?: boolean }) {
   const notify = useConnectToast(wall.shortTitle ?? wall.title);
   const actions = useMemo(
     () =>
@@ -736,7 +736,7 @@ export function RightPanel({ wall }: { wall: WallConfig }) {
   );
 
   return (
-    <aside className="space-y-4">
+    <aside className="min-w-0 space-y-4">
       <PanelCard title="Quick actions">
         {actions.length ? (
           <ul className="text-[12.5px] divide-y divide-border">
@@ -761,20 +761,37 @@ export function RightPanel({ wall }: { wall: WallConfig }) {
       </PanelCard>
 
       <PanelCard title="Activity timeline">
-        <div className="py-6 text-center text-[12.5px] text-muted-foreground">No activity yet.</div>
+        <PanelBody loading={loading} empty="No activity yet." />
       </PanelCard>
 
       <PanelCard title="Notifications">
-        <div className="py-6 text-center text-[12.5px] text-muted-foreground">
-          You&apos;re all caught up.
-        </div>
+        <PanelBody loading={loading} empty="You’re all caught up." />
       </PanelCard>
 
       <PanelCard title="Audit log">
-        <div className="py-6 text-center text-[12.5px] text-muted-foreground">
-          No audit events recorded.
-        </div>
+        <PanelBody loading={loading} empty="No audit events recorded." />
       </PanelCard>
+    </aside>
+  );
+}
+
+/** Panel content that shows a skeleton while data settles, then an empty state. */
+function PanelBody({ loading, empty }: { loading: boolean; empty: string }) {
+  if (loading) {
+    return (
+      <div aria-busy="true" className="py-3 space-y-2.5">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="flex items-center gap-2.5">
+            <SkeletonBar className="h-6 w-6 shrink-0 rounded-full" />
+            <SkeletonBar className="h-2.5 flex-1" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return <div className="py-6 text-center text-[12.5px] text-muted-foreground">{empty}</div>;
+}
+
     </aside>
   );
 }
