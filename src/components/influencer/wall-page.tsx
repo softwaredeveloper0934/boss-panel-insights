@@ -70,12 +70,32 @@ export type WallTableApi = ReturnType<typeof useWallTable>;
 
 /* ----------------------------- shared helpers ----------------------------- */
 
+/**
+ * Surface loading state. Stays `true` for the server render and the first
+ * client frame so every wall shows its skeleton while the route/data settles,
+ * then flips to the real (or empty) surface.
+ */
+export function useSurfaceLoading() {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setReady(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+  return !ready;
+}
+
+/** Shimmering bar used by every skeleton block. */
+export function SkeletonBar({ className = "" }: { className?: string }) {
+  return <div aria-hidden className={`animate-pulse rounded bg-muted ${className}`} />;
+}
+
 function useConnectToast(scope: string) {
   return (label: string) =>
     toast.message(label, {
       description: `Available once the ${scope} data source is connected.`,
     });
 }
+
 
 /** Horizontal scroller with left/right fade edges when overflow exists. */
 function EdgeScroller({ children }: { children: React.ReactNode }) {
@@ -121,13 +141,14 @@ function EdgeScroller({ children }: { children: React.ReactNode }) {
 export function WallPage({ wall }: { wall: WallConfig }) {
   const [active, setActive] = useState(0);
   const table = useWallTable(`wall.${wall.shortTitle ?? wall.title}`, wall.tableColumns ?? []);
+  const loading = useSurfaceLoading();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" data-testid="wall-page" data-loading={loading}>
       <PageHeader wall={wall} />
 
       <div className="mx-auto w-full max-w-[1600px] px-4 pb-3 sm:px-6 lg:px-8">
-        <KpiStrip wall={wall} />
+        <KpiStrip wall={wall} loading={loading} />
       </div>
 
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
@@ -140,13 +161,15 @@ export function WallPage({ wall }: { wall: WallConfig }) {
             scope={wall.shortTitle ?? wall.title}
             table={wall.tableColumns ? table : undefined}
           />
-          <ContentSurface wall={wall} table={table} />
+          <ContentSurface wall={wall} table={table} loading={loading} />
         </main>
-        <RightPanel wall={wall} />
+        <RightPanel wall={wall} loading={loading} />
       </div>
     </div>
   );
 }
+
+
 
 /* --------------------------------- Header --------------------------------- */
 
@@ -203,7 +226,7 @@ export function PageHeader({ wall }: { wall: WallConfig }) {
 
 /* -------------------------------- KPI Strip ------------------------------- */
 
-export function KpiStrip({ wall }: { wall: WallConfig }) {
+export function KpiStrip({ wall, loading = false }: { wall: WallConfig; loading?: boolean }) {
   return (
     <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
       {wall.kpis.map((k) => (
@@ -214,15 +237,25 @@ export function KpiStrip({ wall }: { wall: WallConfig }) {
           <div className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground truncate">
             {k.label}
           </div>
-          <div className="mt-1.5 text-[20px] font-semibold text-foreground tabular-nums leading-none">
-            —
-          </div>
-          <div className="mt-1.5 text-[11px] text-muted-foreground">No data yet</div>
+          {loading ? (
+            <>
+              <SkeletonBar className="mt-1.5 h-5 w-16" />
+              <SkeletonBar className="mt-2 h-2.5 w-20" />
+            </>
+          ) : (
+            <>
+              <div className="mt-1.5 text-[20px] font-semibold text-foreground tabular-nums leading-none">
+                —
+              </div>
+              <div className="mt-1.5 text-[11px] text-muted-foreground">No data yet</div>
+            </>
+          )}
         </div>
       ))}
     </div>
   );
 }
+
 
 /* ------------------------------ Section Tabs ------------------------------ */
 
@@ -439,9 +472,17 @@ export function IconAction({
 
 /* ------------------------------ Content surface --------------------------- */
 
-function ContentSurface({ wall, table }: { wall: WallConfig; table?: WallTableApi }) {
+function ContentSurface({
+  wall,
+  table,
+  loading = false,
+}: {
+  wall: WallConfig;
+  table?: WallTableApi;
+  loading?: boolean;
+}) {
   return (
-    <div className="rounded-md border border-border bg-surface overflow-hidden">
+    <div className="rounded-md border border-border bg-surface overflow-hidden max-w-full">
       {wall.tableColumns ? (
         <TableSkeleton
           title={wall.tableTitle ?? wall.title}
@@ -454,7 +495,10 @@ function ContentSurface({ wall, table }: { wall: WallConfig; table?: WallTableAp
           primaryAction={wall.primaryAction}
           scope={wall.shortTitle ?? wall.title}
           table={table}
+          loading={loading}
         />
+      ) : loading ? (
+        <SurfaceSkeleton />
       ) : (
         <EmptySurface
           title={wall.emptyTitle ?? "Nothing to display yet"}
@@ -470,6 +514,29 @@ function ContentSurface({ wall, table }: { wall: WallConfig; table?: WallTableAp
   );
 }
 
+/** Generic card skeleton for non-table workspace surfaces. */
+export function SurfaceSkeleton({ blocks = 5 }: { blocks?: number }) {
+  return (
+    <div aria-busy="true" aria-live="polite" className="p-4" data-testid="surface-skeleton">
+      <span className="sr-only">Loading workspace…</span>
+      <div className="flex items-center justify-between gap-3">
+        <SkeletonBar className="h-3.5 w-40" />
+        <SkeletonBar className="h-3.5 w-20" />
+      </div>
+      <div className="mt-4 space-y-2.5">
+        {Array.from({ length: blocks }).map((_, i) => (
+          <div key={i} className="flex items-center gap-3">
+            <SkeletonBar className="h-8 w-8 shrink-0 rounded-full" />
+            <SkeletonBar className="h-2.5 flex-1" />
+            <SkeletonBar className="h-2.5 w-16 shrink-0" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+
 /**
  * Live workspace table surface. Mounts the virtualized enterprise DataTable
  * (sticky header + pinned columns + density + column manager + selection +
@@ -483,6 +550,7 @@ export function TableSkeleton({
   primaryAction,
   scope = "workspace",
   table,
+  loading = false,
 }: {
   title: string;
   columns: string[];
@@ -491,7 +559,9 @@ export function TableSkeleton({
   primaryAction?: string;
   scope?: string;
   table?: WallTableApi;
+  loading?: boolean;
 }) {
+
   const notify = useConnectToast(scope);
   const own = useWallTable(`wall.${scope}.${title}`, columns);
   const api = table ?? own;
@@ -512,6 +582,7 @@ export function TableSkeleton({
         rows={rows}
         rowKey={(r) => String(r["id"] ?? "")}
         totalCount={rows.length}
+        loading={loading}
         sort={sort}
         onSortChange={setSort}
         selectedIds={selectedIds}
@@ -657,7 +728,7 @@ export function EmptySurface({
 
 /* ------------------------------- Right panel ------------------------------ */
 
-export function RightPanel({ wall }: { wall: WallConfig }) {
+export function RightPanel({ wall, loading = false }: { wall: WallConfig; loading?: boolean }) {
   const notify = useConnectToast(wall.shortTitle ?? wall.title);
   const actions = useMemo(
     () =>
@@ -666,7 +737,7 @@ export function RightPanel({ wall }: { wall: WallConfig }) {
   );
 
   return (
-    <aside className="space-y-4">
+    <aside className="min-w-0 space-y-4">
       <PanelCard title="Quick actions">
         {actions.length ? (
           <ul className="text-[12.5px] divide-y divide-border">
@@ -691,23 +762,38 @@ export function RightPanel({ wall }: { wall: WallConfig }) {
       </PanelCard>
 
       <PanelCard title="Activity timeline">
-        <div className="py-6 text-center text-[12.5px] text-muted-foreground">No activity yet.</div>
+        <PanelBody loading={loading} empty="No activity yet." />
       </PanelCard>
 
       <PanelCard title="Notifications">
-        <div className="py-6 text-center text-[12.5px] text-muted-foreground">
-          You&apos;re all caught up.
-        </div>
+        <PanelBody loading={loading} empty="You’re all caught up." />
       </PanelCard>
 
       <PanelCard title="Audit log">
-        <div className="py-6 text-center text-[12.5px] text-muted-foreground">
-          No audit events recorded.
-        </div>
+        <PanelBody loading={loading} empty="No audit events recorded." />
       </PanelCard>
     </aside>
   );
 }
+
+/** Panel content that shows a skeleton while data settles, then an empty state. */
+function PanelBody({ loading, empty }: { loading: boolean; empty: string }) {
+  if (loading) {
+    return (
+      <div aria-busy="true" className="py-3 space-y-2.5">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="flex items-center gap-2.5">
+            <SkeletonBar className="h-6 w-6 shrink-0 rounded-full" />
+            <SkeletonBar className="h-2.5 flex-1" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return <div className="py-6 text-center text-[12.5px] text-muted-foreground">{empty}</div>;
+}
+
+
 
 export function PanelCard({ title, children }: { title: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(true);

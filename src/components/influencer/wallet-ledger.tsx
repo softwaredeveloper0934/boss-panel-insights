@@ -127,7 +127,7 @@ function LedgerPanel({ onOpenDetail }: { onOpenDetail: () => void }) {
             Open sample detail
           </button>
         </div>
-        <div className="overflow-x-auto">
+        <div className="max-w-full overflow-x-auto overscroll-x-contain touch-pan-x [-webkit-overflow-scrolling:touch]">
           <table className="w-full text-[12.5px]">
             <thead>
               <tr className="border-b border-border bg-surface-muted/50 text-left text-muted-foreground">

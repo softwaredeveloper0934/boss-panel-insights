@@ -8,7 +8,7 @@ import { ArrowUpRight, Megaphone, Sparkles, UserPlus } from "lucide-react";
  */
 export function ModuleBanner() {
   return (
-    <section className="hero-surface relative overflow-hidden p-6 md:p-10">
+    <section data-testid="module-banner" className="hero-surface relative overflow-hidden p-6 md:p-10">
       <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
       <div className="absolute -bottom-24 -left-10 h-64 w-64 rounded-full bg-accent-pink/40 blur-3xl" />
 

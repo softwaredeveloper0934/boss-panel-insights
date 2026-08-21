@@ -76,7 +76,7 @@ export function TopBar({ onOpenMenu }: { onOpenMenu?: () => void }) {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/70 text-foreground backdrop-blur-xl surface-sheen shadow-[0_1px_0_0_oklch(1_0_0/0.05)_inset,0_18px_44px_-32px_color-mix(in_oklab,var(--color-primary)_85%,transparent)]">
+    <header data-testid="top-bar" className="sticky top-0 z-40 border-b border-border bg-background/70 text-foreground backdrop-blur-xl surface-sheen shadow-[0_1px_0_0_oklch(1_0_0/0.05)_inset,0_18px_44px_-32px_color-mix(in_oklab,var(--color-primary)_85%,transparent)]">
       {/* Row 1 — brand, search, global actions */}
       <div className="flex h-16 items-center gap-3 px-4 lg:px-6">
         <button

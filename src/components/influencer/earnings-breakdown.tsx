@@ -48,7 +48,7 @@ export function EarningsBreakdown() {
       <EarningsHero onRequest={() => setRequestOpen(true)} onInvoice={() => setInvoiceOpen(true)} />
 
       <div className="rounded-md border border-border bg-surface overflow-hidden">
-        <div className="border-b border-border bg-surface-muted/40 overflow-x-auto no-scrollbar">
+        <div className="border-b border-border bg-surface-muted/40 overflow-x-auto overscroll-x-contain touch-pan-x no-scrollbar">
           <div className="flex items-center px-2">
             {TABS.map((t) => {
               const Icon = t.icon;
@@ -501,7 +501,7 @@ function LedgerTable({
         <div className="text-[12.5px] font-semibold text-foreground">{title}</div>
         <div className="text-[11.5px] text-muted-foreground">0 records</div>
       </div>
-      <div className="overflow-x-auto">
+      <div className="max-w-full overflow-x-auto overscroll-x-contain touch-pan-x [-webkit-overflow-scrolling:touch]">
         <table className="w-full text-[12.5px]">
           <thead>
             <tr className="border-b border-border bg-surface-muted/50 text-left text-muted-foreground">
