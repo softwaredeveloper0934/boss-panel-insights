@@ -472,9 +472,17 @@ export function IconAction({
 
 /* ------------------------------ Content surface --------------------------- */
 
-function ContentSurface({ wall, table }: { wall: WallConfig; table?: WallTableApi }) {
+function ContentSurface({
+  wall,
+  table,
+  loading = false,
+}: {
+  wall: WallConfig;
+  table?: WallTableApi;
+  loading?: boolean;
+}) {
   return (
-    <div className="rounded-md border border-border bg-surface overflow-hidden">
+    <div className="rounded-md border border-border bg-surface overflow-hidden max-w-full">
       {wall.tableColumns ? (
         <TableSkeleton
           title={wall.tableTitle ?? wall.title}
@@ -487,7 +495,10 @@ function ContentSurface({ wall, table }: { wall: WallConfig; table?: WallTableAp
           primaryAction={wall.primaryAction}
           scope={wall.shortTitle ?? wall.title}
           table={table}
+          loading={loading}
         />
+      ) : loading ? (
+        <SurfaceSkeleton />
       ) : (
         <EmptySurface
           title={wall.emptyTitle ?? "Nothing to display yet"}
@@ -499,6 +510,32 @@ function ContentSurface({ wall, table }: { wall: WallConfig; table?: WallTableAp
           scope={wall.shortTitle ?? wall.title}
         />
       )}
+    </div>
+  );
+}
+
+/** Generic card skeleton for non-table workspace surfaces. */
+export function SurfaceSkeleton({ blocks = 5 }: { blocks?: number }) {
+  return (
+    <div aria-busy="true" aria-live="polite" className="p-4" data-testid="surface-skeleton">
+      <span className="sr-only">Loading workspace…</span>
+      <div className="flex items-center justify-between gap-3">
+        <SkeletonBar className="h-3.5 w-40" />
+        <SkeletonBar className="h-3.5 w-20" />
+      </div>
+      <div className="mt-4 space-y-2.5">
+        {Array.from({ length: blocks }).map((_, i) => (
+          <div key={i} className="flex items-center gap-3">
+            <SkeletonBar className="h-8 w-8 shrink-0 rounded-full" />
+            <SkeletonBar className="h-2.5 flex-1" style-="" />
+            <SkeletonBar className="h-2.5 w-16 shrink-0" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
     </div>
   );
 }
