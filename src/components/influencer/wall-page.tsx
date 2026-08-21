@@ -527,7 +527,7 @@ export function SurfaceSkeleton({ blocks = 5 }: { blocks?: number }) {
         {Array.from({ length: blocks }).map((_, i) => (
           <div key={i} className="flex items-center gap-3">
             <SkeletonBar className="h-8 w-8 shrink-0 rounded-full" />
-            <SkeletonBar className="h-2.5 flex-1" style-="" />
+            <SkeletonBar className="h-2.5 flex-1" />
             <SkeletonBar className="h-2.5 w-16 shrink-0" />
           </div>
         ))}
@@ -536,9 +536,6 @@ export function SurfaceSkeleton({ blocks = 5 }: { blocks?: number }) {
   );
 }
 
-    </div>
-  );
-}
 
 /**
  * Live workspace table surface. Mounts the virtualized enterprise DataTable
