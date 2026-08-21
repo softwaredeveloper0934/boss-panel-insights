@@ -70,12 +70,32 @@ export type WallTableApi = ReturnType<typeof useWallTable>;
 
 /* ----------------------------- shared helpers ----------------------------- */
 
+/**
+ * Surface loading state. Stays `true` for the server render and the first
+ * client frame so every wall shows its skeleton while the route/data settles,
+ * then flips to the real (or empty) surface.
+ */
+export function useSurfaceLoading() {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setReady(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+  return !ready;
+}
+
+/** Shimmering bar used by every skeleton block. */
+export function SkeletonBar({ className = "" }: { className?: string }) {
+  return <div aria-hidden className={`animate-pulse rounded bg-muted ${className}`} />;
+}
+
 function useConnectToast(scope: string) {
   return (label: string) =>
     toast.message(label, {
       description: `Available once the ${scope} data source is connected.`,
     });
 }
+
 
 /** Horizontal scroller with left/right fade edges when overflow exists. */
 function EdgeScroller({ children }: { children: React.ReactNode }) {
