@@ -141,13 +141,14 @@ function EdgeScroller({ children }: { children: React.ReactNode }) {
 export function WallPage({ wall }: { wall: WallConfig }) {
   const [active, setActive] = useState(0);
   const table = useWallTable(`wall.${wall.shortTitle ?? wall.title}`, wall.tableColumns ?? []);
+  const loading = useSurfaceLoading();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" data-testid="wall-page" data-loading={loading}>
       <PageHeader wall={wall} />
 
       <div className="mx-auto w-full max-w-[1600px] px-4 pb-3 sm:px-6 lg:px-8">
-        <KpiStrip wall={wall} />
+        <KpiStrip wall={wall} loading={loading} />
       </div>
 
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
@@ -160,10 +161,14 @@ export function WallPage({ wall }: { wall: WallConfig }) {
             scope={wall.shortTitle ?? wall.title}
             table={wall.tableColumns ? table : undefined}
           />
-          <ContentSurface wall={wall} table={table} />
+          <ContentSurface wall={wall} table={table} loading={loading} />
         </main>
-        <RightPanel wall={wall} />
+        <RightPanel wall={wall} loading={loading} />
       </div>
+    </div>
+  );
+}
+
     </div>
   );
 }
