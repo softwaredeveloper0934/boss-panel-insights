@@ -226,7 +226,7 @@ export function PageHeader({ wall }: { wall: WallConfig }) {
 
 /* -------------------------------- KPI Strip ------------------------------- */
 
-export function KpiStrip({ wall }: { wall: WallConfig }) {
+export function KpiStrip({ wall, loading = false }: { wall: WallConfig; loading?: boolean }) {
   return (
     <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
       {wall.kpis.map((k) => (
@@ -237,15 +237,25 @@ export function KpiStrip({ wall }: { wall: WallConfig }) {
           <div className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground truncate">
             {k.label}
           </div>
-          <div className="mt-1.5 text-[20px] font-semibold text-foreground tabular-nums leading-none">
-            —
-          </div>
-          <div className="mt-1.5 text-[11px] text-muted-foreground">No data yet</div>
+          {loading ? (
+            <>
+              <SkeletonBar className="mt-1.5 h-5 w-16" />
+              <SkeletonBar className="mt-2 h-2.5 w-20" />
+            </>
+          ) : (
+            <>
+              <div className="mt-1.5 text-[20px] font-semibold text-foreground tabular-nums leading-none">
+                —
+              </div>
+              <div className="mt-1.5 text-[11px] text-muted-foreground">No data yet</div>
+            </>
+          )}
         </div>
       ))}
     </div>
   );
 }
+
 
 /* ------------------------------ Section Tabs ------------------------------ */
 
