@@ -260,7 +260,7 @@ export function DataTable<T>({
         ref={scrollerRef}
         onScroll={handleScroll}
         style={{ height }}
-        className="relative overflow-auto overscroll-contain scroll-smooth"
+        className="relative max-w-full overflow-auto overscroll-contain touch-pan-x touch-pan-y scroll-smooth [-webkit-overflow-scrolling:touch]"
         role="grid"
         aria-rowcount={totalCount ?? rows.length}
         aria-busy={loading}

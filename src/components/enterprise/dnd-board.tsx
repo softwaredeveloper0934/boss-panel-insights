@@ -271,7 +271,7 @@ export function DndBoard<T>({
         </div>
       </div>
 
-      <div ref={scrollerRef} className="overflow-x-auto p-3">
+      <div ref={scrollerRef} className="max-w-full overflow-x-auto overscroll-x-contain touch-pan-x p-3 [-webkit-overflow-scrolling:touch]">
         <div className="flex gap-3 min-w-max items-start">
           {columns.map((col) => {
             const items = grouped[col.id] ?? [];

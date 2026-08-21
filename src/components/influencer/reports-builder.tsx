@@ -342,7 +342,7 @@ export function ReportsBuilder() {
               description="Run the preview to render this report with the configured metrics and dimensions."
             />
           ) : (
-            <div className="overflow-x-auto">
+            <div className="max-w-full overflow-x-auto overscroll-x-contain touch-pan-x [-webkit-overflow-scrolling:touch]">
               <table className="w-full text-[12.5px]">
                 <thead>
                   <tr className="border-b border-border bg-background/40">

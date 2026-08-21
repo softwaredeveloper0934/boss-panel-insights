@@ -182,7 +182,7 @@ export function CampaignKanban() {
         </div>
       ) : null}
 
-      <div className="overflow-x-auto">
+      <div className="max-w-full overflow-x-auto overscroll-x-contain touch-pan-x [-webkit-overflow-scrolling:touch]">
         <div className="grid grid-cols-6 gap-3 min-w-[1080px]">
           {COLUMNS.map((col) => {
             const items = grouped[col.key];

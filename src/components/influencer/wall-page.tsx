@@ -582,6 +582,7 @@ export function TableSkeleton({
         rows={rows}
         rowKey={(r) => String(r["id"] ?? "")}
         totalCount={rows.length}
+        loading={loading}
         sort={sort}
         onSortChange={setSort}
         selectedIds={selectedIds}
