@@ -301,6 +301,7 @@ export function AppSidebar({
   return (
     <>
       <aside
+        data-testid="app-sidebar"
         className={cn(
           "hidden lg:flex flex-col shrink-0 border-r border-border bg-background/80 backdrop-blur-xl sticky top-0 h-screen transition-[width] duration-200",
           collapsed ? "w-[72px]" : "w-[264px]",
