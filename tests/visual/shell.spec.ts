@@ -18,6 +18,9 @@ async function stabilize(page: Page) {
 async function gotoHome(page: Page) {
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("top-bar")).toBeVisible();
+  // Wait for hydration: the wall marks itself ready on the first client frame,
+  // so clicks (menu trigger) are wired before the test interacts.
+  await expect(page.getByTestId("wall-page")).toHaveAttribute("data-loading", "false");
   await stabilize(page);
 }
 
