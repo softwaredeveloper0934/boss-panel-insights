@@ -46,7 +46,7 @@ test.describe("shell visual regression", () => {
 
     // Tablet/mobile: the sidebar lives in the off-canvas drawer.
     await page.getByRole("button", { name: "Open menu" }).click();
-    const drawerSidebar = page.getByTestId("app-sidebar").last();
+    const drawerSidebar = page.getByTestId("sidebar-drawer");
     await expect(drawerSidebar).toBeVisible();
     await stabilize(page);
     await expect(page).toHaveScreenshot(`sidebar-drawer-${testInfo.project.name}.png`);
