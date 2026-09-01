@@ -283,7 +283,7 @@ function AccountsTable({ platform }: { platform: Platform }) {
             <tbody>
               <tr>
                 <td colSpan={COLUMNS.length + 2} className="py-0">
-                  <div className="py-16 px-6 grid place-items-center text-center">
+                  <div className="sticky left-0 w-[calc(100vw-2.5rem)] max-w-full lg:w-full py-16 px-6 grid place-items-center text-center">
                     <div className="h-12 w-12 rounded-full bg-muted grid place-items-center text-muted-foreground mb-3">
                       <Inbox className="h-5 w-5" />
                     </div>

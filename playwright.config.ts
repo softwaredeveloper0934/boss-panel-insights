@@ -10,6 +10,9 @@ import { defineConfig, devices } from "@playwright/test";
  *   bun run test:visual:update       # re-baseline after an intentional change
  */
 const PORT = Number(process.env["PLAYWRIGHT_PORT"] ?? 8080);
+const CHROMIUM_PATH = process.env["PLAYWRIGHT_CHROMIUM_PATH"];
+const launchOptions = CHROMIUM_PATH ? { executablePath: CHROMIUM_PATH } : {};
+
 const BASE_URL = process.env["PLAYWRIGHT_BASE_URL"] ?? `http://localhost:${PORT}`;
 
 export default defineConfig({
@@ -32,11 +35,11 @@ export default defineConfig({
   projects: [
     {
       name: "desktop",
-      use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } },
+      use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 }, launchOptions },
     },
     {
       name: "tablet",
-      use: { ...devices["Desktop Chrome"], viewport: { width: 834, height: 1112 } },
+      use: { ...devices["Desktop Chrome"], viewport: { width: 834, height: 1112 }, launchOptions },
     },
     {
       name: "mobile",
@@ -45,6 +48,7 @@ export default defineConfig({
         viewport: { width: 390, height: 844 },
         hasTouch: true,
         isMobile: false,
+        launchOptions,
       },
     },
   ],

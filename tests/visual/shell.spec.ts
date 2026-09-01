@@ -18,6 +18,9 @@ async function stabilize(page: Page) {
 async function gotoHome(page: Page) {
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("top-bar")).toBeVisible();
+  // Wait for hydration: the wall marks itself ready on the first client frame,
+  // so clicks (menu trigger) are wired before the test interacts.
+  await expect(page.getByTestId("wall-page")).toHaveAttribute("data-loading", "false");
   await stabilize(page);
 }
 
@@ -46,7 +49,7 @@ test.describe("shell visual regression", () => {
 
     // Tablet/mobile: the sidebar lives in the off-canvas drawer.
     await page.getByRole("button", { name: "Open menu" }).click();
-    const drawerSidebar = page.getByTestId("app-sidebar").last();
+    const drawerSidebar = page.getByTestId("sidebar-drawer");
     await expect(drawerSidebar).toBeVisible();
     await stabilize(page);
     await expect(page).toHaveScreenshot(`sidebar-drawer-${testInfo.project.name}.png`);

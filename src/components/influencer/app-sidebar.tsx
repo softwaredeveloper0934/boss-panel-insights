@@ -418,6 +418,7 @@ function MobileDrawer({
       />
       <div
         ref={panelRef}
+        data-testid="sidebar-drawer"
         className={cn(
           "absolute inset-y-0 left-0 w-[280px] max-w-[85vw] border-r border-border bg-background shadow-2xl will-change-transform",
           closing ? "sv-drawer-out" : "sv-drawer-in",
