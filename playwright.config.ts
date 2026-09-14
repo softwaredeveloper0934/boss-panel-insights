@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { existsSync, readdirSync } from "node:fs";
 
 /**
  * Visual regression setup for the Influencer Manager shell.
@@ -10,7 +11,18 @@ import { defineConfig, devices } from "@playwright/test";
  *   bun run test:visual:update       # re-baseline after an intentional change
  */
 const PORT = Number(process.env["PLAYWRIGHT_PORT"] ?? 8080);
-const CHROMIUM_PATH = process.env["PLAYWRIGHT_CHROMIUM_PATH"];
+/** Locate the sandbox-provided Chromium so runs need no extra env setup. */
+const NIX_CHROMIUM = (() => {
+  try {
+    return readdirSync("/nix/store")
+      .filter((d) => d.endsWith("-playwright-chromium"))
+      .map((d) => `/nix/store/${d}/chrome-linux/chrome`)
+      .find((p) => existsSync(p));
+  } catch {
+    return undefined;
+  }
+})();
+const CHROMIUM_PATH = process.env["PLAYWRIGHT_CHROMIUM_PATH"] ?? NIX_CHROMIUM;
 const launchOptions = CHROMIUM_PATH ? { executablePath: CHROMIUM_PATH } : {};
 
 const BASE_URL = process.env["PLAYWRIGHT_BASE_URL"] ?? `http://localhost:${PORT}`;
@@ -19,6 +31,8 @@ export default defineConfig({
   testDir: "./tests/visual",
   snapshotPathTemplate: "{testDir}/__screenshots__/{testFilePath}/{arg}{ext}",
   fullyParallel: true,
+  // The dev server is shared; too many parallel page loads causes flaky timeouts.
+  workers: 3,
   forbidOnly: Boolean(process.env["CI"]),
   retries: process.env["CI"] ? 1 : 0,
   reporter: process.env["CI"] ? "github" : "list",
