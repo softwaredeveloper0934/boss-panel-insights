@@ -1,6 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
-import { existsSync } from "node:fs";
-import glob from "glob";
+import { existsSync, readdirSync } from "node:fs";
 
 /**
  * Visual regression setup for the Influencer Manager shell.
@@ -12,9 +11,17 @@ import glob from "glob";
  *   bun run test:visual:update       # re-baseline after an intentional change
  */
 const PORT = Number(process.env["PLAYWRIGHT_PORT"] ?? 8080);
-const NIX_CHROMIUM = glob
-  .sync("/nix/store/*-playwright-chromium/chrome-linux/chrome")
-  .find((p) => existsSync(p));
+/** Locate the sandbox-provided Chromium so runs need no extra env setup. */
+const NIX_CHROMIUM = (() => {
+  try {
+    return readdirSync("/nix/store")
+      .filter((d) => d.endsWith("-playwright-chromium"))
+      .map((d) => `/nix/store/${d}/chrome-linux/chrome`)
+      .find((p) => existsSync(p));
+  } catch {
+    return undefined;
+  }
+})();
 const CHROMIUM_PATH = process.env["PLAYWRIGHT_CHROMIUM_PATH"] ?? NIX_CHROMIUM;
 const launchOptions = CHROMIUM_PATH ? { executablePath: CHROMIUM_PATH } : {};
 
