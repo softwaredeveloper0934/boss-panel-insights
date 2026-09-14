@@ -31,6 +31,8 @@ export default defineConfig({
   testDir: "./tests/visual",
   snapshotPathTemplate: "{testDir}/__screenshots__/{testFilePath}/{arg}{ext}",
   fullyParallel: true,
+  // The dev server is shared; too many parallel page loads causes flaky timeouts.
+  workers: 3,
   forbidOnly: Boolean(process.env["CI"]),
   retries: process.env["CI"] ? 1 : 0,
   reporter: process.env["CI"] ? "github" : "list",
