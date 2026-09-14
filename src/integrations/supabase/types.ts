@@ -53,6 +53,75 @@ export type Database = {
         }
         Relationships: []
       }
+      influencers: {
+        Row: {
+          categories: string[]
+          commission: number
+          country: string | null
+          created_at: string
+          email: string | null
+          engagement_rate: number
+          followers: number
+          full_name: string
+          handle: string
+          health_score: number
+          id: string
+          languages: string[]
+          notes: string | null
+          platform: string | null
+          revenue: number
+          risk_score: number
+          status: string
+          tier: string | null
+          updated_at: string
+          verification: string
+        }
+        Insert: {
+          categories?: string[]
+          commission?: number
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          engagement_rate?: number
+          followers?: number
+          full_name: string
+          handle: string
+          health_score?: number
+          id?: string
+          languages?: string[]
+          notes?: string | null
+          platform?: string | null
+          revenue?: number
+          risk_score?: number
+          status?: string
+          tier?: string | null
+          updated_at?: string
+          verification?: string
+        }
+        Update: {
+          categories?: string[]
+          commission?: number
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          engagement_rate?: number
+          followers?: number
+          full_name?: string
+          handle?: string
+          health_score?: number
+          id?: string
+          languages?: string[]
+          notes?: string | null
+          platform?: string | null
+          revenue?: number
+          risk_score?: number
+          status?: string
+          tier?: string | null
+          updated_at?: string
+          verification?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
