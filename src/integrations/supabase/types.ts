@@ -14,7 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      follow_ups: {
+        Row: {
+          attempts: number
+          channel: string
+          created_at: string
+          due_at: string
+          id: string
+          last_error: string | null
+          lead_name: string
+          status: string
+          updated_at: string
+          workspace_key: string
+        }
+        Insert: {
+          attempts?: number
+          channel: string
+          created_at?: string
+          due_at: string
+          id?: string
+          last_error?: string | null
+          lead_name: string
+          status?: string
+          updated_at?: string
+          workspace_key?: string
+        }
+        Update: {
+          attempts?: number
+          channel?: string
+          created_at?: string
+          due_at?: string
+          id?: string
+          last_error?: string | null
+          lead_name?: string
+          status?: string
+          updated_at?: string
+          workspace_key?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
