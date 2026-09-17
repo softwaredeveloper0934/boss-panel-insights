@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ModuleBanner } from "@/components/influencer/module-banner";
 import { WallPage } from "@/components/influencer/wall-page";
 import { WALL_BY_SLUG } from "@/lib/influencer-walls";
+import { useInfluencerStats, useInfluencers } from "@/lib/use-influencers";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({

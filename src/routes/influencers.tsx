@@ -2,21 +2,17 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   Ban,
-  CheckCircle2,
-  ChevronRight,
   Download,
-  Eye,
   Filter,
   Inbox,
   LayoutGrid,
   ListFilter,
-  Mail,
-  MoreHorizontal,
+  Pencil,
   Plus,
   RefreshCw,
   Search,
   Sliders,
-  Tag,
+  Trash2,
   Upload,
   UserCheck,
   UserX,
@@ -24,17 +20,27 @@ import {
 import { toast } from "sonner";
 import { WALL_BY_SLUG } from "@/lib/influencer-walls";
 import { KpiStrip, PageHeader, RightPanel, SectionTabs } from "@/components/influencer/wall-page";
-import { InfluencerDetailDrawer } from "@/components/influencer/influencer-detail-drawer";
+import { InfluencerFormDialog } from "@/components/influencer/influencer-form-dialog";
 import { StickyBulkBar } from "@/components/influencer/sticky-bulk-bar";
-import { runOptimistic } from "@/lib/optimistic";
-
 import { useBulkDialogs } from "@/components/influencer/bulk-dialogs";
+import {
+  useInfluencerStats,
+  useInfluencers,
+  type Influencer,
+} from "@/lib/use-influencers";
 
 export const Route = createFileRoute("/influencers")({
   head: () => ({
     meta: [
       { title: "Influencers — Influencer Manager" },
       { name: "description", content: WALL_BY_SLUG.influencers.description },
+      { property: "og:title", content: "Influencer Directory" },
+      {
+        property: "og:description",
+        content: "Create, review and manage every creator record in one directory.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: InfluencersPage,
@@ -55,39 +61,79 @@ const COLUMNS = [
   { key: "status", label: "Status", w: "min-w-[100px]" },
 ];
 
-const FILTER_CHIPS = [
-  "Country",
-  "Platform",
-  "Category",
-  "Tier",
-  "Languages",
-  "Followers",
-  "Engagement",
-  "Health score",
-  "Risk score",
-  "Verification",
-  "Status",
-];
+const FILTER_CHIPS = ["Country", "Platform", "Category", "Tier", "Verification", "Status"];
+
+const nf = (v: number | string) => Number(v).toLocaleString("en-US");
+const money = (v: number | string) =>
+  `$${Number(v).toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
 
 function InfluencersPage() {
   const wall = WALL_BY_SLUG.influencers;
+  const { rows, loading, refresh, create, update, remove, removeMany, setStatusMany } =
+    useInfluencers();
+  const stats = useInfluencerStats(rows);
+
   const [active, setActive] = useState(0);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState("profile");
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editing, setEditing] = useState<Influencer | null>(null);
+  const [pageSize, setPageSize] = useState(25);
   const { requestConfirm, requestExport, dialogs } = useBulkDialogs();
 
-  // Reserved for future bulk-actions wiring.
-  const _ignored = useMemo(() => ({ query, sortKey }), [query, sortKey]);
-  void _ignored;
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const list = q
+      ? rows.filter((r) =>
+          [r.full_name, r.handle, r.email, r.country, r.platform, r.id]
+            .filter(Boolean)
+            .some((v) => String(v).toLowerCase().includes(q)),
+        )
+      : rows;
+    const sorted = [...list].sort((a, b) => {
+      switch (sortKey) {
+        case "followers":
+          return Number(b.followers) - Number(a.followers);
+        case "revenue":
+          return Number(b.revenue) - Number(a.revenue);
+        case "commission":
+          return Number(b.commission) - Number(a.commission);
+        case "engagement":
+          return Number(b.engagement_rate) - Number(a.engagement_rate);
+        case "country":
+          return (a.country ?? "").localeCompare(b.country ?? "");
+        case "status":
+          return a.status.localeCompare(b.status);
+        default:
+          return a.full_name.localeCompare(b.full_name);
+      }
+    });
+    return sorted.slice(0, pageSize);
+  }, [rows, query, sortKey, pageSize]);
+
+  const allShownSelected = filtered.length > 0 && filtered.every((r) => selected.includes(r.id));
+
+  function toggleRow(id: string) {
+    setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  }
+
+  function openCreate() {
+    setEditing(null);
+    setDialogOpen(true);
+  }
+
+  function openEdit(record: Influencer) {
+    setEditing(record);
+    setDialogOpen(true);
+  }
 
   return (
     <div className="flex flex-col">
       <PageHeader wall={wall} />
 
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 pb-3">
-        <KpiStrip wall={wall} />
+        <KpiStrip wall={wall} loading={loading} values={stats} />
       </div>
 
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
@@ -112,6 +158,7 @@ function InfluencersPage() {
                 <button
                   key={c}
                   type="button"
+                  onClick={() => setSortKey(c.toLowerCase())}
                   className="h-8 px-2.5 inline-flex items-center gap-1.5 rounded-md border border-dashed border-border bg-background hover:bg-muted text-[12px] text-foreground transition-colors"
                 >
                   <Filter className="h-3.5 w-3.5" />
@@ -120,6 +167,7 @@ function InfluencersPage() {
               ))}
               <button
                 type="button"
+                onClick={() => toast.message("Saved views")}
                 className="h-8 px-2.5 inline-flex items-center gap-1.5 rounded-md border border-dashed border-border bg-background hover:bg-muted text-[12px] text-foreground transition-colors"
               >
                 <ListFilter className="h-3.5 w-3.5" />
@@ -127,21 +175,38 @@ function InfluencersPage() {
               </button>
             </div>
             <div className="ml-auto flex items-center gap-1">
-              <IconAction title="Refresh">
+              <IconAction title="Refresh" onClick={() => void refresh()}>
                 <RefreshCw className="h-3.5 w-3.5" />
               </IconAction>
-              <IconAction title="View">
+              <IconAction title="View" onClick={() => toast.message("Layout options")}>
                 <LayoutGrid className="h-3.5 w-3.5" />
               </IconAction>
-              <IconAction title="Density">
+              <IconAction title="Density" onClick={() => toast.message("Density options")}>
                 <Sliders className="h-3.5 w-3.5" />
               </IconAction>
-              <IconAction title="Import">
+              <IconAction title="Import" onClick={() => toast.message("Import influencers")}>
                 <Upload className="h-3.5 w-3.5" />
               </IconAction>
-              <IconAction title="Export">
+              <IconAction
+                title="Export"
+                onClick={() =>
+                  requestExport({
+                    count: rows.length,
+                    entity: "influencers",
+                    onExport: () => undefined,
+                  })
+                }
+              >
                 <Download className="h-3.5 w-3.5" />
               </IconAction>
+              <button
+                type="button"
+                onClick={openCreate}
+                className="ml-1 h-8 px-3 inline-flex items-center gap-1.5 rounded-md bg-primary hover:bg-primary/90 text-primary-foreground text-[12.5px] font-medium"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Add Influencer
+              </button>
             </div>
           </div>
 
@@ -151,20 +216,13 @@ function InfluencersPage() {
                 {wall.tableTitle ?? "Directory"}
               </div>
               <div className="flex items-center gap-1.5 text-[11.5px] text-muted-foreground">
-                <span>0 records</span>
+                <span>{nf(rows.length)} records</span>
                 <span>·</span>
-                <span>Page 1 of 1</span>
-                <button
-                  type="button"
-                  className="ml-2 h-7 w-7 grid place-items-center rounded-md hover:bg-muted"
-                  aria-label="Row actions"
-                >
-                  <MoreHorizontal className="h-3.5 w-3.5" />
-                </button>
+                <span>Showing {nf(filtered.length)}</span>
               </div>
             </div>
 
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto overscroll-x-contain">
               <table className="w-full text-[12.5px]">
                 <thead>
                   <tr className="border-b border-border bg-surface-muted/50 text-left text-muted-foreground">
@@ -172,8 +230,10 @@ function InfluencersPage() {
                       <input
                         type="checkbox"
                         aria-label="Select all"
-                        checked={selected > 0}
-                        onChange={(e) => setSelected(e.target.checked ? 12 : 0)}
+                        checked={allShownSelected}
+                        onChange={(e) =>
+                          setSelected(e.target.checked ? filtered.map((r) => r.id) : [])
+                        }
                         className="h-3.5 w-3.5 rounded border-border accent-[color:var(--color-primary)]"
                       />
                     </th>
@@ -191,105 +251,160 @@ function InfluencersPage() {
                         </button>
                       </th>
                     ))}
-                    <th className="w-12" />
+                    <th className="w-20" />
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td colSpan={COLUMNS.length + 2} className="py-0">
-                      <div className="sticky left-0 w-[calc(100vw-2.5rem)] max-w-full lg:w-full py-16 px-6 grid place-items-center text-center">
-                        <div className="h-12 w-12 rounded-full bg-muted grid place-items-center text-muted-foreground mb-3">
-                          <Inbox className="h-5 w-5" />
-                        </div>
-                        <div className="text-[14px] font-semibold text-foreground">
-                          No influencers yet
-                        </div>
-                        <p className="mt-1 text-[12.5px] text-muted-foreground max-w-md">
-                          Records will appear here once data is connected from the Boss Panel. You
-                          can preview the influencer detail drawer to see the layout that will be
-                          used.
-                        </p>
-                        <div className="mt-4 flex items-center gap-2">
+                  {loading ? (
+                    <tr>
+                      <td colSpan={COLUMNS.length + 2} className="py-16 text-center text-muted-foreground">
+                        Loading influencers…
+                      </td>
+                    </tr>
+                  ) : filtered.length === 0 ? (
+                    <tr>
+                      <td colSpan={COLUMNS.length + 2} className="py-0">
+                        <div className="sticky left-0 w-[calc(100vw-2.5rem)] max-w-full lg:w-full py-16 px-6 grid place-items-center text-center">
+                          <div className="h-12 w-12 rounded-full bg-muted grid place-items-center text-muted-foreground mb-3">
+                            <Inbox className="h-5 w-5" />
+                          </div>
+                          <div className="text-[14px] font-semibold text-foreground">
+                            {rows.length === 0 ? "No influencers yet" : "No matching influencers"}
+                          </div>
+                          <p className="mt-1 text-[12.5px] text-muted-foreground max-w-md">
+                            {rows.length === 0
+                              ? "Add your first creator record and it will be stored in the module database."
+                              : "Adjust your search to see more records."}
+                          </p>
                           <button
                             type="button"
-                            onClick={() => setDrawerOpen(true)}
-                            className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface hover:bg-muted text-[12.5px] font-medium text-foreground"
-                          >
-                            <Eye className="h-3.5 w-3.5" />
-                            Preview detail drawer
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setSelected((n) => (n === 0 ? 12 : 0))}
-                            className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface hover:bg-muted text-[12.5px] font-medium text-foreground"
-                          >
-                            <CheckCircle2 className="h-3.5 w-3.5" />
-                            Preview bulk selection
-                          </button>
-                          <button
-                            type="button"
-                            className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md bg-primary hover:bg-primary/90 text-primary-foreground text-[12.5px] font-medium"
+                            onClick={openCreate}
+                            className="mt-4 h-8 px-3 inline-flex items-center gap-1.5 rounded-md bg-primary hover:bg-primary/90 text-primary-foreground text-[12.5px] font-medium"
                           >
                             <Plus className="h-3.5 w-3.5" />
                             Add Influencer
                           </button>
                         </div>
-                      </div>
-                    </td>
-                  </tr>
+                      </td>
+                    </tr>
+                  ) : (
+                    filtered.map((r) => (
+                      <tr key={r.id} className="border-b border-border/60 hover:bg-muted/40">
+                        <td className="py-2 pl-4">
+                          <input
+                            type="checkbox"
+                            aria-label={`Select ${r.full_name}`}
+                            checked={selected.includes(r.id)}
+                            onChange={() => toggleRow(r.id)}
+                            className="h-3.5 w-3.5 rounded border-border accent-[color:var(--color-primary)]"
+                          />
+                        </td>
+                        <td className="px-3 py-2">
+                          <div className="font-medium text-foreground">{r.full_name}</div>
+                          <div className="text-[11.5px] text-muted-foreground">
+                            @{r.handle}
+                            {r.platform ? ` · ${r.platform}` : ""}
+                          </div>
+                        </td>
+                        <td className="px-3 py-2 text-muted-foreground">{r.country ?? "—"}</td>
+                        <td className="px-3 py-2 text-muted-foreground">
+                          {r.languages.length ? r.languages.join(", ") : "—"}
+                        </td>
+                        <td className="px-3 py-2 text-muted-foreground">
+                          {r.categories.length ? r.categories.join(", ") : "—"}
+                        </td>
+                        <td className="px-3 py-2 text-right tabular-nums">{nf(r.followers)}</td>
+                        <td className="px-3 py-2 text-right tabular-nums">
+                          {Number(r.engagement_rate).toFixed(2)}%
+                        </td>
+                        <td className="px-3 py-2 text-right tabular-nums">{money(r.revenue)}</td>
+                        <td className="px-3 py-2 text-right tabular-nums">{money(r.commission)}</td>
+                        <td className="px-3 py-2 tabular-nums">{r.health_score}</td>
+                        <td className="px-3 py-2 tabular-nums">{r.risk_score}</td>
+                        <td className="px-3 py-2 capitalize text-muted-foreground">
+                          {r.verification}
+                        </td>
+                        <td className="px-3 py-2">
+                          <span className="inline-flex items-center rounded-full border border-border px-2 py-0.5 text-[11px] capitalize">
+                            {r.status}
+                          </span>
+                        </td>
+                        <td className="px-3 py-2">
+                          <div className="flex items-center justify-end gap-1">
+                            <button
+                              type="button"
+                              onClick={() => openEdit(r)}
+                              aria-label={`Edit ${r.full_name}`}
+                              className="h-7 w-7 grid place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+                            >
+                              <Pencil className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              aria-label={`Delete ${r.full_name}`}
+                              onClick={() =>
+                                requestConfirm({
+                                  title: "Delete influencer",
+                                  description: `${r.full_name} will be permanently removed from the database.`,
+                                  confirmLabel: "Delete",
+                                  tone: "danger",
+                                  onConfirm: () => {
+                                    void remove(r.id);
+                                    setSelected((prev) => prev.filter((x) => x !== r.id));
+                                  },
+                                })
+                              }
+                              className="h-7 w-7 grid place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
 
             <div className="flex items-center justify-between px-4 h-10 border-t border-border bg-surface-muted text-[11.5px] text-muted-foreground">
               <div className="flex items-center gap-3">
-                <span>0 selected</span>
-                <span>·</span>
-                <button type="button" className="hover:text-foreground" disabled>
-                  Bulk message
-                </button>
-                <button type="button" className="hover:text-foreground" disabled>
-                  Bulk assign
-                </button>
-                <button type="button" className="hover:text-foreground" disabled>
-                  Bulk export
-                </button>
+                <span>{selected.length} selected</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span>Rows per page</span>
-                <select className="h-7 px-1.5 rounded border border-border bg-surface text-foreground">
+                <select
+                  value={pageSize}
+                  onChange={(e) => setPageSize(Number(e.target.value))}
+                  className="h-7 px-1.5 rounded border border-border bg-surface text-foreground"
+                >
                   {[25, 50, 100, 250].map((n) => (
-                    <option key={n}>{n}</option>
+                    <option key={n} value={n}>
+                      {n}
+                    </option>
                   ))}
                 </select>
-                <button
-                  type="button"
-                  className="h-7 px-2 rounded border border-border bg-surface hover:bg-muted"
-                >
-                  Previous
-                </button>
-                <button
-                  type="button"
-                  className="h-7 px-2 rounded border border-border bg-surface hover:bg-muted"
-                >
-                  Next
-                </button>
               </div>
             </div>
           </div>
-
-          <SegmentTipCard onPreview={() => setDrawerOpen(true)} />
         </main>
 
-        <RightPanel wall={wall} />
+        <RightPanel wall={wall} loading={loading} />
       </div>
 
-      <InfluencerDetailDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
+      <InfluencerFormDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        record={editing}
+        onSubmit={async (values) =>
+          editing ? await update(editing.id, values) : await create(values)
+        }
+      />
 
       <StickyBulkBar
-        count={selected}
+        count={selected.length}
         entity="influencers"
-        onClear={() => setSelected(0)}
+        onClear={() => setSelected([])}
         actions={[
           {
             key: "approve",
@@ -299,22 +414,18 @@ function InfluencersPage() {
             onClick: () =>
               requestConfirm({
                 title: "Approve influencers",
-                description: `${selected} selected influencer${selected === 1 ? "" : "s"} will be moved to Active and notified. Verification requirements stay unchanged.`,
+                description: `${selected.length} selected influencer${selected.length === 1 ? "" : "s"} will be set to Active.`,
                 confirmLabel: "Approve",
                 tone: "primary",
                 withNote: true,
                 noteLabel: "Approval note (optional)",
                 onConfirm: (note) => {
-                  const n = selected;
-                  void runOptimistic({
-                    label: "Approve influencers",
-                    entity: "influencers",
-                    count: n,
-                    detail: note || "Status set to Active.",
-                    from: "Pending",
-                    to: "Active",
-                    apply: () => setSelected(0),
-                    rollback: () => setSelected(n),
+                  const ids = selected;
+                  void setStatusMany(ids, "active", note).then((ok) => {
+                    if (ok) {
+                      toast.success(`${ids.length} approved`);
+                      setSelected([]);
+                    }
                   });
                 },
               }),
@@ -327,37 +438,21 @@ function InfluencersPage() {
             onClick: () =>
               requestConfirm({
                 title: "Reject influencers",
-                description: `${selected} selected influencer${selected === 1 ? "" : "s"} will be rejected. This is recorded on each activity timeline.`,
+                description: `${selected.length} selected influencer${selected.length === 1 ? "" : "s"} will be marked as Rejected.`,
                 confirmLabel: "Reject",
                 tone: "danger",
                 withNote: true,
                 noteLabel: "Rejection reason",
                 onConfirm: (note) => {
-                  const n = selected;
-                  void runOptimistic({
-                    label: "Reject influencers",
-                    entity: "influencers",
-                    count: n,
-                    detail: note || "No reason provided.",
-                    from: "Pending",
-                    to: "Rejected",
-                    apply: () => setSelected(0),
-                    rollback: () => setSelected(n),
+                  const ids = selected;
+                  void setStatusMany(ids, "rejected", note).then((ok) => {
+                    if (ok) {
+                      toast.success(`${ids.length} rejected`);
+                      setSelected([]);
+                    }
                   });
                 },
               }),
-          },
-          {
-            key: "message",
-            label: "Message",
-            icon: <Mail className="h-3.5 w-3.5" />,
-            onClick: () => toast.message("Bulk message composer"),
-          },
-          {
-            key: "tag",
-            label: "Add tag",
-            icon: <Tag className="h-3.5 w-3.5" />,
-            onClick: () => toast.message("Tag picker opened"),
           },
           {
             key: "suspend",
@@ -367,22 +462,37 @@ function InfluencersPage() {
             onClick: () =>
               requestConfirm({
                 title: "Suspend influencers",
-                description: `${selected} selected influencer${selected === 1 ? "" : "s"} will lose panel access until reactivated.`,
+                description: `${selected.length} selected influencer${selected.length === 1 ? "" : "s"} will lose panel access until reactivated.`,
                 confirmLabel: "Suspend",
                 tone: "danger",
                 withNote: true,
                 noteLabel: "Suspension reason",
                 onConfirm: (note) => {
-                  const n = selected;
-                  void runOptimistic({
-                    label: "Suspend influencers",
-                    entity: "influencers",
-                    count: n,
-                    detail: note || "No reason provided.",
-                    from: "Active",
-                    to: "Suspended",
-                    apply: () => setSelected(0),
-                    rollback: () => setSelected(n),
+                  const ids = selected;
+                  void setStatusMany(ids, "suspended", note).then((ok) => {
+                    if (ok) {
+                      toast.success(`${ids.length} suspended`);
+                      setSelected([]);
+                    }
+                  });
+                },
+              }),
+          },
+          {
+            key: "delete",
+            label: "Delete",
+            tone: "danger",
+            icon: <Trash2 className="h-3.5 w-3.5" />,
+            onClick: () =>
+              requestConfirm({
+                title: "Delete influencers",
+                description: `${selected.length} selected influencer${selected.length === 1 ? "" : "s"} will be permanently removed.`,
+                confirmLabel: "Delete",
+                tone: "danger",
+                onConfirm: () => {
+                  const ids = selected;
+                  void removeMany(ids).then((ok) => {
+                    if (ok) setSelected([]);
                   });
                 },
               }),
@@ -393,9 +503,9 @@ function InfluencersPage() {
             icon: <Download className="h-3.5 w-3.5" />,
             onClick: () =>
               requestExport({
-                count: selected,
+                count: selected.length,
                 entity: "influencers",
-                onExport: () => setSelected(0),
+                onExport: () => setSelected([]),
               }),
           },
         ]}
@@ -406,38 +516,23 @@ function InfluencersPage() {
   );
 }
 
-function IconAction({ children, title }: { children: React.ReactNode; title: string }) {
+function IconAction({
+  children,
+  title,
+  onClick,
+}: {
+  children: React.ReactNode;
+  title: string;
+  onClick?: () => void;
+}) {
   return (
     <button
       type="button"
       title={title}
+      onClick={onClick}
       className="h-8 w-8 grid place-items-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
     >
       {children}
     </button>
-  );
-}
-
-function SegmentTipCard({ onPreview }: { onPreview: () => void }) {
-  return (
-    <section className="rounded-md border border-dashed border-border bg-surface-muted px-4 py-3 flex items-center justify-between gap-3">
-      <div className="min-w-0">
-        <div className="text-[12.5px] font-semibold text-foreground">
-          Built for one million plus records
-        </div>
-        <p className="text-[12px] text-muted-foreground mt-0.5">
-          Virtualised table, saved views, multi-column sort, server-side filters and bulk operations
-          will activate when the Boss Panel data source is connected.
-        </p>
-      </div>
-      <button
-        type="button"
-        onClick={onPreview}
-        className="shrink-0 h-8 px-3 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface hover:bg-muted text-[12.5px] font-medium text-foreground"
-      >
-        Preview profile
-        <ChevronRight className="h-3.5 w-3.5" />
-      </button>
-    </section>
   );
 }
