@@ -138,7 +138,13 @@ function EdgeScroller({ children }: { children: React.ReactNode }) {
 
 /* ------------------------------ main WallPage ----------------------------- */
 
-export function WallPage({ wall }: { wall: WallConfig }) {
+export function WallPage({
+  wall,
+  kpiValues,
+}: {
+  wall: WallConfig;
+  kpiValues?: Record<string, string>;
+}) {
   const [active, setActive] = useState(0);
   const table = useWallTable(`wall.${wall.shortTitle ?? wall.title}`, wall.tableColumns ?? []);
   const loading = useSurfaceLoading();
@@ -148,8 +154,9 @@ export function WallPage({ wall }: { wall: WallConfig }) {
       <PageHeader wall={wall} />
 
       <div className="mx-auto w-full max-w-[1600px] px-4 pb-3 sm:px-6 lg:px-8">
-        <KpiStrip wall={wall} loading={loading} />
+        <KpiStrip wall={wall} loading={loading} values={kpiValues} />
       </div>
+
 
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
         <SectionTabs sections={wall.sections} active={active} onChange={setActive} />
@@ -173,8 +180,15 @@ export function WallPage({ wall }: { wall: WallConfig }) {
 
 /* --------------------------------- Header --------------------------------- */
 
-export function PageHeader({ wall }: { wall: WallConfig }) {
+export function PageHeader({
+  wall,
+  onPrimaryAction,
+}: {
+  wall: WallConfig;
+  onPrimaryAction?: () => void;
+}) {
   const notify = useConnectToast(wall.shortTitle ?? wall.title);
+
   return (
     <div className="border-b border-border bg-surface/60">
       <div className="mx-auto w-full max-w-[1600px] px-4 pb-5 pt-6 sm:px-6 sm:pt-7 lg:px-8">
@@ -210,7 +224,7 @@ export function PageHeader({ wall }: { wall: WallConfig }) {
             {wall.primaryAction ? (
               <button
                 type="button"
-                onClick={() => notify(wall.primaryAction!)}
+                onClick={() => (onPrimaryAction ? onPrimaryAction() : notify(wall.primaryAction!))}
                 className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3.5 text-[13px] font-medium leading-5 text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 active:bg-primary cursor-pointer"
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -226,7 +240,15 @@ export function PageHeader({ wall }: { wall: WallConfig }) {
 
 /* -------------------------------- KPI Strip ------------------------------- */
 
-export function KpiStrip({ wall, loading = false }: { wall: WallConfig; loading?: boolean }) {
+export function KpiStrip({
+  wall,
+  loading = false,
+  values,
+}: {
+  wall: WallConfig;
+  loading?: boolean;
+  values?: Record<string, string>;
+}) {
   return (
     <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
       {wall.kpis.map((k) => (
@@ -245,9 +267,11 @@ export function KpiStrip({ wall, loading = false }: { wall: WallConfig; loading?
           ) : (
             <>
               <div className="mt-1.5 text-[20px] font-semibold text-foreground tabular-nums leading-none">
-                —
+                {values?.[k.label] ?? "—"}
               </div>
-              <div className="mt-1.5 text-[11px] text-muted-foreground">No data yet</div>
+              <div className="mt-1.5 text-[11px] text-muted-foreground">
+                {values?.[k.label] ? "Live from database" : "No data yet"}
+              </div>
             </>
           )}
         </div>

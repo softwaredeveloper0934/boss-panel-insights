@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ModuleBanner } from "@/components/influencer/module-banner";
 import { WallPage } from "@/components/influencer/wall-page";
 import { WALL_BY_SLUG } from "@/lib/influencer-walls";
+import { useInfluencerStats, useInfluencers } from "@/lib/use-influencers";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,13 +27,17 @@ export const Route = createFileRoute("/")({
 });
 
 function DashboardPage() {
+  const { rows } = useInfluencers();
+  const stats = useInfluencerStats(rows);
+
   return (
     <>
       <div className="mx-auto w-full max-w-[1600px] px-4 pt-6 sm:px-6 lg:px-8">
         <ModuleBanner />
       </div>
-      <WallPage wall={WALL_BY_SLUG.dashboard} />
+      <WallPage wall={WALL_BY_SLUG.dashboard} kpiValues={stats} />
     </>
   );
 }
+
 
