@@ -224,7 +224,7 @@ export function PageHeader({
             {wall.primaryAction ? (
               <button
                 type="button"
-                onClick={() => notify(wall.primaryAction!)}
+                onClick={() => (onPrimaryAction ? onPrimaryAction() : notify(wall.primaryAction!))}
                 className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3.5 text-[13px] font-medium leading-5 text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 active:bg-primary cursor-pointer"
               >
                 <Plus className="h-3.5 w-3.5" />
