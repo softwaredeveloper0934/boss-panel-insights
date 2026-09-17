@@ -138,7 +138,13 @@ function EdgeScroller({ children }: { children: React.ReactNode }) {
 
 /* ------------------------------ main WallPage ----------------------------- */
 
-export function WallPage({ wall }: { wall: WallConfig }) {
+export function WallPage({
+  wall,
+  kpiValues,
+}: {
+  wall: WallConfig;
+  kpiValues?: Record<string, string>;
+}) {
   const [active, setActive] = useState(0);
   const table = useWallTable(`wall.${wall.shortTitle ?? wall.title}`, wall.tableColumns ?? []);
   const loading = useSurfaceLoading();
@@ -148,8 +154,9 @@ export function WallPage({ wall }: { wall: WallConfig }) {
       <PageHeader wall={wall} />
 
       <div className="mx-auto w-full max-w-[1600px] px-4 pb-3 sm:px-6 lg:px-8">
-        <KpiStrip wall={wall} loading={loading} />
+        <KpiStrip wall={wall} loading={loading} values={kpiValues} />
       </div>
+
 
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
         <SectionTabs sections={wall.sections} active={active} onChange={setActive} />
