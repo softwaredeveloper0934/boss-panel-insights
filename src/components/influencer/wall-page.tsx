@@ -233,7 +233,15 @@ export function PageHeader({ wall }: { wall: WallConfig }) {
 
 /* -------------------------------- KPI Strip ------------------------------- */
 
-export function KpiStrip({ wall, loading = false }: { wall: WallConfig; loading?: boolean }) {
+export function KpiStrip({
+  wall,
+  loading = false,
+  values,
+}: {
+  wall: WallConfig;
+  loading?: boolean;
+  values?: Record<string, string>;
+}) {
   return (
     <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
       {wall.kpis.map((k) => (
@@ -252,11 +260,16 @@ export function KpiStrip({ wall, loading = false }: { wall: WallConfig; loading?
           ) : (
             <>
               <div className="mt-1.5 text-[20px] font-semibold text-foreground tabular-nums leading-none">
-                —
+                {values?.[k.label] ?? "—"}
               </div>
-              <div className="mt-1.5 text-[11px] text-muted-foreground">No data yet</div>
+              <div className="mt-1.5 text-[11px] text-muted-foreground">
+                {values?.[k.label] ? "Live from database" : "No data yet"}
+              </div>
             </>
           )}
+        </div>
+      ))}
+
         </div>
       ))}
     </div>
