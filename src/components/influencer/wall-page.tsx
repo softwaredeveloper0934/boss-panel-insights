@@ -180,8 +180,15 @@ export function WallPage({
 
 /* --------------------------------- Header --------------------------------- */
 
-export function PageHeader({ wall }: { wall: WallConfig }) {
+export function PageHeader({
+  wall,
+  onPrimaryAction,
+}: {
+  wall: WallConfig;
+  onPrimaryAction?: () => void;
+}) {
   const notify = useConnectToast(wall.shortTitle ?? wall.title);
+
   return (
     <div className="border-b border-border bg-surface/60">
       <div className="mx-auto w-full max-w-[1600px] px-4 pb-5 pt-6 sm:px-6 sm:pt-7 lg:px-8">
