@@ -269,9 +269,6 @@ export function KpiStrip({
           )}
         </div>
       ))}
-
-        </div>
-      ))}
     </div>
   );
 }
