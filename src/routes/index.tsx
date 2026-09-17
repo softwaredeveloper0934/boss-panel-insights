@@ -25,13 +25,17 @@ export const Route = createFileRoute("/")({
 });
 
 function DashboardPage() {
+  const { rows } = useInfluencers();
+  const stats = useInfluencerStats(rows);
+
   return (
     <>
       <div className="mx-auto w-full max-w-[1600px] px-4 pt-6 sm:px-6 lg:px-8">
         <ModuleBanner />
       </div>
-      <WallPage wall={WALL_BY_SLUG.dashboard} />
+      <WallPage wall={WALL_BY_SLUG.dashboard} kpiValues={stats} />
     </>
   );
 }
+
 
