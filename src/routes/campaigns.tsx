@@ -1,5 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useRecords } from "@/lib/use-records";
+import { campaignsConfig } from "@/lib/module-records";
+import { RecordsSurface } from "@/components/influencer/records-surface";
 import {
   Activity,
   BarChart3,
@@ -75,14 +79,37 @@ function CampaignsPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [assignOpen, setAssignOpen] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
-  const [query, setQuery] = useState("");
+  const api = useRecords("campaigns");
+  const [assignedCount, setAssignedCount] = useState(0);
+  const kpis = useMemo(() => campaignsConfig.kpis(api.rows), [api.rows]);
+
+  const loadAssigned = useCallback(async () => {
+    const { count } = await supabase
+      .from("campaign_creators")
+      .select("id", { count: "exact", head: true });
+    setAssignedCount(count ?? 0);
+  }, []);
+  useEffect(() => {
+    void loadAssigned();
+  }, [loadAssigned]);
+
+  const STATUS_FOR_TAB: Record<number, string | undefined> = {
+    1: "draft",
+    2: "active",
+    3: "scheduled",
+    4: "in_review",
+    5: "completed",
+    6: "archived",
+  };
+  const status = STATUS_FOR_TAB[tab];
+  const scopedApi = status ? { ...api, rows: api.rows.filter((r) => r["status"] === status) } : api;
 
   return (
     <div className="flex flex-col">
-      <PageHeader wall={wallWithActions(wall, () => setCreateOpen(true), () => setAssignOpen(true))} />
+      <PageHeader wall={wall} onPrimaryAction={() => setCreateOpen(true)} />
 
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 pb-3">
-        <KpiStrip wall={wall} />
+        <KpiStrip wall={wall} loading={api.loading} values={kpis} />
       </div>
 
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
@@ -96,14 +123,35 @@ function CampaignsPage() {
           ) : tab === 8 ? (
             <TimelineView />
           ) : tab === 9 ? (
-            <AnalyticsView />
+            <AnalyticsView
+              values={{
+                "Active campaigns": kpis["Active"] ?? "0",
+                "Assigned creators": assignedCount.toLocaleString("en-US"),
+                Clicks: "0",
+                ROI: "0%",
+              }}
+            />
           ) : (
-            <CampaignTableView
-              tabLabel={SUB_TABS[tab]}
-              query={query}
-              setQuery={setQuery}
-              onCreate={() => setCreateOpen(true)}
-              onAssign={() => setAssignOpen(true)}
+            <RecordsSurface
+              key={tab}
+              table="campaigns"
+              api={scopedApi}
+              title={SUB_TABS[tab]}
+              fields={campaignsConfig.fields}
+              columns={campaignsConfig.columns}
+              addLabel={campaignsConfig.addLabel}
+              emptyTitle={campaignsConfig.emptyTitle}
+              emptyDescription={campaignsConfig.emptyDescription}
+              extraActions={
+                <button
+                  type="button"
+                  onClick={() => setAssignOpen(true)}
+                  className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface hover:bg-muted text-[12.5px] font-medium text-foreground"
+                >
+                  <Users className="h-3.5 w-3.5" />
+                  Assign creators
+                </button>
+              }
             />
           )}
         </main>
@@ -112,187 +160,14 @@ function CampaignsPage() {
       </div>
 
       <CreateCampaignDialog open={createOpen} onOpenChange={setCreateOpen} />
-      <AssignCreatorsDialog open={assignOpen} onOpenChange={setAssignOpen} />
+      <AssignCreatorsDialog
+        open={assignOpen}
+        onOpenChange={setAssignOpen}
+        campaigns={api.rows}
+        onAssigned={() => void loadAssigned()}
+      />
       <CampaignDetailDrawer open={detailOpen} onOpenChange={setDetailOpen} />
     </div>
-  );
-}
-
-// Replace primary action handler by wrapping header-level click handlers
-// directly into the page via local buttons; the shared <PageHeader /> reads
-// the static config, so we render an extra action bar under it for the
-// click-bound primary CTA.
-function wallWithActions(
-  wall: typeof WALL_BY_SLUG.campaigns,
-  _onCreate: () => void,
-  _onAssign: () => void,
-) {
-  return wall;
-}
-
-/* ---------- Table view ---------- */
-
-function CampaignTableView({
-  tabLabel,
-  query,
-  setQuery,
-  onCreate,
-  onAssign,
-}: {
-  tabLabel: string;
-  query: string;
-  setQuery: (v: string) => void;
-  onCreate: () => void;
-  onAssign: () => void;
-}) {
-  return (
-    <>
-      <div className="flex flex-wrap items-center gap-2 rounded-md border border-border bg-surface p-2">
-        <div className="flex items-center gap-1.5 flex-1 min-w-[240px] h-8 px-2.5 rounded-md border border-border bg-background">
-          <Search className="h-3.5 w-3.5 text-muted-foreground" />
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            type="text"
-            placeholder="Search campaigns by name, brand or ID…"
-            className="flex-1 bg-transparent text-[12.5px] outline-none placeholder:text-muted-foreground"
-          />
-        </div>
-        {["Brand", "Objective", "Status", "Date range", "Owner"].map((c) => (
-          <button
-            key={c}
-            type="button"
-            className="h-8 px-2.5 inline-flex items-center gap-1.5 rounded-md border border-dashed border-border bg-background hover:bg-muted text-[12px] text-foreground"
-          >
-            <Filter className="h-3.5 w-3.5" />
-            {c}
-          </button>
-        ))}
-        <button
-          type="button"
-          className="h-8 px-2.5 inline-flex items-center gap-1.5 rounded-md border border-dashed border-border bg-background hover:bg-muted text-[12px] text-foreground"
-        >
-          <ListFilter className="h-3.5 w-3.5" />
-          More filters
-        </button>
-        <div className="ml-auto flex items-center gap-1">
-          <IconAction title="Refresh"><RefreshCw className="h-3.5 w-3.5" /></IconAction>
-          <IconAction title="View"><LayoutGrid className="h-3.5 w-3.5" /></IconAction>
-          <IconAction title="Import"><Upload className="h-3.5 w-3.5" /></IconAction>
-        </div>
-        <button
-          type="button"
-          onClick={onAssign}
-          className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface hover:bg-muted text-[12.5px] font-medium text-foreground"
-        >
-          <Users className="h-3.5 w-3.5" />
-          Assign creators
-        </button>
-        <button
-          type="button"
-          onClick={onCreate}
-          className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md bg-primary hover:bg-primary/90 text-primary-foreground text-[12.5px] font-medium"
-        >
-          <Plus className="h-3.5 w-3.5" />
-          Create campaign
-        </button>
-      </div>
-
-      <div className="rounded-md border border-border bg-surface overflow-hidden">
-        <div className="flex items-center justify-between px-4 h-10 border-b border-border bg-surface-muted">
-          <div className="text-[12.5px] font-semibold text-foreground">{tabLabel}</div>
-          <div className="flex items-center gap-1.5 text-[11.5px] text-muted-foreground">
-            <span>0 records</span>
-            <span>·</span>
-            <span>Page 1 of 1</span>
-            <button
-              type="button"
-              className="ml-2 h-7 w-7 grid place-items-center rounded-md hover:bg-muted"
-              aria-label="Row actions"
-            >
-              <MoreHorizontal className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-[12.5px]">
-            <thead>
-              <tr className="border-b border-border bg-surface-muted/50 text-left text-muted-foreground">
-                <th className="w-8 py-2 pl-4">
-                  <input
-                    type="checkbox"
-                    aria-label="Select all"
-                    className="h-3.5 w-3.5 rounded border-border accent-[color:var(--color-primary)]"
-                  />
-                </th>
-                {COLUMNS.map((c) => (
-                  <th key={c.key} className={`py-2 px-3 font-medium text-[11.5px] uppercase tracking-wide ${c.w}`}>
-                    {c.label}
-                  </th>
-                ))}
-                <th className="w-12" />
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colSpan={COLUMNS.length + 2} className="py-0">
-                  <div className="sticky left-0 w-[calc(100vw-2.5rem)] max-w-full lg:w-full py-16 px-6 grid place-items-center text-center">
-                    <div className="h-12 w-12 rounded-full bg-muted grid place-items-center text-muted-foreground mb-3">
-                      <Inbox className="h-5 w-5" />
-                    </div>
-                    <div className="text-[14px] font-semibold text-foreground">
-                      No campaigns yet
-                    </div>
-                    <p className="mt-1 text-[12.5px] text-muted-foreground max-w-md">
-                      Start by creating your first campaign. You can define
-                      budget, schedule, content guidelines and approval rules
-                      in a guided flow.
-                    </p>
-                    <div className="mt-4 flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={onAssign}
-                        className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface hover:bg-muted text-[12.5px] font-medium text-foreground"
-                      >
-                        <Eye className="h-3.5 w-3.5" />
-                        Preview assign flow
-                      </button>
-                      <button
-                        type="button"
-                        onClick={onCreate}
-                        className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md bg-primary hover:bg-primary/90 text-primary-foreground text-[12.5px] font-medium"
-                      >
-                        <Plus className="h-3.5 w-3.5" />
-                        Create campaign
-                      </button>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div className="flex items-center justify-between px-4 h-10 border-t border-border bg-surface-muted text-[11.5px] text-muted-foreground">
-          <div className="flex items-center gap-3">
-            <span>0 selected</span>
-            <span>·</span>
-            <button type="button" className="hover:text-foreground" disabled>Pause</button>
-            <button type="button" className="hover:text-foreground" disabled>Archive</button>
-            <button type="button" className="hover:text-foreground" disabled>Duplicate</button>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <button type="button" className="h-7 px-2 rounded border border-border bg-surface hover:bg-muted">
-              Previous
-            </button>
-            <button type="button" className="h-7 px-2 rounded border border-border bg-surface hover:bg-muted">
-              Next
-            </button>
-          </div>
-        </div>
-      </div>
-    </>
   );
 }
 
@@ -355,14 +230,14 @@ function TimelineView() {
 
 /* ---------- Analytics view ---------- */
 
-function AnalyticsView() {
+function AnalyticsView({ values }: { values: Record<string, string> }) {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
-        <AnalyticsCard icon={<Target className="h-3.5 w-3.5" />} label="Active campaigns" />
-        <AnalyticsCard icon={<Users className="h-3.5 w-3.5" />} label="Assigned creators" />
-        <AnalyticsCard icon={<MousePointerClick className="h-3.5 w-3.5" />} label="Clicks" />
-        <AnalyticsCard icon={<TrendingUp className="h-3.5 w-3.5" />} label="ROI" />
+        <AnalyticsCard icon={<Target className="h-3.5 w-3.5" />} label="Active campaigns" value={values["Active campaigns"]} />
+        <AnalyticsCard icon={<Users className="h-3.5 w-3.5" />} label="Assigned creators" value={values["Assigned creators"]} />
+        <AnalyticsCard icon={<MousePointerClick className="h-3.5 w-3.5" />} label="Clicks" value={values["Clicks"]} />
+        <AnalyticsCard icon={<TrendingUp className="h-3.5 w-3.5" />} label="ROI" value={values["ROI"]} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -400,9 +275,11 @@ function AnalyticsView() {
 function AnalyticsCard({
   icon,
   label,
+  value,
 }: {
   icon: React.ReactNode;
   label: string;
+  value?: string;
 }) {
   return (
     <div className="rounded-md border border-border bg-surface p-3">
@@ -411,7 +288,7 @@ function AnalyticsCard({
         {label}
       </div>
       <div className="mt-1.5 text-[22px] font-semibold text-foreground tabular-nums leading-none">
-        —
+        {value ?? "—"}
       </div>
       <div className="mt-2 h-6">
         <svg viewBox="0 0 100 24" className="w-full h-full text-muted-foreground/40">
@@ -424,7 +301,7 @@ function AnalyticsCard({
           />
         </svg>
       </div>
-      <div className="mt-1 text-[11px] text-muted-foreground">No data</div>
+      <div className="mt-1 text-[11px] text-muted-foreground">Live from database</div>
     </div>
   );
 }
