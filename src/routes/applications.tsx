@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useRecords, type AnyRow } from "@/lib/use-records";
+import { applicationsConfig } from "@/lib/module-records";
+import { RecordsSurface } from "@/components/influencer/records-surface";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   CheckCircle2,
@@ -79,13 +82,15 @@ function ApplicationsPage() {
   const [drawer, setDrawer] = useState(false);
   const [selected, setSelected] = useState(0);
   const { requestConfirm, requestExport, dialogs } = useBulkDialogs();
+  const api = useRecords("applications");
+  const kpis = useMemo(() => applicationsConfig.kpis(api.rows), [api.rows]);
 
   return (
     <div className="flex flex-col">
-      <PageHeader wall={wall} />
+      <PageHeader wall={wall} onPrimaryAction={() => setActive(0)} />
 
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 pb-3">
-        <KpiStrip wall={wall} />
+        <KpiStrip wall={wall} loading={api.loading} values={kpis} />
       </div>
 
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
@@ -101,12 +106,24 @@ function ApplicationsPage() {
           <FilterBar extraChips={["Stage", "Country", "Risk", "Reviewer", "Source"]} />
 
           {active === 0 && (
-            <QueueView
-              onOpen={() => setDrawer(true)}
-              onPreviewBulk={() => setSelected((n) => (n === 0 ? 8 : 0))}
+            <RecordsSurface
+              table="applications"
+              api={api}
+              title={applicationsConfig.title}
+              fields={applicationsConfig.fields}
+              columns={applicationsConfig.columns}
+              addLabel={applicationsConfig.addLabel}
+              emptyTitle={applicationsConfig.emptyTitle}
+              emptyDescription={applicationsConfig.emptyDescription}
             />
           )}
-          {active === 1 && <PipelineView onOpen={() => setDrawer(true)} />}
+          {active === 1 && (
+            <PipelineView
+              rows={api.rows}
+              onOpen={() => setDrawer(true)}
+              onMove={(id, stage) => void api.setField([id], "stage", stage)}
+            />
+          )}
           {active === 2 && <VerificationView kind="Identity" />}
           {active === 3 && <VerificationView kind="KYC" />}
           {active === 4 && <VerificationView kind="Social" />}
@@ -217,42 +234,23 @@ function ApplicationsPage() {
 
 /* ---------- Views ---------- */
 
-function QueueView({ onOpen, onPreviewBulk }: { onOpen: () => void; onPreviewBulk: () => void }) {
-  return (
-    <div className="rounded-md border border-border bg-surface overflow-hidden">
-      <div className="flex items-center justify-between px-4 h-10 border-b border-border bg-surface-muted">
-        <div className="text-[12.5px] font-semibold text-foreground">Application Queue</div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onPreviewBulk}
-            className="h-7 px-2.5 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface hover:bg-muted text-[12px] text-foreground"
-          >
-            <CheckCircle2 className="h-3.5 w-3.5" /> Preview bulk selection
-          </button>
-          <button
-            onClick={onOpen}
-            className="h-7 px-2.5 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface hover:bg-muted text-[12px] text-foreground"
-          >
-            <Eye className="h-3.5 w-3.5" /> Preview application
-          </button>
-          <span className="text-[11.5px] text-muted-foreground">0 records · Page 1 of 1</span>
-        </div>
-      </div>
-      <TableSkeleton
-        title="Queue"
-        columns={wall.tableColumns ?? []}
-        emptyTitle="No applications yet"
-        emptyDescription="New creator applications will land here for triage, KYC and brand review."
-        primaryAction={wall.primaryAction}
-      />
-    </div>
-  );
-}
-
 type ApplicationCard = { id: string; name: string; handle: string; stage: string };
 
-function PipelineView({ onOpen }: { onOpen: () => void }) {
-  const [cards, setCards] = useState<ApplicationCard[]>([]);
+function PipelineView({
+  rows,
+  onOpen,
+  onMove,
+}: {
+  rows: AnyRow[];
+  onOpen: () => void;
+  onMove: (id: string, stage: string) => void;
+}) {
+  const cards: ApplicationCard[] = rows.map((r) => ({
+    id: r.id,
+    name: String(r["full_name"]),
+    handle: String(r["handle"]),
+    stage: String(r["stage"]),
+  }));
 
   const columns: BoardColumn[] = PIPELINE.map((c) => ({
     id: c.id,
@@ -270,12 +268,7 @@ function PipelineView({ onOpen }: { onOpen: () => void }) {
       getId={(c) => c.id}
       getColumnId={(c) => c.stage}
       onMove={(moves) => {
-        setCards((prev) =>
-          prev.map((c) => {
-            const m = moves.find((x) => x.id === c.id);
-            return m ? { ...c, stage: m.to } : c;
-          }),
-        );
+        for (const m of moves) onMove(m.id, m.to);
       }}
       renderCard={(card, meta) => (
         <button
