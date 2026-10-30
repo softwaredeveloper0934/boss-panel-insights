@@ -20,3 +20,6 @@
 - [ ] Reports (derived from real rows)
 
 Notes: UI/design unchanged — only data wiring. Boss Panel holds the only sidebar.
+
+## Phase 3 — demo access
+- [ ] Demo-only Super Admin login screen (fixed username, password, 12-digit license key, backup key; no change options), tested end-to-end
