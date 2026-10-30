@@ -18,6 +18,7 @@ import { Dialog, DialogPortal, DialogOverlay } from "@/components/ui/dialog";
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onCreate?: (values: Record<string, unknown>) => Promise<unknown>;
 };
 
 type StepKey = "basics" | "budget" | "guidelines" | "approval";
@@ -29,7 +30,7 @@ const STEPS: { key: StepKey; label: string; icon: ReactNode }[] = [
   { key: "approval", label: "Approval & Review", icon: <ListChecks className="h-3.5 w-3.5" /> },
 ];
 
-export function CreateCampaignDialog({ open, onOpenChange }: Props) {
+export function CreateCampaignDialog({ open, onOpenChange, onCreate }: Props) {
   const [stepIdx, setStepIdx] = useState(0);
   const [form, setForm] = useState({
     name: "",
@@ -190,7 +191,24 @@ export function CreateCampaignDialog({ open, onOpenChange }: Props) {
                 <button
                   type="button"
                   disabled={!canNext}
-                  onClick={() => onOpenChange(false)}
+                  onClick={async () => {
+                    if (onCreate) {
+                      const ok = await onCreate({
+                        name: form.name.trim(),
+                        brand_name: form.brand.trim() || null,
+                        objective: form.objective.toLowerCase(),
+                        budget: Number(form.budget) || 0,
+                        start_date: form.startDate || null,
+                        end_date: form.endDate || null,
+                        approval: form.requireApproval ? "pending" : "approved",
+                        status: "draft",
+                        brief: [form.description, form.guidelines].filter(Boolean).join("\n\n") || null,
+                      });
+                      if (!ok) return;
+                    }
+                    reset();
+                    onOpenChange(false);
+                  }}
                   className="h-8 px-3 inline-flex items-center gap-1.5 rounded-md bg-primary hover:bg-primary/90 text-primary-foreground text-[12.5px] font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Sparkles className="h-3.5 w-3.5" />

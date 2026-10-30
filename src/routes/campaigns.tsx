@@ -159,7 +159,7 @@ function CampaignsPage() {
         <RightPanel wall={wall} />
       </div>
 
-      <CreateCampaignDialog open={createOpen} onOpenChange={setCreateOpen} />
+      <CreateCampaignDialog open={createOpen} onOpenChange={setCreateOpen} onCreate={api.create} />
       <AssignCreatorsDialog
         open={assignOpen}
         onOpenChange={setAssignOpen}
