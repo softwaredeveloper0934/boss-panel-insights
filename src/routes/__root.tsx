@@ -1,5 +1,7 @@
+import { DemoLoginGate } from "@/components/influencer/demo-login-gate";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
+  type ErrorComponentProps,
   Outlet,
   Link,
   createRootRouteWithContext,
@@ -38,7 +40,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -130,6 +132,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <DemoLoginGate>
       <div className="flex min-h-screen w-full bg-background text-foreground">
         <AppSidebar
           collapsed={collapsed}
@@ -146,6 +149,7 @@ function RootComponent() {
         <LiveAnnouncer />
         <Toaster position="bottom-right" richColors closeButton />
       </div>
+      </DemoLoginGate>
     </QueryClientProvider>
   );
 }

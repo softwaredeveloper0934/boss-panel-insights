@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { WallPage } from "@/components/influencer/wall-page";
+import { RecordsPage } from "@/components/influencer/records-page";
+import { collaborationsConfig } from "@/lib/module-records";
+
 import { WALL_BY_SLUG } from "@/lib/influencer-walls";
 
 export const Route = createFileRoute("/collaborations")({
@@ -9,5 +11,13 @@ export const Route = createFileRoute("/collaborations")({
       { name: "description", content: WALL_BY_SLUG["collaborations"].description },
     ],
   }),
-  component: () => <WallPage wall={WALL_BY_SLUG["collaborations"]} />,
+  component: CollaborationsPage,
 });
+
+function CollaborationsPage() {
+  return (
+    <RecordsPage wall={WALL_BY_SLUG["collaborations"]} config={collaborationsConfig}>
+      
+    </RecordsPage>
+  );
+}

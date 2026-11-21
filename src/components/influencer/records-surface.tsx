@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Inbox, Pencil, Plus, RefreshCw, Search, Trash2 } from "lucide-react";
 import { RecordFormDialog, type FieldDef } from "@/components/influencer/record-form-dialog";
 import { useRecords, type AnyRow, type TableName } from "@/lib/use-records";
@@ -22,6 +22,7 @@ type Props = {
   /** rendered inside the toolbar, right of the Add button */
   extraActions?: React.ReactNode;
   api?: ReturnType<typeof useRecords>;
+  openCreateSignal?: number;
 };
 
 const fmt = (value: unknown, kind: ColumnDef["kind"]) => {
@@ -55,12 +56,19 @@ export function RecordsSurface({
   searchKeys,
   extraActions,
   api,
+  openCreateSignal,
 }: Props) {
   const records = api ?? useRecords(table);
   const { rows, loading, refresh, create, update, remove } = records;
   const [query, setQuery] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<AnyRow | null>(null);
+  useEffect(() => {
+    if (openCreateSignal) {
+      setEditing(null);
+      setDialogOpen(true);
+    }
+  }, [openCreateSignal]);
   const [selected, setSelected] = useState<string[]>([]);
 
   const keys = searchKeys ?? columns.map((c) => c.key);

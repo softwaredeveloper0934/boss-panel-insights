@@ -1,3 +1,7 @@
+import { useMemo } from "react";
+import { useRecords } from "@/lib/use-records";
+import { socialAccountsConfig } from "@/lib/module-records";
+import { RecordsSurface } from "@/components/influencer/records-surface";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import {
@@ -62,13 +66,19 @@ function SocialAccountsPage() {
   const wall = WALL_BY_SLUG["social-accounts"];
   const [active, setActive] = useState(0);
   const platform = PLATFORMS[active];
+  const api = useRecords("social_accounts");
+  const scoped =
+    platform.key === "all"
+      ? api
+      : { ...api, rows: api.rows.filter((r) => String(r["platform"] ?? "").toLowerCase() === platform.label.toLowerCase()) };
+  const kpis = useMemo(() => socialAccountsConfig.kpis(scoped.rows), [scoped.rows]);
 
   return (
     <div className="flex flex-col">
       <PageHeader wall={wall} />
 
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 pb-3">
-        <KpiStrip wall={wall} />
+        <KpiStrip wall={wall} loading={api.loading} values={kpis} />
       </div>
 
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 border-b border-border">
@@ -101,7 +111,17 @@ function SocialAccountsPage() {
         <main className="min-w-0 space-y-6">
           <PlatformOverview platform={platform} />
           <PerformanceStrip platform={platform} />
-          <AccountsTable platform={platform} />
+          <RecordsSurface
+            key={platform.key}
+            table="social_accounts"
+            api={scoped}
+            title={socialAccountsConfig.title}
+            fields={socialAccountsConfig.fields}
+            columns={socialAccountsConfig.columns}
+            addLabel={socialAccountsConfig.addLabel}
+            emptyTitle={socialAccountsConfig.emptyTitle}
+            emptyDescription={socialAccountsConfig.emptyDescription}
+          />
         </main>
         <RightPanel wall={wall} />
       </div>

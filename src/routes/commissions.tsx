@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useMemo as useMemoK } from "react";
+import { useRecords } from "@/lib/use-records";
+import { commissionsKpis } from "@/lib/module-records";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Search,
@@ -78,6 +81,8 @@ const FILTER_CHIPS = [
 ];
 
 function CommissionsPage() {
+  const ledger = useRecords("wallet_transactions");
+  const kpiValues = useMemoK(() => commissionsKpis(ledger.rows), [ledger.rows]);
   const [active, setActive] = useState(0);
   const [selected, setSelected] = useState<number>(0);
 
@@ -85,7 +90,7 @@ function CommissionsPage() {
     <div className="flex flex-col">
       <PageHeader wall={wall} />
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 pb-3">
-        <KpiStrip wall={wall} />
+        <KpiStrip wall={wall} loading={ledger.loading} values={kpiValues} />
       </div>
 
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">

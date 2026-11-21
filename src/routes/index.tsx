@@ -1,3 +1,4 @@
+import { useRecords, countWhere, sumBy, num, money } from "@/lib/use-records";
 import { createFileRoute } from "@tanstack/react-router";
 import { ModuleBanner } from "@/components/influencer/module-banner";
 import { WallPage } from "@/components/influencer/wall-page";
@@ -28,7 +29,20 @@ export const Route = createFileRoute("/")({
 
 function DashboardPage() {
   const { rows } = useInfluencers();
-  const stats = useInfluencerStats(rows);
+  const base = useInfluencerStats(rows);
+  const campaigns = useRecords("campaigns");
+  const apps = useRecords("applications");
+  const payouts = useRecords("payouts");
+  const content = useRecords("content_items");
+  const stats = {
+    ...base,
+    "Active Campaigns": num(countWhere(campaigns.rows, "status", "active")),
+    "Leads Generated": num(apps.rows.length),
+    "Sales Generated": num(sumBy(content.rows, "clicks")),
+    "Pending Payouts": money(
+      payouts.rows.filter((r) => r["status"] !== "paid").reduce((a, r) => a + Number(r["amount"] ?? 0), 0),
+    ),
+  };
 
   return (
     <>

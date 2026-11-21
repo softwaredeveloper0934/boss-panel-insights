@@ -62,7 +62,10 @@ export function RecordFormDialog({ open, title, fields, record, onClose, onSubmi
       const raw = (values[f.name] ?? "").trim();
       if (f.kind === "list") payload[f.name] = raw ? raw.split(",").map((s) => s.trim()).filter(Boolean) : [];
       else if (f.kind === "number") payload[f.name] = raw ? Number(raw) : 0;
-      else payload[f.name] = raw === "" ? null : raw;
+      else if (raw === "" && f.kind === "select") {
+        // Leave blank choices out on create so the database default applies.
+        if (record) payload[f.name] = record[f.name] ?? null;
+      } else payload[f.name] = raw === "" ? null : raw;
     }
     const result = await onSubmit(payload);
     setBusy(false);

@@ -16,6 +16,7 @@ async function stabilize(page: Page) {
 }
 
 async function gotoHome(page: Page) {
+  await page.addInitScript(() => sessionStorage.setItem("im-demo-super-admin", "1"));
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("top-bar")).toBeVisible();
   // Wait for hydration: the wall marks itself ready on the first client frame,
