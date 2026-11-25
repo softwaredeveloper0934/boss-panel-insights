@@ -23,3 +23,8 @@ Notes: UI/design unchanged — only data wiring. Boss Panel holds the only sideb
 
 ## Phase 3 — demo access
 - [x] Demo-only Super Admin login screen (fixed username, password, 12-digit license key, backup key; no change options), tested end-to-end
+
+## Phase 4 — campaign intelligence and saved-data reports
+- [ ] AI-assisted applicant ranking: campaign brief + applicant profiles, ranked results with clear fit reasons via AI Gateway
+- [ ] Reports builder: generate campaign, application, and payout metrics from saved database records
+- [ ] Campaigns side-panel “Create Campaign” action opens the working campaign creation form
